@@ -1,12 +1,17 @@
 import React, { useState } from "react";
 import { Checkbox } from "../../components/ui/input/Checkbox";
-import { Button, CustomInput } from "../../components";
+import { Button, CustomInput, ModalVerificationAuth } from "../../components";
 import { FiUser } from "react-icons/fi";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { MdErrorOutline } from "react-icons/md";
 import { MdOutlineMail } from "react-icons/md";
 import { registerUser } from "../../service/auth/use-register";
+import { useAuthValidation } from "../../service/auth/use-authValidation";
 export const Register = () => {
+  const [errorEmailBack, setErrorEmailBack] = useState(false);
+  const [errorPasswordBack, setErrorPasswordBack] = useState([]);
+  const [open, setOpen] = useState(false);
+
   const [check, setChecked] = useState(false);
   const [formRegister, setFormRegister] = useState({
     name: "",
@@ -34,13 +39,19 @@ export const Register = () => {
       [name]: "",
     });
   };
-  console.log(formRegister);
 
   const handleCheck = (e) => {
     setChecked(e.target.checked);
   };
   const handleSubmitRegister = async (e) => {
     e.preventDefault();
+    if (errorEmailBack) {
+      setErrorEmailBack(false);
+    }
+    if (errorPasswordBack) {
+      setErrorPasswordBack(false);
+    }
+    //  VALIDACION PARTE DEL FRONT
     let formErrors = {};
     if (!formRegister.name) {
       formErrors.name = "El campo nombre es obligatorio.";
@@ -56,6 +67,10 @@ export const Register = () => {
     }
     if (!formRegister.repassword) {
       formErrors.repassword = "El campo repetir contraseña es obligatorio.";
+    } else {
+      if (formRegister.password !== formRegister.repassword) {
+        formErrors.repassword = "Las contraseñas no coinciden.";
+      }
     }
     if (!check) {
       formErrors.checkbox = "Debe aceptar los términos y servicios.";
@@ -64,16 +79,59 @@ export const Register = () => {
       setErrors(formErrors);
       return;
     }
+
     try {
-      const newProduct = await registerUser(
+      const user = await registerUser(
         formRegister.email,
         formRegister.password
       );
-      console.log("Producto creado:", newProduct);
+      console.log(user, "aa data");
+
+      // ENVIAR EMAIL DE VERIFICACION
+      if (user.status == "200") {
+        setOpen(true);
+        useAuthValidation(formRegister.email);
+      }
+
+      // VALIDACION PARTE DEL BACK
+      if (user.DuplicateUserName) {
+        setErrorEmailBack(true);
+      }
+
+      let passwordErrors = [];
+
+      if (user.PasswordRequiresNonAlphanumeric) {
+        passwordErrors.push(
+          "La contraseña debe contener al menos un carácter no alfanumérico."
+        );
+      }
+
+      if (user.PasswordRequiresDigit) {
+        passwordErrors.push(
+          "La contraseña debe tener al menos un dígito ('0'-'9')."
+        );
+      }
+
+      if (user.PasswordRequiresUpper) {
+        passwordErrors.push(
+          "La contraseña debe tener al menos una mayúscula ('A'-'Z')."
+        );
+      }
+
+      if (user.PasswordTooShort) {
+        passwordErrors.push("La contraseña debe tener al menos 6 caracteres.");
+      }
+
+      if (passwordErrors.length > 0) {
+        setErrorPasswordBack(passwordErrors);
+      } else {
+        setErrorPasswordBack([]);
+      }
     } catch (error) {
       console.error("Error al enviar el formulario:", error);
     }
   };
+
   return (
     <form
       onSubmit={handleSubmitRegister}
@@ -149,6 +207,12 @@ export const Register = () => {
             <MdErrorOutline width={15} />
           </span>
         )}
+        {errorEmailBack && (
+          <span className="text-red-500 w-full text-start font-medium flex justify-start items-center text-sm">
+            El correo ya existe.
+            <MdErrorOutline width={15} />
+          </span>
+        )}
       </div>
       <div className="w-full flex justify-center flex-col items-center md:w-1/3 ">
         <label
@@ -172,6 +236,13 @@ export const Register = () => {
             <MdErrorOutline width={15} />
           </span>
         )}
+        {errorPasswordBack.length > 0 &&
+          errorPasswordBack.map((error) => (
+            <span className="text-red-500 w-full text-start font-medium flex justify-start items-center text-sm">
+              {error}
+              <MdErrorOutline width={15} />
+            </span>
+          ))}
       </div>
       <div className="w-full flex justify-center flex-col items-center md:w-1/3 ">
         <label
@@ -235,6 +306,7 @@ export const Register = () => {
         )}
         <Button type="submit" label="Registrarse"></Button>
       </div>
+      <ModalVerificationAuth open={open}></ModalVerificationAuth>
     </form>
   );
 };

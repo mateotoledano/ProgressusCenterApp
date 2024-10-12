@@ -1,12 +1,11 @@
 import { api } from "../api";
 // Registrar usuario
-export const registerUser = async (email, password) => {
+export const useAuthValidation = async (email) => {
   try {
     const response = await api.post(
-      `/register`,
+      `/api/Auth/EnviarCodigoDeVerificacion`,
       {
-        email: email, // Asegúrate de que el nombre del campo coincide
-        password: password, // Verifica que el campo sea correcto
+        email: email,
       },
       {
         headers: {

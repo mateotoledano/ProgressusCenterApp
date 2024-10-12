@@ -3,12 +3,13 @@ import { IoSearchSharp } from "react-icons/io5";
 import { IoMenuSharp } from "react-icons/io5";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import useStoreMenu from "../../../store/useStoreMenu";
+import { Link } from "react-router-dom";
 export const TopMenu = () => {
   const navBar = useStoreMenu((state) => state.navBar);
   const openNavBar = useStoreMenu((state) => state.openNavBar);
 
   return (
-    <div className="bg-customNavBar p-3 md:py-3 shadow-2xl flex justify-between items-end md:items-center font-semibold text-lg text-white">
+    <div className="bg-customNavBar md:mb-5 p-3 md:py-3 shadow-2xl flex justify-between items-end md:items-center font-semibold text-lg text-white">
       <div className="flex justify-center items-center">
         <button>
           <IoMenuSharp
@@ -39,14 +40,14 @@ export const TopMenu = () => {
           </span>
           <IoMdNotificationsOutline className="w-9 h-9 md:w-7 md:h-7"></IoMdNotificationsOutline>
         </div>
-        <div className="flex items-center gap-2 ">
+        <Link to="/acount" className="flex items-center gap-2 cursor-pointer">
           <img
             className="w-10  md:w-10 rounded-full cursor-pointer"
-            src="https://s3-alpha-sig.figma.com/img/d3cb/19c0/a69c0dc2445bb8e7c73edd99c09aef09?Expires=1729468800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=L21pN7pKDHji-Ziq~z4rgbPFHAxXHF-uMTzwHZM6~Eta79vxm-N0huPHOiwJFO-8uAgK9~VLtm976PvvnXWqJjjivHSgLTWkxy~289FgrxQF6OcjLjr6APZifcowqsU9mBIPeSqpUssC2KguEAMvW5u9xnajX05DIfXkEl3bIOhIZL2koKjdonfoFIscZca2YV8nMQoq7lEX2A5ekplmDVN5UA9AoRQ0BfeKfAWIXfHfCFjfnnbIa~iBAGpM2B4Zwul6wO4O~R5sFdfW9Fv5KvuO7GLS1kJfbK3O4~7xvXB7H25JcRBs6rkItxYFKwIiGcoR3GhkK3D8IVmygEO1nA__"
+            src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8YXZhdGFyfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
             alt="Rounded avatar"
           />
           <span className="hidden lg:block text-lg font-normal ">Mariano</span>
-        </div>
+        </Link>
       </div>
     </div>
   );
