@@ -9,7 +9,7 @@ export const TopMenu = () => {
   const openNavBar = useStoreMenu((state) => state.openNavBar);
 
   return (
-    <div className="bg-customNavBar md:mb-5 p-3 md:py-3 shadow-2xl flex justify-between items-end md:items-center font-semibold text-lg text-white">
+    <div className="bg-customNavBar md:mb-5 p-3 md:py-3 shadow-xl sticky top-0 flex z-30 justify-between items-end md:items-center font-semibold text-lg text-white">
       <div className="flex justify-center items-center">
         <button>
           <IoMenuSharp

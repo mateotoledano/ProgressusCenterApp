@@ -1,4 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { ProtectedRoute } from "./components";
 import App from "./App";
 import {
   Profile,
@@ -9,7 +10,7 @@ import {
   Turns,
   Inventary,
   Stats,
-  Notifications
+  Notifications,
 } from "./pages";
 
 export const router = createBrowserRouter([
@@ -19,34 +20,68 @@ export const router = createBrowserRouter([
   },
   {
     path: "/home",
-    element: <HomePage />,
+
+    element: (
+      <ProtectedRoute>
+        <HomePage />,
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/acount",
-    element: <Profile />,
+
+    element: (
+      <ProtectedRoute>
+        <Profile />,
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/plans",
-    element: <Plans />,
+    element: (
+      <ProtectedRoute>
+        <Plans />,
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/membership",
-    element: <MemberShip />,
+    element: (
+      <ProtectedRoute>
+        <MemberShip />,
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/turns",
-    element: <Turns />,
+    element: (
+      <ProtectedRoute>
+        <Turns />,
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/inventary",
-    element: <Inventary />,
+    element: (
+      <ProtectedRoute>
+        <Inventary />,
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/stats",
-    element: <Stats />,
+    element: (
+      <ProtectedRoute>
+        <Stats />,
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/notifications",
-    element: <Notifications />,
+    element: (
+      <ProtectedRoute>
+        <Notifications />,
+      </ProtectedRoute>
+    ),
   },
 ]);

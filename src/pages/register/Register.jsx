@@ -1,7 +1,14 @@
 import React, { useState } from "react";
-import { Checkbox } from "../../components/ui/input/Checkbox";
-import { Button, CustomInput, ModalVerificationAuth } from "../../components";
+
+import {
+  Button,
+  CustomInput,
+  ErrorAuth,
+  ModalVerificationAuth,
+  Checkbox,
+} from "../../components";
 import { FiUser } from "react-icons/fi";
+
 import { RiLockPasswordLine } from "react-icons/ri";
 import { MdErrorOutline } from "react-icons/md";
 import { MdOutlineMail } from "react-icons/md";
@@ -20,6 +27,7 @@ export const Register = () => {
     password: "",
     repassword: "",
   });
+
   const [errors, setErrors] = useState({
     name: "",
     lastname: "",
@@ -41,8 +49,16 @@ export const Register = () => {
   };
 
   const handleCheck = (e) => {
-    setChecked(e.target.checked);
+    const isChecked = e.target.checked;
+    setChecked(isChecked);
+    if (isChecked) {
+      setErrors({
+        ...errors,
+        checkbox: "",
+      });
+    }
   };
+
   const handleSubmitRegister = async (e) => {
     e.preventDefault();
     if (errorEmailBack) {
@@ -85,7 +101,6 @@ export const Register = () => {
         formRegister.email,
         formRegister.password
       );
-      console.log(user, "aa data");
 
       // ENVIAR EMAIL DE VERIFICACION
       if (user.status == "200") {
@@ -117,7 +132,11 @@ export const Register = () => {
           "La contraseña debe tener al menos una mayúscula ('A'-'Z')."
         );
       }
-
+      if (user.PasswordRequiresLower) {
+        passwordErrors.push(
+          "La contraseña debe tener al menos una minuscula ('a'-'z')."
+        );
+      }
       if (user.PasswordTooShort) {
         passwordErrors.push("La contraseña debe tener al menos 6 caracteres.");
       }
@@ -138,7 +157,7 @@ export const Register = () => {
       className="w-3/4 mb-6 animate-fade-in-right flex flex-col justify-center items-center md:mb-2 mt-4 md:mt-2 md:gap-3  md:flex-row md:flex-wrap  md:justify-center "
     >
       {/* Inputs */}
-      <div className="w-full flex justify-center flex-col items-center md:w-1/3 ">
+      <div className="w-full flex justify-center flex-col items-center md:w-1/3 md:mx-8 ">
         <label
           className="text-start  w-full text-lg font-normal flex justify-start items-center "
           htmlFor=""
@@ -155,14 +174,9 @@ export const Register = () => {
           name="name"
           Icon={FiUser}
         ></CustomInput>
-        {errors.name && (
-          <span className="text-red-500 w-full text-start font-medium flex justify-start items-center text-sm">
-            {errors.name}
-            <MdErrorOutline width={15} />
-          </span>
-        )}
+        {errors.name && <ErrorAuth messageError={errors.name}></ErrorAuth>}
       </div>
-      <div className="w-full flex justify-center flex-col items-center md:w-1/3 ">
+      <div className="w-full flex justify-center flex-col items-center md:w-1/3  md:mx-8">
         <label
           className="text-start  w-full text-lg font-normal flex justify-start items-center "
           htmlFor=""
@@ -179,13 +193,10 @@ export const Register = () => {
           Icon={FiUser}
         ></CustomInput>
         {errors.lastname && (
-          <span className="text-red-500 w-full text-start font-medium flex justify-start items-center text-sm">
-            {errors.lastname}
-            <MdErrorOutline width={15} />
-          </span>
+          <ErrorAuth messageError={errors.lastname}></ErrorAuth>
         )}
       </div>
-      <div className="w-full flex justify-center flex-col items-center md:w-1/3 ">
+      <div className="w-full flex justify-center flex-col items-center md:w-1/3  md:mx-8">
         <label
           className="text-start  w-full text-lg font-normal flex justify-start items-center "
           htmlFor=""
@@ -201,12 +212,7 @@ export const Register = () => {
           name="email"
           Icon={MdOutlineMail}
         ></CustomInput>
-        {errors.email && (
-          <span className="text-red-500 w-full text-start font-medium flex justify-start items-center text-sm">
-            {errors.email}
-            <MdErrorOutline width={15} />
-          </span>
-        )}
+        {errors.email && <ErrorAuth messageError={errors.email}></ErrorAuth>}
         {errorEmailBack && (
           <span className="text-red-500 w-full text-start font-medium flex justify-start items-center text-sm">
             El correo ya existe.
@@ -214,7 +220,7 @@ export const Register = () => {
           </span>
         )}
       </div>
-      <div className="w-full flex justify-center flex-col items-center md:w-1/3 ">
+      <div className="w-full flex justify-center flex-col items-center md:w-1/3  md:mx-8">
         <label
           className="text-start  w-full text-lg font-normal flex justify-start items-center "
           htmlFor=""
@@ -231,10 +237,7 @@ export const Register = () => {
           Icon={RiLockPasswordLine}
         ></CustomInput>
         {errors.password && (
-          <span className="text-red-500 w-full text-start font-medium flex justify-start items-center text-sm">
-            {errors.password}
-            <MdErrorOutline width={15} />
-          </span>
+          <ErrorAuth messageError={errors.password}></ErrorAuth>
         )}
         {errorPasswordBack.length > 0 &&
           errorPasswordBack.map((error) => (
@@ -244,7 +247,7 @@ export const Register = () => {
             </span>
           ))}
       </div>
-      <div className="w-full flex justify-center flex-col items-center md:w-1/3 ">
+      <div className="w-full flex justify-center flex-col items-center md:w-1/3  md:mx-8">
         <label
           className="text-start  w-full text-lg font-normal flex justify-start items-center "
           htmlFor=""
@@ -261,14 +264,11 @@ export const Register = () => {
           Icon={RiLockPasswordLine}
         ></CustomInput>
         {errors.repassword && (
-          <span className="text-red-500 w-full text-start font-medium flex justify-start items-center text-sm">
-            {errors.repassword}
-            <MdErrorOutline width={15} />
-          </span>
+          <ErrorAuth messageError={errors.repassword}></ErrorAuth>
         )}
       </div>
 
-      <div className="hidden  md:flex w-1/3 flex-wrap justify-start pt-12  ">
+      <div className="hidden  md:flex w-1/3 flex-wrap justify-start pt-12   md:mx-8">
         <div className="flex gap-2  items-center  ">
           <Checkbox check={check} onChange={handleCheck}></Checkbox>
           <span>
@@ -279,15 +279,12 @@ export const Register = () => {
           </span>
         </div>
         {errors.checkbox && (
-          <span className="text-red-500 w-full text-start font-medium flex justify-start items-center text-sm">
-            {errors.checkbox}
-            <MdErrorOutline width={15} />
-          </span>
+          <ErrorAuth messageError={errors.checkbox}></ErrorAuth>
         )}
       </div>
 
       {/* Checkbox */}
-      <div className="w-full flex justify-center flex-col items-center md:w-2/3 md:justify-start  ">
+      <div className="w-full flex justify-center flex-col items-center md:w-2/3 md:justify-start  md:mx-8 ">
         <div className="flex gap-2 justify-start  w-full items-center md:justify-start md:w-full md:hidden">
           <Checkbox check={check} onChange={handleCheck}></Checkbox>
           <span>
@@ -306,7 +303,12 @@ export const Register = () => {
         )}
         <Button type="submit" label="Registrarse"></Button>
       </div>
-      <ModalVerificationAuth open={open}></ModalVerificationAuth>
+      {/* MODAL PARA VERIFICAR EL CORREO */}
+      <ModalVerificationAuth
+        setOpen={setOpen}
+        open={open}
+        email={formRegister.email}
+      ></ModalVerificationAuth>
     </form>
   );
 };

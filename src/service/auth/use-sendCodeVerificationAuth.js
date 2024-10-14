@@ -1,12 +1,12 @@
 import { api } from "../api";
 // Registrar usuario
-export const registerUser = async (email, password) => {
+export const sendCodeVerificationAuth = async (email, codeString) => {
   try {
     const response = await api.post(
-      `/register`,
+      `/api/Auth/ConfirmarCorreo`,
       {
-        email: email,
-        password: password,
+        email: email, // Asegúrate de que el nombre del campo coincide
+        codigo: codeString, // Verifica que el campo sea correcto
       },
       {
         headers: {
@@ -18,7 +18,7 @@ export const registerUser = async (email, password) => {
     return response;
   } catch (error) {
     console.error("Error al registrar usuario:", error.response.data.errors);
-
-    return error.response.data.errors;
+    console.log(error, "error desde el cah");
+    return error.response;
   }
 };

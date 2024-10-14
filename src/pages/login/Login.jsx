@@ -1,11 +1,19 @@
 import React, { useState } from "react";
 import { FiUser } from "react-icons/fi";
-import { Button, CustomInput } from "../../components";
+import { Button, CustomInput, ErrorAuth } from "../../components";
+import { useNavigate } from "react-router-dom";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { Checkbox } from "../../components/ui/input/Checkbox";
 import { MdErrorOutline } from "react-icons/md";
+import { loginUser } from "../../service/auth/use-login";
+import useStoreUser from "../../store/useStoreUser";
+import useStoreAlert from "../../store/useStoreAlert";
 
 export const Login = () => {
+  const [errorLogin, setErrorLogin] = useState(false);
+  const closeAlert = useStoreAlert((state) => state.closeAlert);
+
+  const navigate = useNavigate();
   const [formLogin, setFormLogin] = useState({
     email: "",
     password: "",
@@ -35,8 +43,9 @@ export const Login = () => {
     setChecked(e.target.checked);
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+
     let formErrors = {};
     if (!formLogin.email) {
       formErrors.email = "El campo email es obligatorio.";
@@ -49,8 +58,23 @@ export const Login = () => {
       setErrors(formErrors);
       return;
     }
+    try {
+      const enviarUser = await loginUser(formLogin.email, formLogin.password);
 
-    console.log("Formulario enviado:", formLogin);
+      console.log(enviarUser, "response login");
+
+      if (enviarUser.status == "200") {
+        if (enviarUser.data.accessToken) {
+          useStoreUser.getState().setUser(enviarUser); // Guardamos el usuario en el store
+        }
+        closeAlert();
+        navigate("/home");
+      } else {
+        setErrorLogin(true);
+      }
+    } catch (e) {
+      console.log("error", e);
+    }
   };
 
   return (
@@ -70,10 +94,13 @@ export const Login = () => {
         type="email"
       />
       {errors.email && (
-        <span className="text-red-500 w-full text-start font-medium flex justify-start items-center text-sm">
-          {errors.email}
-          <MdErrorOutline width={15} />
-        </span>
+        <>
+          <ErrorAuth messageError={errors.email}></ErrorAuth>
+          {/* <span className="text-red-500 w-full text-start font-medium flex justify-start items-center text-sm">
+            {errors.email}
+            <MdErrorOutline width={15} />
+          </span> */}
+        </>
       )}
 
       <CustomInput
@@ -85,10 +112,11 @@ export const Login = () => {
         Icon={RiLockPasswordLine}
       />
       {errors.password && (
-        <span className="text-red-500 w-full text-start font-medium flex justify-start items-center text-sm">
-          {errors.password}
-          <MdErrorOutline width={15} />
-        </span>
+        <ErrorAuth messageError={errors.password}></ErrorAuth>
+        // <span className="text-red-500 w-full text-start font-medium flex justify-start items-center text-sm">
+        //   {errors.password}
+        //   <MdErrorOutline width={15} />
+        // </span>
       )}
 
       {/* Checkbox */}
@@ -96,7 +124,12 @@ export const Login = () => {
         <Checkbox check={check} onChange={handleCheck} />
         <span>Recordarme</span>
       </div>
-
+      {errorLogin && (
+        <span className="text-red-500 w-full text-center font-medium flex justify-center my-2 items-center text-sm md:text-base md:gap-2">
+          Credenciales invalidas
+          <MdErrorOutline width={15} />
+        </span>
+      )}
       <Button type="submit" label="Ingresar" />
     </form>
   );

@@ -12,7 +12,7 @@ export const Button = ({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`py-[7px] my-2 px-5 bg-customButtonGreen text-white rounded-sm hover:bg-customTextGreen ${className}`}
+      className={`py-[7px] my-2 px-5 bg-customButtonGreen text-white rounded-sm  font-medium ${className}`}
     >
       {label}
     </button>

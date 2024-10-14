@@ -1,9 +1,9 @@
 import { api } from "../api";
-// Registrar usuario
-export const registerUser = async (email, password) => {
+// Login usuario
+export const loginUser = async (email, password) => {
   try {
     const response = await api.post(
-      `/register`,
+      `/login`,
       {
         email: email,
         password: password,
@@ -19,6 +19,6 @@ export const registerUser = async (email, password) => {
   } catch (error) {
     console.error("Error al registrar usuario:", error.response.data.errors);
 
-    return error.response.data.errors;
+    return error;
   }
 };

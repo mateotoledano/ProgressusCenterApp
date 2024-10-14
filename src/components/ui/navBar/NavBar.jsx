@@ -9,6 +9,7 @@ import {
   IoShirtOutline,
   IoTicketOutline,
 } from "react-icons/io5";
+import { BiLogOut } from "react-icons/bi";
 import { Link, useLocation } from "react-router-dom";
 import { GoHome } from "react-icons/go";
 import { CgProfile } from "react-icons/cg";
@@ -20,10 +21,14 @@ import { GrPlan } from "react-icons/gr";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import clsx from "clsx";
 import useStoreMenu from "../../../store/useStoreMenu";
+import useStoreUser from "../../../store/useStoreUser";
 export const NavBar = () => {
+  const closeSession = useStoreUser((state) => state.clearUser);
   const location = useLocation();
   const path = location.pathname;
-
+  const logout = () => {
+    closeSession();
+  };
   const routeNavigation = [
     {
       title: "Inicio",
@@ -79,31 +84,28 @@ export const NavBar = () => {
       {menu && (
         <div
           onClick={close}
-          className="fade-in fixed top-0 cursor-pointer left-0 w-screen h-screen z-10 backdrop-filter backdrop-blur-sm"
+          className="fade-in fixed top-0 cursor-pointer left-0 w-screen h-screen z-40 backdrop-filter backdrop-blur-sm"
         ></div>
       )}
 
       <nav
         className={clsx(
-          "fixed p-5 left-0 top-0 w-[230px] md:w-[350px] min-h-screen bg-white z-20 shadow-2xl transform transition-all duration-300",
+          "fixed p-5 left-0 top-0 w-[230px] md:w-[350px] min-h-screen bg-white z-40 shadow-2xl transform transition-all duration-300",
           { "-translate-x-full": !menu }
         )}
       >
         <IoCloseOutline
-          size={35}
-          className="absolute top-5 right-1 cursor-pointer"
+          size={30}
+          className="absolute top-1 right-1 cursor-pointer"
           onClick={close}
         ></IoCloseOutline>
-        <div className="relative mt-10">
-          <IoSearchOutline
-            size={22}
-            className="absolute  bottom-2 "
-          ></IoSearchOutline>
-          <input
-            type="text"
-            placeholder="Buscar"
-            className="w-full bg-gray-50 rounded pl-8 py-1 pr-10 border-b-2 text-lg border-gray-200 focus:outline-none focus:border-blue-500"
-          />
+        <div className="flex flex-row-reverse justify-end gap-5 mt-5 mb-5 items-center ">
+          <div className="cursor-pointer">
+            <IoSearchOutline size={26}></IoSearchOutline>
+          </div>
+          <div onClick={logout} className="cursor-pointer ">
+            <BiLogOut size={26}></BiLogOut>
+          </div>
         </div>
         {routeNavigation.map((item) => {
           return (
@@ -123,54 +125,6 @@ export const NavBar = () => {
             </Link>
           );
         })}
-
-        {/* <Link
-          href={"/"}
-          className="flex items-center mt-7 p-2 rounded-md hover:bg-gray-100 transition-all "
-        >
-          <IoTicketOutline size={20}></IoTicketOutline>
-          <span className="ml-3 text-lg ">Ordenes</span>
-        </Link>
-        <Link
-          href={"/"}
-          className="flex items-center mt-7 p-2 rounded-md hover:bg-gray-100 transition-all "
-        >
-          <IoLogInOutline size={20}></IoLogInOutline>
-          <span className="ml-3 text-lg ">Ingresar</span>
-        </Link>
-        <Link
-          href={"/"}
-          className="flex items-center mt-7 p-2 rounded-md hover:bg-gray-100 transition-all "
-        >
-          <IoLogOutOutline size={20}></IoLogOutOutline>
-          <span className="ml-3 text-lg ">Salir</span>
-        </Link>
-
-        <div className="h-px w-full bg-gray-200 my-5"></div>
-
-        <Link
-          href={"/"}
-          className="flex items-center mt-7 p-2 rounded-md hover:bg-gray-100 transition-all "
-        >
-          <IoShirtOutline size={20}></IoShirtOutline>
-          <span className="ml-3 text-lg ">Products</span>
-        </Link>
-
-        <Link
-          href={"/"}
-          className="flex items-center mt-7 p-2 rounded-md hover:bg-gray-100 transition-all "
-        >
-          <IoTicketOutline size={20}></IoTicketOutline>
-          <span className="ml-3 text-lg ">Ordenes</span>
-        </Link>
-
-        <Link
-          href={"/"}
-          className="flex items-center mt-7 p-2 rounded-md hover:bg-gray-100 transition-all "
-        >
-          <IoPeopleOutline size={20}></IoPeopleOutline>
-          <span className="ml-3 text-lg ">Usuarios</span>
-        </Link> */}
       </nav>
     </div>
   );
