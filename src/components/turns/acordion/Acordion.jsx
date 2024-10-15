@@ -6,10 +6,32 @@ import { IoIosArrowDown } from "react-icons/io";
 import { CgGym } from "react-icons/cg";
 import { IoSettingsOutline } from "react-icons/io5";
 import { Button } from "../../ui/buttons/Button";
-
+import { ModalTurns } from "../modalTurns/ModalTurns";
 // Recibiendo props en el componente
-export const Acordion = ({ title, content, isSelected, onClick }) => {
-  console.log(isSelected, "seleciiconawd");
+export const Acordion = ({ title, content, onClick }) => {
+  const [open, setOpen] = React.useState(false);
+  console.log(content, "content");
+
+  const [horaInicio, setHorario] = React.useState("");
+  const [horaFinal, setHoraFinal] = React.useState("");
+
+  const onChangeHora = (cont, index) => {
+    setHorario(cont);
+
+    // Verificar si es la última hora del turno
+    if (index === content.length - 1) {
+      const [hours, minutes] = cont.split(":");
+      const nextHour = `${String(parseInt(hours) + 1).padStart(
+        2,
+        "0"
+      )}:${minutes}`;
+      setHoraFinal(nextHour);
+    } else {
+      setHoraFinal(content[index + 1]);
+    }
+
+    setOpen(true);
+  };
 
   return (
     <div className="w-full">
@@ -29,27 +51,31 @@ export const Acordion = ({ title, content, isSelected, onClick }) => {
         <AccordionDetails>
           <div className="flex flex-col gap-5">
             {content.map((cont, index) => (
-              <div className="bg-green-50 rounded md:p-1 px-1 flex justify-between">
+              <div
+                key={cont}
+                className="bg-green-50 rounded-lg md:p-2 p-2 px-1 flex justify-between cursor-pointer hover:bg-customNavBar hover:text-white transition-all"
+                onClick={() => onChangeHora(cont, index)}
+              >
                 <div className="flex flex-row-reverse items-center justify-start gap-3">
                   <span
                     key={index}
-                    className="text-base md:text-lg  font-semibold border "
+                    className="text-base md:text-lg  font-semibold  "
                   >
                     {cont}
                   </span>
-                  <CgGym size={23}></CgGym>
-                </div>
-                <div>
-                  <Button
-                    label="Elegir turno"
-                    className="px-[7px] py-[5px]  md:px-2 md:py-1  bg-customTextBlue text-sm md:text-lg  hover:bg-blue-600"
-                  ></Button>
+                  <CgGym size={24}></CgGym>
                 </div>
               </div>
             ))}
           </div>
         </AccordionDetails>
       </Accordion>
+      <ModalTurns
+        open={open}
+        setOpen={setOpen}
+        horaInicio={horaInicio}
+        horaFinal={horaFinal}
+      ></ModalTurns>
     </div>
   );
 };

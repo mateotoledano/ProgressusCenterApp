@@ -3,7 +3,7 @@ import { api } from "../api";
 export const sendCodeVerificationAuth = async (email, codeString) => {
   try {
     const response = await api.post(
-      `/api/Auth/ConfirmarCorreo`,
+      `/api/Auth/ComprobarCodigoDeConfirmacionCorreo`,
       {
         email: email, // Asegúrate de que el nombre del campo coincide
         codigo: codeString, // Verifica que el campo sea correcto

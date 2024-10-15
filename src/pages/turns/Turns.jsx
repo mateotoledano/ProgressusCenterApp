@@ -2,25 +2,30 @@ import React, { useState } from "react";
 import { MainLayout } from "../../layout/MainLayout";
 import { Acordion, Stack } from "../../components";
 import dayjs from "dayjs";
+import "dayjs/locale/es";
+
 import { FaRegCalendarCheck } from "react-icons/fa";
 import { IoIosTimer } from "react-icons/io";
+
+dayjs.locale("es");
+
 export const Turns = () => {
   const turnos = [
     {
       title: "Turno Mañana",
-      horarios: ["08:30", "09:30", "10:30", "11:30", "12:30"],
+      horarios: ["07:00", "08:00", "09:00", "10:00", "11:00", "12:00"],
     },
     {
       title: "Turno Tarde",
-      horarios: ["14:30", "15:30", "16:30", "17:30", "18:30", "19:30"],
+      horarios: ["13:00", "14:00", "15:00", "16:00", "17:00", "18:00"],
     },
     {
       title: "Turno Noche",
-      horarios: ["20:30", "21:30", "22:30", "23:30"],
+      horarios: ["19:00", "20:00", "21:00", "22:00"],
     },
   ];
 
-  const today = dayjs().format("DD/MM/YYYY");
+  const today = dayjs().format("dddd, D [de] MMMM [de] YYYY");
 
   return (
     <MainLayout>
@@ -46,7 +51,7 @@ export const Turns = () => {
           <section className="md:w-3/4 md:border-l  md:pl-12">
             <div className="md:mt-0 mt-3 flex w-full gap-5 flex-col justify-center items-center">
               <h1 className="text-lg md:text-2xl font-semibold flex items-center gap-1">
-                Turnos seleccionados
+                Mis turnos
                 <IoIosTimer></IoIosTimer>
               </h1>
               <Stack
@@ -72,7 +77,7 @@ export const Turns = () => {
             </div>
             <div className="mt-3 flex w-full gap-5 flex-col justify-center items-center">
               <h1 className="text-lg md:text-2xl font-semibold flex items-center gap-1">
-                Turnos finalizados
+                Turnos a los que asisti
                 <FaRegCalendarCheck></FaRegCalendarCheck>
               </h1>
               <Stack

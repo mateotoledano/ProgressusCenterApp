@@ -1,14 +1,5 @@
 import React from "react";
-import {
-  IoCloseOutline,
-  IoLogInOutline,
-  IoLogOutOutline,
-  IoPeopleOutline,
-  IoPersonOutline,
-  IoSearchOutline,
-  IoShirtOutline,
-  IoTicketOutline,
-} from "react-icons/io5";
+import { IoCloseOutline, IoSearchOutline } from "react-icons/io5";
 import { BiLogOut } from "react-icons/bi";
 import { Link, useLocation } from "react-router-dom";
 import { GoHome } from "react-icons/go";
@@ -23,7 +14,7 @@ import clsx from "clsx";
 import useStoreMenu from "../../../store/useStoreMenu";
 import useStoreUser from "../../../store/useStoreUser";
 export const NavBar = () => {
-  const closeSession = useStoreUser((state) => state.clearUser);
+  const closeSession = useStoreUser((state) => state.clearToken);
   const location = useLocation();
   const path = location.pathname;
   const logout = () => {
@@ -87,7 +78,7 @@ export const NavBar = () => {
           className="fade-in fixed top-0 cursor-pointer left-0 w-screen h-screen z-40 backdrop-filter backdrop-blur-sm"
         ></div>
       )}
-
+      {/* NAVBAR */}
       <nav
         className={clsx(
           "fixed p-5 left-0 top-0 w-[230px] md:w-[350px] min-h-screen bg-white z-40 shadow-2xl transform transition-all duration-300",

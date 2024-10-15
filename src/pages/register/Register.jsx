@@ -101,6 +101,7 @@ export const Register = () => {
         formRegister.email,
         formRegister.password
       );
+      console.log(user, "userrrrrr");
 
       // ENVIAR EMAIL DE VERIFICACION
       if (user.status == "200") {

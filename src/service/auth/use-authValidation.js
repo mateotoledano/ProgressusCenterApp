@@ -3,7 +3,7 @@ import { api } from "../api";
 export const useAuthValidation = async (email) => {
   try {
     const response = await api.post(
-      `/api/Auth/EnviarCodigoDeVerificacion`,
+      `/api/Auth/EnviarCodigoDeVerificacionConfirmarEmail`,
       {
         email: email,
       },
@@ -13,7 +13,6 @@ export const useAuthValidation = async (email) => {
         },
       }
     );
-
 
     return response;
   } catch (error) {

@@ -1,10 +1,9 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import { ProtectedRoute } from "./components";
 import App from "./App";
 import {
   Profile,
   HomePage,
-  Login,
   MemberShip,
   Plans,
   Turns,

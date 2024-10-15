@@ -1,8 +1,8 @@
 import { Navigate } from "react-router-dom";
-import useStoreUser from "../../store/useStoreUser"; // Asegúrate de importar tu store
+import useStoreUser from "../../store/useStoreUser";
 
 export const ProtectedRoute = ({ children }) => {
-  const { user } = useStoreUser();
+  const { token } = useStoreUser();
 
-  return user ? children : <Navigate to="/" />;
+  return token ? children : <Navigate to="/" />;
 };
