@@ -1,8 +1,10 @@
 import { CgGym } from "react-icons/cg";
 
-export const Stack = ({ titulo, duracion, fechaFinalizacion , className }) => {
+export const Stack = ({ titulo, duracion, fechaFinalizacion, className }) => {
   return (
-    <div className={`flex items-center cursor-pointer gap-2 md:gap-6 px-1 md:px-1 py-2 bg-customBlue rounded border w-full ${className}`}>
+    <div
+      className={`flex items-center cursor-pointer gap-2 md:gap-6 px-1 md:px-1 py-2 bg-customBlue rounded border w-full ${className}`}
+    >
       <CgGym size={30} />
       <div className="leading-3">
         <p className="text-xs md:text-lg font-bold text-slate-600">{titulo}</p>

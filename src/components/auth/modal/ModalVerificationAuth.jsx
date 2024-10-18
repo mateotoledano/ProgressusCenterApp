@@ -6,12 +6,9 @@ import Modal from "@mui/material/Modal";
 import ConfirmCode from "../confirmCode/ConfirmCode";
 import { Button } from "../../ui/buttons/Button";
 import { useState } from "react";
-import useStoreAlert from "../../../store/useStoreAlert";
+import { useStoreAlert, useStoreSelectAuth } from "../../../store";
 import { useSpring, animated } from "@react-spring/web";
-import { BiBorderRadius } from "react-icons/bi";
 import { sendCodeVerificationAuth } from "../../../service/auth/use-sendCodeVerificationAuth";
-import useStoreSelectAuth from "../../../store/useStoreSelectAuth";
-import { Alert } from "../../ui/alert/Alert";
 import { MdErrorOutline } from "react-icons/md";
 
 const Fade = React.forwardRef(function Fade(props, ref) {
@@ -70,11 +67,13 @@ const style = {
 };
 
 export const ModalVerificationAuth = ({ open, email, setOpen }) => {
+  // ESTADO DEL ALERT CUANDO SE VERIFICA EL CODIGO
   const openAlertAuth = useStoreAlert((state) => state.openAlert);
+  // CAMBIAR AL LOGIN
+  const changeToLogin = useStoreSelectAuth((state) => state.authLogin);
+  // ERROR AL ENVIAR EL CODIGO
   const [alertFailed, setAlertFailed] = useState(false);
   const [code, setCode] = useState(Array(4).fill(""));
-  const handleClose = () => setOpen(false);
-  const changeToLogin = useStoreSelectAuth((state) => state.authLogin);
   const handleSendCode = async () => {
     const codeString = code.join("");
     try {

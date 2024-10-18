@@ -1,11 +1,10 @@
 import React from "react";
 import { NavBar, TopMenu } from "../components";
-import useStoreAlert from "../store/useStoreAlert";
+import { useStoreAlert } from "../store";
 export const MainLayout = ({ children }) => {
   const prueba = useStoreAlert((state) => state.alert);
-  console.log(prueba, "estado de la alerta");
   return (
-    <div className="">
+    <div className="bg-customGray">
       <TopMenu></TopMenu>
       <NavBar></NavBar>
 

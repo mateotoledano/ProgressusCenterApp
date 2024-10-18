@@ -4,7 +4,7 @@ import { MainLayout } from '../../layout/MainLayout'
 export const Notifications = () => {
   return (
     <MainLayout>
-        <div>
+        <div className='animate-fade-in-down'>
             aaaa
         </div>
     </MainLayout>

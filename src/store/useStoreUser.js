@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 // GUARDAR TOKEN
-const useStoreUser = create(
+export const useStoreUser = create(
   persist(
     (set) => ({
       remember: false,
@@ -18,5 +18,3 @@ const useStoreUser = create(
     }
   )
 );
-
-export default useStoreUser;

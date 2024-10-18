@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { FiUser } from "react-icons/fi";
-import { Button, CustomInput, ErrorAuth } from "../../components";
+import { Button, CustomInput, ErrorAuth, Checkbox } from "../../components";
 import { useNavigate } from "react-router-dom";
 import { RiLockPasswordLine } from "react-icons/ri";
-import { Checkbox } from "../../components/ui/input/Checkbox";
 import { MdErrorOutline } from "react-icons/md";
-
 import { loginUser } from "../../service/auth/use-login";
-import useStoreUser from "../../store/useStoreUser";
-import useStoreAlert from "../../store/useStoreAlert";
+import { useStoreUser, useStoreAlert } from "../../store";
 
 export const Login = () => {
   const [errorLogin, setErrorLogin] = useState(false);
   const closeAlert = useStoreAlert((state) => state.closeAlert);
+  // TOKEN DEL USER
   const token = useStoreUser((state) => state.token);
   const storeToken = useStoreUser((state) => state.setToken);
+  // RECORDAR USUARIO
   const remember = useStoreUser((state) => state.remember);
   const setRemember = useStoreUser((state) => state.setRemember);
   const navigate = useNavigate();
@@ -29,7 +28,9 @@ export const Login = () => {
   });
 
   const [check, setChecked] = useState(remember);
+
   useEffect(() => {
+    // VERIFICAR SI EL USUARIO ES RECORDADO O NO
     if (!remember) {
       storeToken(null);
     }
@@ -54,12 +55,13 @@ export const Login = () => {
   const handleCheck = (e) => {
     const isChecked = e.target.checked;
     setChecked(isChecked);
+    // CAMBIAR EL RECORDAR EN EL STORE
     setRemember(isChecked);
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
+    // VALIDACION EN EL FRONT
     let formErrors = {};
     if (!formLogin.email) {
       formErrors.email = "El campo email es obligatorio.";
@@ -72,12 +74,9 @@ export const Login = () => {
       setErrors(formErrors);
       return;
     }
-    console.log(formLogin.email, formLogin.password);
 
     try {
       const enviarUser = await loginUser(formLogin.email, formLogin.password);
-
-      console.log(enviarUser, "response login");
 
       if (enviarUser.status == "200") {
         if (enviarUser.data.accessToken) {
@@ -86,6 +85,7 @@ export const Login = () => {
         closeAlert();
         navigate("/home");
       } else {
+        // VALIDACION EN EL BACK
         setErrorLogin(true);
       }
     } catch (e) {

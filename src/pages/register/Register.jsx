@@ -8,13 +8,12 @@ import {
   Checkbox,
 } from "../../components";
 import { FiUser } from "react-icons/fi";
-
 import { RiLockPasswordLine } from "react-icons/ri";
-import { MdErrorOutline } from "react-icons/md";
-import { MdOutlineMail } from "react-icons/md";
+import { MdErrorOutline, MdOutlineMail } from "react-icons/md";
 import { registerUser } from "../../service/auth/use-register";
 import { useAuthValidation } from "../../service/auth/use-authValidation";
 export const Register = () => {
+  // MANEJO DE ESTADO DE ERRORES QUE VIENEN DEL BACK
   const [errorEmailBack, setErrorEmailBack] = useState(false);
   const [errorPasswordBack, setErrorPasswordBack] = useState([]);
   const [open, setOpen] = useState(false);

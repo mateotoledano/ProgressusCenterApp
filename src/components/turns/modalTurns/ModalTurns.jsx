@@ -69,6 +69,11 @@ const style = {
 };
 
 export const ModalTurns = ({ open, setOpen, horaInicio, horaFinal }) => {
+  // HORARIO Y FECHA PARA MOSTRAR EN HOME
+  // const today = dayjs().format("dddd, D [de] MMMM [de] YYYY");
+  // const setTime = useStoreTime((state) => state.setTime);
+  // const setDate = useStoreTime((state) => state.setTDate);
+
   const [openAlert, setOpenAlert] = React.useState(false);
   const [openAlertError, setOpenAlertError] = React.useState(false);
   dayjs.extend(utc);
@@ -76,7 +81,7 @@ export const ModalTurns = ({ open, setOpen, horaInicio, horaFinal }) => {
   const fechaArgentina = dayjs()
     .tz("America/Argentina/Buenos_Aires")
     .toISOString();
-  const idUser = "4b8d9e35-5be2-4a7a-b94a-b2bab5aa4397";
+  const idUser = "91f20e0f-d9e9-4c61-87cb-7bf368633ad4";
 
   // Obtener la fecha actual en formato 'YYYY-MM-DD'
   const fechaBase = dayjs()
@@ -117,6 +122,7 @@ export const ModalTurns = ({ open, setOpen, horaInicio, horaFinal }) => {
       if (responseTurn && responseTurn.status == "200") {
         setOpen(false);
         setOpenAlert(true);
+ 
       } else {
         setOpen(false);
         setOpenAlertError(true);

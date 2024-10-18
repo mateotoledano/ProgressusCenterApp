@@ -1,7 +1,8 @@
 import React from "react";
 import { Alert } from "../components";
-import useStoreAlert from "../store/useStoreAlert";
+import { useStoreAlert } from "../store";
 export const LayoutLoginRegister = ({ children }) => {
+  // LAYOUT PARA PODER MOSTRAR ALERT AL REGISTRARSE(MANEJO DE STORE DEL ALERT)
   const alertValue = useStoreAlert((state) => state.alert);
 
   return (

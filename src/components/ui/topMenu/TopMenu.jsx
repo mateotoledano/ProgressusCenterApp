@@ -2,25 +2,27 @@ import React from "react";
 import { IoSearchSharp } from "react-icons/io5";
 import { IoMenuSharp } from "react-icons/io5";
 import { IoMdNotificationsOutline } from "react-icons/io";
-import useStoreMenu from "../../../store/useStoreMenu";
+import logo from "/progressus.png";
+import { useStoreMenu } from "../../../store";
 import { Link } from "react-router-dom";
 export const TopMenu = () => {
-  const navBar = useStoreMenu((state) => state.navBar);
+  //ABRIR EL NAVBAR
   const openNavBar = useStoreMenu((state) => state.openNavBar);
 
   return (
-    <div className="bg-customNavBar md:mb-5 p-3 md:py-3 shadow-xl sticky top-0 flex z-30 justify-between items-end md:items-center font-semibold text-lg text-white">
+    <div className="bg-customNavBar md:mb-5 p-2 md:py-2 shadow-xl sticky top-0 flex z-30 justify-between items-center md:items-center font-semibold text-lg text-white">
       <div className="flex justify-center items-center">
         <button>
           <IoMenuSharp
-            className="w-8 h-8 md:w-7 md:h-7"
+            className="w-8 h-7 md:w-7 md:h-7 cursor-pointer"
             onClick={openNavBar}
             size={22}
           ></IoMenuSharp>
         </button>
       </div>
-      <div className="flex justify-center md:justify-start md:ml-2 w-full items-start mb-1 md:items-center ">
-        <h2 className="text-xl md:text-2xl">Progressus</h2>
+      <div className="flex justify-center md:justify-start md:ml-2 w-full items-start md:items-center gap-2 mb-1 r ">
+        <img src={logo} className="w-[55px] md:w-[65px]" alt="" />
+        <h2 className="hidden md:block text-xl md:text-2xl">Progressus</h2>
       </div>
 
       <div className="flex justify-center items-center gap-3 md:gap-8 md:w-1/4 md:justify-end">

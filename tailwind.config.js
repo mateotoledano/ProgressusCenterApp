@@ -9,8 +9,8 @@ export default {
         customButtonGreen: "#5B8C00", 
         customNavBar : "#7CB305",
         customBlue : "#E6F7FF",
-        customTextBlue : "#1890FF"
-   
+        customTextBlue : "#1890FF",
+        customGray : "#F0F2F5"
       },
     },
   },

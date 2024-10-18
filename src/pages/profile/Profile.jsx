@@ -9,7 +9,7 @@ import { Stack } from "../../components";
 export const Profile = () => {
   return (
     <MainLayout>
-      <div className="bg-white md:mx-auto rounded shadow-xl w-full md:w-5/6 overflow-hidden mb-4">
+      <div className="animate-fade-in-down bg-white md:mx-auto rounded shadow-xl w-full md:w-11/12 overflow-hidden mb-4">
         <div className="h-[190px] bg-gradient-to-r ">
           <img
             src="https://wallpapercave.com/wp/wp8077707.jpg"

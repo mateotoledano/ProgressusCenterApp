@@ -5,16 +5,14 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import { IoIosArrowDown } from "react-icons/io";
 import { CgGym } from "react-icons/cg";
 import { IoSettingsOutline } from "react-icons/io5";
-import { Button } from "../../ui/buttons/Button";
 import { ModalTurns } from "../modalTurns/ModalTurns";
 // Recibiendo props en el componente
 export const Acordion = ({ title, content, onClick }) => {
   const [open, setOpen] = React.useState(false);
-  console.log(content, "content");
 
+  // MANEJO DE HORARIOS
   const [horaInicio, setHorario] = React.useState("");
   const [horaFinal, setHoraFinal] = React.useState("");
-
   const onChangeHora = (cont, index) => {
     setHorario(cont);
 

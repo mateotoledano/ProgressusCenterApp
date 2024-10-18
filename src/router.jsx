@@ -11,7 +11,7 @@ import {
   Stats,
   Notifications,
 } from "./pages";
-
+//RUTAS PROTEGIDAS
 export const router = createBrowserRouter([
   {
     path: "/",

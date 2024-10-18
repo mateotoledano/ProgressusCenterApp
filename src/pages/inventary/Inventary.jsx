@@ -4,7 +4,7 @@ import { MainLayout } from "../../layout/MainLayout";
 export const Inventary = () => {
   return (
     <MainLayout>
-      <div>aaaaa</div>
+      <div className="animate-fade-in-down">aaaaa</div>
     </MainLayout>
   );
 };

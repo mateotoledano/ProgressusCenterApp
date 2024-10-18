@@ -1,8 +1,7 @@
 import React, { useRef, useState } from "react";
-import { Button } from "../../ui/buttons/Button";
 
 export default function ConfirmCode({ code, setCode }) {
-  const inputRefs = useRef([]); // Array of refs for each input field
+  const inputRefs = useRef([]);
 
   const handleKeyDown = (e) => {
     if (
@@ -75,7 +74,6 @@ export default function ConfirmCode({ code, setCode }) {
               className="shadow-xs flex w-[55px] md:w-[64px] items-center justify-center rounded-lg border border-customTextBlue bg-white p-2 text-center text-2xl font-medium text-gray-5 outline-none sm:text-4xl dark:border-dark-3 dark:bg-white/5"
             />
           ))}
-          {/* Botón para enviar el código */}
         </div>
       </div>
     </section>
