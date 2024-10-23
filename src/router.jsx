@@ -10,6 +10,7 @@ import {
   Inventary,
   Stats,
   Notifications,
+  MyPlans,
 } from "./pages";
 //RUTAS PROTEGIDAS
 export const router = createBrowserRouter([
@@ -40,6 +41,14 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <Plans />,
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/plans/myplans",
+    element: (
+      <ProtectedRoute>
+        <MyPlans />,
       </ProtectedRoute>
     ),
   },

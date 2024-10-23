@@ -7,11 +7,12 @@ export * from "./ui/alert/Alert";
 export * from "./ui/errorAuth/ErrorAuth";
 export * from "./ui/stack/Stack";
 export * from "./ui/input/Checkbox";
-export * from "./ui/location/Location"
+export * from "./ui/location/Location";
+export * from "./ui/table/Table";
+export * from "./ui/select/Select"
 export * from "./auth/modal/ModalVerificationAuth";
 export * from "./auth/confirmCode/ConfirmCode";
 export * from "./turns/acordion/Acordion";
 export * from "./turns/modalTurns/ModalTurns";
 export * from "./protectedRoute/ProtectedRoute";
-export * from "./plans/pricingPrices/PricingPrices"
-
+export * from "./membership/pricingPrices/PricingPrices";

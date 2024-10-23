@@ -3,6 +3,7 @@ import { useStoreUser } from "../../store";
 
 export const ProtectedRoute = ({ children }) => {
   const { token } = useStoreUser();
+  const sessionToken = sessionStorage.getItem("token");
 
-  return token ? children : <Navigate to="/" />;
+  return token || sessionToken ? children : <Navigate to="/" />;
 };

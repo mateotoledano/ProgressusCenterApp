@@ -20,10 +20,13 @@ export const TopMenu = () => {
           ></IoMenuSharp>
         </button>
       </div>
-      <div className="flex justify-center md:justify-start md:ml-2 w-full items-start md:items-center gap-2 mb-1 r ">
+      <Link
+        to={"/home"}
+        className="flex justify-center md:justify-start md:ml-2 w-full items-start md:items-center gap-2 mb-1 r "
+      >
         <img src={logo} className="w-[55px] md:w-[65px]" alt="" />
-        <h2 className="hidden md:block text-xl md:text-2xl">Progressus</h2>
-      </div>
+        {/* <h2 className="hidden md:block text-xl md:text-2xl">Progressus</h2> */}
+      </Link>
 
       <div className="flex justify-center items-center gap-3 md:gap-8 md:w-1/4 md:justify-end">
         {/* Buscar en desktop */}

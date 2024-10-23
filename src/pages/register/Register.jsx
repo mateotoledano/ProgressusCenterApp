@@ -10,7 +10,11 @@ import {
 import { FiUser } from "react-icons/fi";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { MdErrorOutline, MdOutlineMail } from "react-icons/md";
-import { registerUser } from "../../service/auth/use-register";
+import { BsTelephone } from "react-icons/bs";
+import {
+  registerUser,
+  registerUserWhitData,
+} from "../../service/auth/use-register";
 import { useAuthValidation } from "../../service/auth/use-authValidation";
 export const Register = () => {
   // MANEJO DE ESTADO DE ERRORES QUE VIENEN DEL BACK
@@ -25,6 +29,7 @@ export const Register = () => {
     email: "",
     password: "",
     repassword: "",
+    tel: "",
   });
 
   const [errors, setErrors] = useState({
@@ -33,6 +38,7 @@ export const Register = () => {
     email: "",
     password: "",
     repassword: "",
+    tel: "",
     check: "",
   });
   const handleChange = (e) => {
@@ -87,6 +93,9 @@ export const Register = () => {
         formErrors.repassword = "Las contraseñas no coinciden.";
       }
     }
+    if (!formRegister.tel) {
+      formErrors.tel = "El campo Telefono es obligatorio.";
+    }
     if (!check) {
       formErrors.checkbox = "Debe aceptar los términos y servicios.";
     }
@@ -100,10 +109,15 @@ export const Register = () => {
         formRegister.email,
         formRegister.password
       );
-      console.log(user, "userrrrrr");
-
+      const userData = await registerUserWhitData(
+        formRegister.email,
+        formRegister.name,
+        formRegister.lastname,
+        formRegister.tel
+      );
+      console.log(userData, "userrrrrr data");
       // ENVIAR EMAIL DE VERIFICACION
-      if (user.status == "200") {
+      if (user.status == "200" && userData.status == "200") {
         setOpen(true);
         useAuthValidation(formRegister.email);
       }
@@ -157,7 +171,7 @@ export const Register = () => {
       className="w-3/4 mb-6 animate-fade-in-right flex flex-col justify-center items-center md:mb-2 mt-4 md:mt-2 md:gap-3  md:flex-row md:flex-wrap  md:justify-center "
     >
       {/* Inputs */}
-      <div className="w-full flex justify-center flex-col items-center md:w-1/3 md:mx-8 ">
+      <div className="w-full flex justify-center flex-col items-center md:w-1/3 md:mx-12 ">
         <label
           className="text-start  w-full text-lg font-normal flex justify-start items-center "
           htmlFor=""
@@ -176,7 +190,7 @@ export const Register = () => {
         ></CustomInput>
         {errors.name && <ErrorAuth messageError={errors.name}></ErrorAuth>}
       </div>
-      <div className="w-full flex justify-center flex-col items-center md:w-1/3  md:mx-8">
+      <div className="w-full flex justify-center flex-col items-center md:w-1/3  md:mx-12">
         <label
           className="text-start  w-full text-lg font-normal flex justify-start items-center "
           htmlFor=""
@@ -196,7 +210,7 @@ export const Register = () => {
           <ErrorAuth messageError={errors.lastname}></ErrorAuth>
         )}
       </div>
-      <div className="w-full flex justify-center flex-col items-center md:w-1/3  md:mx-8">
+      <div className="w-full flex justify-center flex-col items-center md:w-1/3  md:mx-12">
         <label
           className="text-start  w-full text-lg font-normal flex justify-start items-center "
           htmlFor=""
@@ -220,7 +234,7 @@ export const Register = () => {
           </span>
         )}
       </div>
-      <div className="w-full flex justify-center flex-col items-center md:w-1/3  md:mx-8">
+      <div className="w-full flex justify-center flex-col items-center md:w-1/3  md:mx-12">
         <label
           className="text-start  w-full text-lg font-normal flex justify-start items-center "
           htmlFor=""
@@ -247,7 +261,7 @@ export const Register = () => {
             </span>
           ))}
       </div>
-      <div className="w-full flex justify-center flex-col items-center md:w-1/3  md:mx-8">
+      <div className="w-full flex justify-center flex-col items-center md:w-1/3  md:mx-12">
         <label
           className="text-start  w-full text-lg font-normal flex justify-start items-center "
           htmlFor=""
@@ -267,11 +281,28 @@ export const Register = () => {
           <ErrorAuth messageError={errors.repassword}></ErrorAuth>
         )}
       </div>
-
-      <div className="hidden  md:flex w-1/3 flex-wrap justify-start pt-12   md:mx-8">
+      <div className="w-full flex justify-center flex-col items-center md:w-1/3  md:mx-12">
+        <label
+          className="text-start  w-full text-lg font-normal flex justify-start items-center "
+          htmlFor=""
+        >
+          Telefono
+        </label>
+        <CustomInput
+          iconColor={"text-customTextGreen"}
+          onChange={handleChange}
+          className="my-1 "
+          placeholder="Repita su contraseña"
+          type="text"
+          name="tel"
+          Icon={BsTelephone}
+        ></CustomInput>
+        {errors.tel && <ErrorAuth messageError={errors.tel}></ErrorAuth>}
+      </div>
+      <div className="hidden  md:flex w-full flex-wrap justify-center pt-0  md:mx-12">
         <div className="flex gap-2  items-center  ">
           <Checkbox check={check} onChange={handleCheck}></Checkbox>
-          <span>
+          <span className="text-sm">
             Acepto los{" "}
             <a href="" className="underline text-customTextGreen">
               terminos y servicios
@@ -279,12 +310,15 @@ export const Register = () => {
           </span>
         </div>
         {errors.checkbox && (
-          <ErrorAuth messageError={errors.checkbox}></ErrorAuth>
+          <ErrorAuth
+            className="justify-center"
+            messageError={errors.checkbox}
+          ></ErrorAuth>
         )}
       </div>
 
       {/* Checkbox */}
-      <div className="w-full flex justify-center flex-col items-center md:w-2/3 md:justify-start  md:mx-8 ">
+      <div className="w-full flex justify-center flex-col items-center md:w-2/3 md:justify-start  md:mx-12 ">
         <div className="flex gap-2 justify-start  w-full items-center md:justify-start md:w-full md:hidden">
           <Checkbox check={check} onChange={handleCheck}></Checkbox>
           <span>

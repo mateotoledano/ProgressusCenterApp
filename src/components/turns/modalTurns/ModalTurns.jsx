@@ -59,7 +59,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: window.innerWidth < 700 ? "76%" : 800,
+  width: window.innerWidth < 700 ? "78%" : 800,
   maxWidth: 400,
   bgcolor: "#E6F7FF",
   border: "1px solid #1890FF",

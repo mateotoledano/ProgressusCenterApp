@@ -1,10 +1,15 @@
 import React, { useState } from "react";
-import { MainLayout } from "../../layout/MainLayout";
-import { IoSearchSharp } from "react-icons/io5";
+import { MainLayout } from "../../../layout/MainLayout";
+import { Title, Location, BasicTable, Select } from "../../../components";
 
-import { GrPlan } from "react-icons/gr";
-import { Title, Location, CustomInput, BasicTable } from "../../components";
-import { Link } from "react-router-dom";
+const columns = [
+  "Grupo Muscular",
+  "Ejercicio",
+  "Peso",
+  "Series",
+  "Repeticiones",
+  "Ver",
+];
 const ejercicios = [
   {
     grupoMuscular: "Pecho",
@@ -13,6 +18,7 @@ const ejercicios = [
     series: 4,
     repeticiones: 10,
     link: "https://www.youtube.com/watch?v=gRVjAtPip0Y",
+    dia: "Lunes",
   },
   {
     grupoMuscular: "Pecho",
@@ -21,6 +27,7 @@ const ejercicios = [
     series: 4,
     repeticiones: 12,
     link: "https://www.youtube.com/watch?v=eozdVDA78K0",
+    dia: "Lunes",
   },
   {
     grupoMuscular: "Pecho",
@@ -29,6 +36,7 @@ const ejercicios = [
     series: 4,
     repeticiones: 10,
     link: "https://www.youtube.com/watch?v=DbFgADa2PL8",
+    dia: "Lunes",
   },
   {
     grupoMuscular: "Pecho",
@@ -37,6 +45,7 @@ const ejercicios = [
     series: 3,
     repeticiones: 12,
     link: "https://www.youtube.com/watch?v=2z8JmcrW-As",
+    dia: "Lunes",
   },
   {
     grupoMuscular: "Pecho",
@@ -45,8 +54,8 @@ const ejercicios = [
     series: 4,
     repeticiones: 10,
     link: "https://www.youtube.com/watch?v=1bEv8G0u3bQ",
+    dia: "Lunes",
   },
-
   {
     grupoMuscular: "Espalda",
     ejercicio: "Dominadas",
@@ -54,6 +63,7 @@ const ejercicios = [
     series: 4,
     repeticiones: 8,
     link: "https://www.youtube.com/watch?v=IS9o9E7jf4M",
+    dia: "Martes",
   },
   {
     grupoMuscular: "Espalda",
@@ -62,6 +72,7 @@ const ejercicios = [
     series: 4,
     repeticiones: 10,
     link: "https://www.youtube.com/watch?v=9efgcAjQe7E",
+    dia: "Martes",
   },
   {
     grupoMuscular: "Espalda",
@@ -70,6 +81,7 @@ const ejercicios = [
     series: 4,
     repeticiones: 12,
     link: "https://www.youtube.com/watch?v=xWggTb45brM",
+    dia: "Martes",
   },
   {
     grupoMuscular: "Espalda",
@@ -78,6 +90,7 @@ const ejercicios = [
     series: 4,
     repeticiones: 10,
     link: "https://www.youtube.com/watch?v=O5hVJf2BRw4",
+    dia: "Martes",
   },
   {
     grupoMuscular: "Espalda",
@@ -86,8 +99,8 @@ const ejercicios = [
     series: 4,
     repeticiones: 12,
     link: "https://www.youtube.com/watch?v=1pJBeGZ5Q14",
+    dia: "Martes",
   },
-
   {
     grupoMuscular: "Piernas",
     ejercicio: "Sentadillas",
@@ -95,6 +108,7 @@ const ejercicios = [
     series: 4,
     repeticiones: 12,
     link: "https://www.youtube.com/watch?v=1oed-UmAxFs",
+    dia: "Miércoles",
   },
   {
     grupoMuscular: "Piernas",
@@ -103,6 +117,7 @@ const ejercicios = [
     series: 4,
     repeticiones: 10,
     link: "https://www.youtube.com/watch?v=IZxyjW7MPJQ",
+    dia: "Miércoles",
   },
   {
     grupoMuscular: "Piernas",
@@ -111,6 +126,7 @@ const ejercicios = [
     series: 4,
     repeticiones: 8,
     link: "https://www.youtube.com/watch?v=ytGaGIn3SjE",
+    dia: "Miércoles",
   },
   {
     grupoMuscular: "Piernas",
@@ -119,6 +135,7 @@ const ejercicios = [
     series: 3,
     repeticiones: 10,
     link: "https://www.youtube.com/watch?v=D7KaRcUTQeE",
+    dia: "Miércoles",
   },
   {
     grupoMuscular: "Piernas",
@@ -127,8 +144,8 @@ const ejercicios = [
     series: 4,
     repeticiones: 12,
     link: "https://www.youtube.com/watch?v=yRdv3fSnhoY",
+    dia: "Miércoles",
   },
-
   {
     grupoMuscular: "Bíceps",
     ejercicio: "Curl con barra",
@@ -136,6 +153,7 @@ const ejercicios = [
     series: 3,
     repeticiones: 12,
     link: "https://www.youtube.com/watch?v=soxrZlIl35U",
+    dia: "Jueves",
   },
   {
     grupoMuscular: "Bíceps",
@@ -144,6 +162,7 @@ const ejercicios = [
     series: 4,
     repeticiones: 10,
     link: "https://www.youtube.com/watch?v=zC3nLlEvin4",
+    dia: "Jueves",
   },
   {
     grupoMuscular: "Bíceps",
@@ -152,6 +171,7 @@ const ejercicios = [
     series: 4,
     repeticiones: 12,
     link: "https://www.youtube.com/watch?v=ykJmrZ5v0Oo",
+    dia: "Jueves",
   },
   {
     grupoMuscular: "Bíceps",
@@ -160,6 +180,7 @@ const ejercicios = [
     series: 3,
     repeticiones: 12,
     link: "https://www.youtube.com/watch?v=F8dERy4GIyw",
+    dia: "Jueves",
   },
   {
     grupoMuscular: "Bíceps",
@@ -168,8 +189,8 @@ const ejercicios = [
     series: 4,
     repeticiones: 10,
     link: "https://www.youtube.com/watch?v=oEGZ2gF-36w",
+    dia: "Jueves",
   },
-
   {
     grupoMuscular: "Tríceps",
     ejercicio: "Fondos en paralelas",
@@ -177,6 +198,7 @@ const ejercicios = [
     series: 4,
     repeticiones: 10,
     link: "https://www.youtube.com/watch?v=2z8JmcrW-As",
+    dia: "Viernes",
   },
   {
     grupoMuscular: "Tríceps",
@@ -185,6 +207,7 @@ const ejercicios = [
     series: 4,
     repeticiones: 10,
     link: "https://www.youtube.com/watch?v=d_KZxkY_0cM",
+    dia: "Viernes",
   },
   {
     grupoMuscular: "Tríceps",
@@ -193,6 +216,7 @@ const ejercicios = [
     series: 4,
     repeticiones: 12,
     link: "https://www.youtube.com/watch?v=vB5OHsJ3EME",
+    dia: "Viernes",
   },
   {
     grupoMuscular: "Tríceps",
@@ -201,6 +225,7 @@ const ejercicios = [
     series: 4,
     repeticiones: 10,
     link: "https://www.youtube.com/watch?v=0AUGkch3tzc",
+    dia: "Viernes",
   },
   {
     grupoMuscular: "Tríceps",
@@ -209,8 +234,8 @@ const ejercicios = [
     series: 4,
     repeticiones: 12,
     link: "https://www.youtube.com/watch?v=SeIJmciN8mo",
+    dia: "Viernes",
   },
-
   {
     grupoMuscular: "Hombros",
     ejercicio: "Press militar",
@@ -218,6 +243,7 @@ const ejercicios = [
     series: 4,
     repeticiones: 10,
     link: "https://www.youtube.com/watch?v=B-aVuyhvLHU",
+    dia: "Sábado",
   },
   {
     grupoMuscular: "Hombros",
@@ -226,6 +252,7 @@ const ejercicios = [
     series: 4,
     repeticiones: 12,
     link: "https://www.youtube.com/watch?v=3VcKaXpzqRo",
+    dia: "Sábado",
   },
   {
     grupoMuscular: "Hombros",
@@ -233,126 +260,91 @@ const ejercicios = [
     peso: "10kg",
     series: 4,
     repeticiones: 12,
-    link: "https://www.youtube.com/watch?v=SiM5Af6ScjY",
+    link: "https://www.youtube.com/watch?v=6yMdALZ9lz4",
+    dia: "Sábado",
+  },
+  {
+    grupoMuscular: "Hombros",
+    ejercicio: "Encogimientos",
+    peso: "60kg",
+    series: 4,
+    repeticiones: 12,
+    link: "https://www.youtube.com/watch?v=IAgkVKyRhB8",
+    dia: "Sábado",
   },
   {
     grupoMuscular: "Hombros",
     ejercicio: "Press Arnold",
-    peso: "15kg",
+    peso: "20kg",
     series: 4,
     repeticiones: 10,
-    link: "https://www.youtube.com/watch?v=v-7v9zOI72g",
+    link: "https://www.youtube.com/watch?v=6Z15_WdXmVw",
+    dia: "Sábado",
   },
   {
-    grupoMuscular: "Hombros",
-    ejercicio: "Remo al mentón",
-    peso: "30kg",
+    grupoMuscular: "Piernas",
+    ejercicio: "Peso muerto",
+    peso: "80kg",
     series: 4,
-    repeticiones: 10,
-    link: "https://www.youtube.com/watch?v=8zI5EoiYiZk",
-  },
-
-  {
-    grupoMuscular: "Core",
-    ejercicio: "Plancha",
-    peso: "Peso corporal",
-    series: 4,
-    repeticiones: "30s",
-    link: "https://www.youtube.com/watch?v=TvxNkmjdhMM",
+    repeticiones: 8,
+    link: "https://www.youtube.com/watch?v=ytGaGIn3SjE",
+    dia: "Sabado",
   },
   {
-    grupoMuscular: "Core",
-    ejercicio: "Crunch abdominal",
-    peso: "Peso corporal",
-    series: 4,
-    repeticiones: 15,
-    link: "https://www.youtube.com/watch?v=5ER5OFKxz4E",
-  },
-  {
-    grupoMuscular: "Core",
-    ejercicio: "Elevación de piernas",
-    peso: "Peso corporal",
-    series: 4,
-    repeticiones: 12,
-    link: "https://www.youtube.com/watch?v=JB2oyawG9KI",
-  },
-  {
-    grupoMuscular: "Core",
-    ejercicio: "Bicicleta",
-    peso: "Peso corporal",
+    grupoMuscular: "Piernas",
+    ejercicio: "Zancadas",
+    peso: "20kg",
     series: 3,
-    repeticiones: 20,
-    link: "https://www.youtube.com/watch?v=9FGilxCbdz8",
+    repeticiones: 10,
+    link: "https://www.youtube.com/watch?v=D7KaRcUTQeE",
+    dia: "Sabado",
   },
   {
-    grupoMuscular: "Core",
-    ejercicio: "Russian twist",
-    peso: "5kg",
+    grupoMuscular: "Piernas",
+    ejercicio: "Peso muerto",
+    peso: "80kg",
     series: 4,
-    repeticiones: 20,
-    link: "https://www.youtube.com/watch?v=wkD8rjkodUI",
+    repeticiones: 8,
+    link: "https://www.youtube.com/watch?v=ytGaGIn3SjE",
+    dia: "Sabado",
+  },
+  {
+    grupoMuscular: "Piernas",
+    ejercicio: "Zancadas",
+    peso: "20kg",
+    series: 3,
+    repeticiones: 10,
+    link: "https://www.youtube.com/watch?v=D7KaRcUTQeE",
+    dia: "Sabado",
   },
 ];
-const columns = [
-  "Grupo Muscular",
-  "Ejercicio",
-  "Peso",
-  "Series",
-  "Repeticiones",
-  "Ver",
-  "Agregar",
-];
-export const Plans = () => {
-  const [searchPlan, setSearchPlan] = useState("");
-  const handleChange = (e) => {
-    setSearchPlan(e.target.value);
-  };
-  console.log(searchPlan, "search");
+
+export const MyPlans = () => {
+  const [selectedDay, setSelectedDay] = useState("Lunes");
+  console.log(selectedDay, "selected day");
 
   return (
     <MainLayout>
       <section className="animate-fade-in-down md:mx-auto bg-white rounded shadow-xl w-full md:w-11/12  overflow-hidden mb-4 flex flex-col ">
-        <div className="b p-3 ">
-          <Location route={"Planes"} subroute={"Crear Plan"}></Location>
-          <div className="flex flex-col md:flex-row md:justify-between md:items-center">
-            <Title title={"Crear Plan de Entrenamiento"}></Title>
-            <Link to={"/plans/myplans"} className="flex  gap-2 items-center">
-              <span className="text-sm md:text-lg text-customTextGreen underline">
-                Mis planes
-              </span>
-              <GrPlan className="text-customNavBar text-sm md:text-2xl"></GrPlan>
-            </Link>
-          </div>
+        <div className="p-3">
+          <Location route={"Planes"} subroute={"Mis Planes"}></Location>
+          <Title title={"Mis Planes"}></Title>
         </div>
         {/* DIVISION GRAY */}
         <div className="w-full h-2 md:h-4 bg-customGray"></div>
-        {/* BUSCAR EJERCICIO */}
-        <div className="p-3 mt-0  flex flex-col md:flex-row md:justify-between  md:items-center">
-          <div className="flex justify-start items-center gap-2">
-            <h2 className="md:text-2xl">{`Plan de Mariano`}</h2>
-
-            <GrPlan className="text-customNavBar text-sm md:text-2xl"></GrPlan>
-          </div>
-          <div className="flex justify-center items-center gap-1 mt-3 md:w-1/3">
-            <CustomInput
-              value={searchPlan}
-              onChange={handleChange}
-              placeholder="Buscar ejercicio..."
-              type="text"
-            ></CustomInput>
-            <button className="bg-customButtonGreen p-2 md:p-2  rounded">
-              <IoSearchSharp className="text-white  text-lg md:text-2xl font-semibold"></IoSearchSharp>{" "}
-            </button>
-          </div>
+        <div className="w-full flex md:flex-row flex-col items-start md:gap-0 gap-2 md:justify-between md:items-center p-3 mb-3">
+          <Title title={`Plan de Mariano`}></Title>
+          <Select
+            selectedDay={selectedDay}
+            setSelectedDay={setSelectedDay}
+          ></Select>
         </div>
-        {/* TABLA DE EJERCICIOS */}
-        <div className="mt-3">
-          <BasicTable
-            arreglo={ejercicios}
-            arregloColumns={columns}
-            action="add"
-          ></BasicTable>
-        </div>
+        <BasicTable
+          selectedDay={selectedDay}
+          arregloColumns={columns}
+          arreglo={ejercicios}
+          action={"delete"}
+        ></BasicTable>
       </section>
     </MainLayout>
   );

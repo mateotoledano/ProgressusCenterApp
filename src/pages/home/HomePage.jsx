@@ -24,7 +24,7 @@ export const HomePage = () => {
           ></Title>
         </div>
         <div className="bg-white mx-3 md:m-0 md:mx-8 p-2 rounded shadow-sm flex justify-center items-center ">
-          <img src={logo} width={500} alt="Progressus" />
+          <img src={logo} alt="Progressus" />
         </div>
 
         <div className="bg-white mx-3 md:m-0 md:mx-8 p-2 rounded shadow-sm gap-1  flex flex-col md:flex-row justify-center items-center ">

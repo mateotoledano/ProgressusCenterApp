@@ -115,7 +115,7 @@ export const NavBar = () => {
             )}
           >
             {item.icon}
-            <span className="ml-3 text-lg">{item.title}</span>
+            <span className="ml-3 text-lg md:text-xl">{item.title}</span>
           </div>
         ))}
       </nav>
