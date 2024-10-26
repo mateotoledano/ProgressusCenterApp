@@ -13,8 +13,8 @@ function App() {
   ///////////////////////
   return (
     <LayoutLoginRegister>
-      <div className="animate-fade-in-down w-full min-h-screen items-center  justify-center p-4 bg-customGray md:flex  md:flex-col md:items-start md:justify-start ">
-        <div className="flex flex-col gap-4 items-center justify-center  md:mt-0 md:w-full ">
+      <div className="animate-fade-in-down w-full min-h-screen  items-center  justify-center p-4 bg-customGray md:flex  md:flex-col md:items-start md:justify-start ">
+        <div className="flex flex-col gap-4 mt-24 items-center justify-center  md:mt-0 md:w-full ">
           <img className="w-2/5 md:w-[195px]" src={logoProgressus} alt="" />
           <div className="flex justify-center gap-12 w-full md:gap-24">
             <span

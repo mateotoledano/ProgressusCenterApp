@@ -10,6 +10,7 @@ export * from "./ui/input/Checkbox";
 export * from "./ui/location/Location";
 export * from "./ui/table/Table";
 export * from "./ui/select/Select"
+export * from "./ui/footer/Footer"
 export * from "./auth/modal/ModalVerificationAuth";
 export * from "./auth/confirmCode/ConfirmCode";
 export * from "./turns/acordion/Acordion";

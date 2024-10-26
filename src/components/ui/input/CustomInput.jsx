@@ -28,7 +28,7 @@ export const CustomInput = ({
 
   return (
     <div
-      className={`flex my-2 bg-white items-center border border-gray-400 rounded-sm w-full ${className}`}
+      className={`flex my-2 bg-white items-center border border-gray-300 rounded-sm w-full ${className}`}
     >
       {Icon && <span className="p-1">{<Icon className={iconColor} />}</span>}
 

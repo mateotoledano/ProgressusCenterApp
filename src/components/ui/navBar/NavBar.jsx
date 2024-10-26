@@ -16,12 +16,17 @@ import { useStoreMenu, useStoreUser } from "../../../store";
 export const NavBar = () => {
   // CERRAR SESION
   const closeSession = useStoreUser((state) => state.clearToken);
+
   const location = useLocation();
   const path = location.pathname;
   const menu = useStoreMenu((state) => state.navBar);
   const close = useStoreMenu((state) => state.closeNavBar);
   const navigate = useNavigate();
+  const handleLogout = () => {
+    console.log("holaaaa");
 
+    closeSession();
+  };
   const routeNavigation = [
     {
       title: "Inicio",
@@ -98,7 +103,7 @@ export const NavBar = () => {
           <div className="cursor-pointer">
             <IoSearchOutline size={26} />
           </div>
-          <div onClick={closeSession} className="cursor-pointer ">
+          <div onClick={handleLogout} className="cursor-pointer ">
             <BiLogOut size={26} />
           </div>
         </div>
@@ -107,7 +112,7 @@ export const NavBar = () => {
             key={item.link}
             onClick={() => handleLinkClick(item.link)}
             className={clsx(
-              "flex items-center mt-7 p-1  rounded-md hover:bg-gray-100 transition-all cursor-pointer",
+              "flex items-center mt-7 p-1 trans-hover rounded-md hover:bg-gray-100 transition-all cursor-pointer",
               {
                 "bg-customBlue text-customTextBlue font-semibold":
                   path === item.link,

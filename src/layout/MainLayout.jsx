@@ -1,14 +1,20 @@
 import React from "react";
-import { NavBar, TopMenu } from "../components";
+import { Footer, NavBar, TopMenu } from "../components";
 import { useStoreAlert } from "../store";
+
 export const MainLayout = ({ children }) => {
   const prueba = useStoreAlert((state) => state.alert);
-  return (
-    <div className="bg-customGray">
-      <TopMenu></TopMenu>
-      <NavBar></NavBar>
 
-      {children}
-    </div>
+  return (
+    <body className="bg-customGray ">
+      <TopMenu />
+      <NavBar />
+
+      {/* Contenedor del contenido principal con flex-grow para ocupar el espacio restante */}
+      <main className="flex-1 ">{children}</main>
+
+      {/* Footer siempre al fondo, sin margen adicional */}
+      <Footer />
+    </body>
   );
 };

@@ -1,6 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-*{
-  margin:0 ; 
+* {
+  margin: 0;
+}
+.shadow-top {
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+}
+#root {
+  background-color: #e4f5d0;
+}
+/* Transitions */
+.trans-hover {
+  transition: transform 0.1s ease;
+}
+
+.trans-hover:hover {
+  transform: scale(1.02);
+  opacity: 0.8;
 }

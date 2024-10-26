@@ -11,8 +11,9 @@ export const Login = () => {
   const [errorLogin, setErrorLogin] = useState(false);
   const closeAlert = useStoreAlert((state) => state.closeAlert);
   // TOKEN DEL USER
-  const token = useStoreUser((state) => state.token);
-  const storeToken = useStoreUser((state) => state.setToken);
+  const localToken = localStorage.getItem("auth-token");
+  const storeLocalToken = useStoreUser((state) => state.setToken);
+
   // RECORDAR USUARIO
   const remember = useStoreUser((state) => state.remember);
   const setRemember = useStoreUser((state) => state.setRemember);
@@ -31,10 +32,7 @@ export const Login = () => {
 
   useEffect(() => {
     // VERIFICAR SI EL USUARIO ES RECORDADO O NO
-    if (!remember) {
-      storeToken(null);
-    }
-    if (remember && token != null) {
+    if (localToken) {
       navigate("/home");
     }
   }, []);
@@ -58,6 +56,7 @@ export const Login = () => {
     // CAMBIAR EL RECORDAR EN EL STORE
     setRemember(isChecked);
   };
+  console.log(remember, "esto es el recordar");
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -80,7 +79,7 @@ export const Login = () => {
 
       if (enviarUser.status == "200") {
         if (enviarUser.data.accessToken) {
-          storeToken(enviarUser.data);
+          storeLocalToken(enviarUser.data);
         }
         closeAlert();
         navigate("/home");
