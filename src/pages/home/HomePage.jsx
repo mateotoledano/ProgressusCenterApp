@@ -33,8 +33,8 @@ export const HomePage = () => {
             className={"p-4 text-center w-full justify-center md:justify-start"}
           ></Title>
         </div>
-        <div className="bg-white mx-3 md:m-0 md:mx-8 p-2 rounded shadow-sm flex justify-center items-center ">
-          <img src={gif} className="w-full" alt="Progressus" />
+        <div className=" mx-3 md:m-0 md:mx-8 p-2 rounded shadow-sm flex justify-center items-center ">
+          <img src={gif} className="w-3/5" alt="Progressus" />
         </div>
 
         <div className="bg-white mx-3 md:m-0 md:mx-8 p-2 rounded shadow-sm gap-1  flex flex-col md:flex-row justify-center items-center ">
