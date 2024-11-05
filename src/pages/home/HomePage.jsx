@@ -1,19 +1,29 @@
 import React, { useEffect } from "react";
 import { MainLayout } from "../../layout/MainLayout";
-import { useStoreUser } from "../../store";
-import { useStoreMenu } from "../../store";
-import logo from "/progressus.png";
+import { useStoreUser, useStoreMenu, useStoreUserData } from "../../store";
+import { useDataUser } from "../../service/auth/use-dataUser";
+import gif from "/Progressus_G5.gif";
 import { Button, Title, Footer } from "../../components";
 import { Link } from "react-router-dom";
 export const HomePage = () => {
-  // const time = useStoreTime((state) => state.time);
-  // const date = useStoreTime((state) => state.time);
-  const token = useStoreUser((state) => state.token);
-  const cerrarNavbar = useStoreMenu((state) => state.closeNavBar);
-  console.log(token, "usuario del store");
-  const nameUser = "Mariano";
-  const dateTurn = "18 de octubre a las 15 hs";
+  const email = useStoreUserData((state) => state.email);
+  const dataUser = useStoreUserData((state) => state.userData);
+  const setAllDataUser = useStoreUserData((state) => state.setUserData);
 
+  const nameUser = dataUser.nombre;
+  const dateTurn = "18 de octubre a las 15 hs";
+  useEffect(() => {
+    try {
+      const dataUser = async () => {
+        const data = await useDataUser(email);
+
+        setAllDataUser(data.data);
+      };
+      dataUser();
+    } catch (e) {
+      console.log(e, "errores");
+    }
+  }, []);
   return (
     <MainLayout>
       <div className="animate-fade-in-down w-full   flex flex-col justify-start gap-1">
@@ -24,7 +34,7 @@ export const HomePage = () => {
           ></Title>
         </div>
         <div className="bg-white mx-3 md:m-0 md:mx-8 p-2 rounded shadow-sm flex justify-center items-center ">
-          <img src={logo} alt="Progressus" />
+          <img src={gif} className="w-full" alt="Progressus" />
         </div>
 
         <div className="bg-white mx-3 md:m-0 md:mx-8 p-2 rounded shadow-sm gap-1  flex flex-col md:flex-row justify-center items-center ">

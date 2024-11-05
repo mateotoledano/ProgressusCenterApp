@@ -2,13 +2,15 @@ import React from "react";
 import { IoSearchSharp } from "react-icons/io5";
 import { IoMenuSharp } from "react-icons/io5";
 import { IoMdNotificationsOutline } from "react-icons/io";
+import { useStoreUserData } from "../../../store";
 import logo from "/progressus.png";
 import { useStoreMenu } from "../../../store";
 import { Link } from "react-router-dom";
 export const TopMenu = () => {
   //ABRIR EL NAVBAR
   const openNavBar = useStoreMenu((state) => state.openNavBar);
-
+  const dataUser = useStoreUserData((state) => state.userData);
+  const firstName = dataUser.nombre ? dataUser.nombre.split(" ")[0] : "";
   return (
     <div className="bg-customNavBar md:mb-5 p-2 md:py-2 shadow-xl sticky top-0 flex z-30 justify-between items-center md:items-center font-semibold text-lg text-white">
       <div className="flex justify-center items-center">
@@ -51,7 +53,9 @@ export const TopMenu = () => {
             src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8YXZhdGFyfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
             alt="Rounded avatar"
           />
-          <span className="hidden lg:block text-lg font-normal ">Mariano</span>
+          <span className="hidden lg:block text-lg font-semibold ">
+            {firstName}
+          </span>
         </Link>
       </div>
     </div>

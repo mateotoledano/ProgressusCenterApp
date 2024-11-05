@@ -335,6 +335,7 @@ export const Plans = () => {
           </div>
           <div className="flex justify-center items-center gap-1 mt-3 md:w-1/3">
             <CustomInput
+            className="focus:ring-customButtonGreen focus:border-customButtonGreen "
               value={searchPlan}
               onChange={handleChange}
               placeholder="Buscar ejercicio..."

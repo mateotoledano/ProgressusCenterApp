@@ -11,7 +11,7 @@ export const MemberShip = () => {
         </div>
         {/* DIVISION GRAY */}
         <div className="w-full h-2 md:h-4 bg-customGray"></div>
-        <div className="p-2 mt-2">
+        <div className="p-5 mt-2">
           <PricingPrices></PricingPrices>
         </div>
       </section>

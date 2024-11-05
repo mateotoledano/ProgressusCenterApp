@@ -117,7 +117,7 @@ export const BasicTable = ({
                 {action == "add" && (
                   <TableCell sx={{ fontSize: "16px" }} align="center">
                     <button>
-                      <MdAddCircleOutline className="text-customButtonGreen text-2xl"></MdAddCircleOutline>
+                      <MdAddCircleOutline  className="text-customNavBar hover:text-customButtonGreen text-2xl"></MdAddCircleOutline>
                     </button>
                   </TableCell>
                 )}
@@ -146,25 +146,22 @@ export const BasicTable = ({
       />
 
       {/* Modal para mostrar el video */}
-      <Dialog open={openVideo} onClose={handleClose} fullWidth maxWidth="md">
+      <Dialog open={openVideo} onClose={handleClose} fullWidth maxWidth="lg">
         <div className="bg-customGreenLigth">
-          <DialogTitle
-            sx={{ display: "flex", alignItems: "center", gap: "5px" }}
-          >
-            <CgGym className="text-2xl md:text-3xl"></CgGym> {nameExercise}
-          </DialogTitle>
+          <div className="flex items-center gap-3 p-2 md:px-4 md:py-3">
+            <CgGym className="text-2xl md:text-3xl"></CgGym>
+            <h2 className="text-lg md:text-xl font-semibold">{nameExercise} </h2>
+          </div>
 
-          <DialogContent>
-            <iframe
-              width="100%"
-              className="md:h-[500px] h-72"
-              src={videoUrl.replace("watch?v=", "embed/")}
-              title="YouTube Video"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
-          </DialogContent>
+          <iframe
+            width="100%"
+            className="md:h-[500px] h-72 px-3 md:pb-4 pb-3 md:px-4 "
+            src={videoUrl.replace("watch?v=", "embed/")}
+            title="YouTube Video"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
         </div>
       </Dialog>
     </Paper>

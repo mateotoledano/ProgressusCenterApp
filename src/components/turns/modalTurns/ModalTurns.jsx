@@ -81,7 +81,7 @@ export const ModalTurns = ({ open, setOpen, horaInicio, horaFinal }) => {
   const fechaArgentina = dayjs()
     .tz("America/Argentina/Buenos_Aires")
     .toISOString();
-  const idUser = "91f20e0f-d9e9-4c61-87cb-7bf368633ad4";
+  const idUser = "23347ad5-e2f9-4a7b-9c0c-cd535a967c14";
 
   // Obtener la fecha actual en formato 'YYYY-MM-DD'
   const fechaBase = dayjs()

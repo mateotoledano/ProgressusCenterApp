@@ -14,7 +14,7 @@ export const Select = ({ selectedDay, setSelectedDay }) => {
         id="countries"
         value={selectedDay}
         onChange={handleChange}
-        className="w-full md:w-2/3 bg-gray-50 border border-gray-400 outline-none text-gray-900 text-sm rounded-lg focus:ring-customButtonGreen focus:border-customButtonGreen block p-2.5"
+        className="w-full md:w-2/3  border border-gray-200 outline-none text-gray-900 text-sm rounded-sm focus:ring-customButtonGreen focus:border-customButtonGreen block p-2.5"
       >
         <option value="Lunes">Lunes</option>
         <option value="Martes">Martes</option>

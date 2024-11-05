@@ -11,22 +11,25 @@ import { IoStatsChartOutline } from "react-icons/io5";
 import { GrPlan } from "react-icons/gr";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import clsx from "clsx";
-import { useStoreMenu, useStoreUser } from "../../../store";
+import { useStoreMenu, useStoreUser, useStoreUserData } from "../../../store";
 
 export const NavBar = () => {
   // CERRAR SESION
   const closeSession = useStoreUser((state) => state.clearToken);
-
+  const clearUserData = useStoreUserData((state) => state.clearUserData);
   const location = useLocation();
   const path = location.pathname;
+  console.log(path, "aprthh");
+
   const menu = useStoreMenu((state) => state.navBar);
   const close = useStoreMenu((state) => state.closeNavBar);
   const navigate = useNavigate();
   const handleLogout = () => {
-    console.log("holaaaa");
-
     closeSession();
+    clearUserData();
+    navigate("/");
   };
+
   const routeNavigation = [
     {
       title: "Inicio",
@@ -80,7 +83,7 @@ export const NavBar = () => {
   return (
     <div className="">
       {menu && (
-        <div className="fixed top-0 left-0 w-screen h-screen z-10 bg-black opacity-5" />
+        <div className="fixed top-0 left-0 w-screen h-screen z-10 bg-gray-600 opacity-5" />
       )}
       {menu && (
         <div
@@ -90,7 +93,7 @@ export const NavBar = () => {
       )}
       <nav
         className={clsx(
-          "fixed p-5 left-0 top-0 w-[230px] md:w-[350px] min-h-screen bg-white z-40 shadow-2xl transform transition-all duration-300",
+          "fixed p-5 left-0 top-0 w-[230px] md:w-[350px] min-h-screen bg-white z-40 shadow-xl transform transition-all duration-300",
           { "-translate-x-full": !menu }
         )}
       >
@@ -115,7 +118,7 @@ export const NavBar = () => {
               "flex items-center mt-7 p-1 trans-hover rounded-md hover:bg-gray-100 transition-all cursor-pointer",
               {
                 "bg-customBlue text-customTextBlue font-semibold":
-                  path === item.link,
+                  path.startsWith(item.link),
               }
             )}
           >

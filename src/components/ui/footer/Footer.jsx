@@ -63,33 +63,33 @@ export const Footer = () => {
   ];
   return (
     <>
-      <footer class="bg-customGreenLigth shadow-top font-sans dark:bg-gray-900 md:mt-14">
-        <div class="container md:px-6 px-2 py-2 mx-auto">
-          <section className="flex flex-col md:flex-row w-full justify-between text-gray-800 md:gap-0 gap-4">
-            <div className="flex justify-center md:justify-start  w-full md:w-1/3 items-center gap-5  ">
-              <img src={logo} className="w-[95px] md:w-[125px]" alt="" />
+      <footer className="bg-customGreenLigth shadow-top font-sans dark:bg-gray-900 mt-6 md:mt-14">
+        <div className="container md:px-0 px-2 py-2 mx-auto">
+          <section className="flex flex-col md:flex-row w-full justify-between items-end text-gray-800 md:gap-0 gap-4">
+            <div className="flex justify-center md:justify-start   w-full md:w-1/3 items-end md:items-center gap-5  ">
+              <img src={logo} className="w-[80px] md:w-[125px]" alt="" />
               <div className="font-medium md:text-base text-sm">
                 <p className=" w-full ">🏋️ Entrenamiento personalizado</p>
                 <p className=" w-full ">💪 Cumple tus metas</p>
                 <p className=" w-full ">⭐ Calidad y dedicación</p>
               </div>
 
-              {/* <h2 className="hidden md:block text-xl md:text-2xl">Progressus</h2> */}
+              {/* <h2 classNameName="hidden md:block text-xl md:text-2xl">Progressus</h2> */}
             </div>
 
-            <div class="flex flex-col justify-start mt-4 md:mt-0 items-center text-center  md:w-1/3">
-              <div className="flex flex-row justify-between md:gap-3 gap-10 md:flex-col md:justify-start ">
-                <div className="flex flex-col justify-start ">
+            <div className="flex flex-col w-full justify-end mt-4 md:mt-0 items-center text-center  md:w-1/3">
+              <div className="flex flex-row justify-between md:gap-0 gap-10 md:flex-col md:justify-start ">
+                <div className="flex flex-col justify-end ">
                   <span className="font-semibold p-1">Lunes a Viernes </span>
                   <span>08:00 am - 22:00 pm </span>
                 </div>
-                <div className="flex flex-col justify-start ">
+                <div className="flex flex-col justify-end  ">
                   <span className="font-semibold p-1">Sabados </span>
                   <span>08:00 am - 12:00 am </span>
                 </div>
               </div>
             </div>
-            <div class="md:w-1/3 md:mt-0 mt-3  flex gap-28 md:gap-10 justify-center   md:justify-end  font-semibold items-start">
+            <div className="w-full md:w-1/3 md:mt-0 mt-3   flex gap-28 md:gap-10 justify-center   md:justify-end  font-semibold items-end">
               <div className="flex flex-col items-start justify-end">
                 {routeNavigation.slice(0, 4).map((route, index) => (
                   <Link
@@ -117,17 +117,17 @@ export const Footer = () => {
             </div>
           </section>
 
-          <hr class="my-2 border-customTextGreen md:mt-5 dark:border-gray-700 h-2" />
+          <hr className="my-2 border-customTextGreen md:mt-5 dark:border-gray-700 h-2" />
 
-          <div class="sm:flex md:justify-between md:flex-row-reverse sm:items-center sm:justify-between ">
-            <div class="flex justify-center md:justify-end gap-4 hover:cursor-pointer">
+          <div className="sm:flex md:justify-between md:flex-row-reverse sm:items-center sm:justify-between ">
+            <div className="flex justify-center md:justify-end gap-4 hover:cursor-pointer">
               <a className="" href="">
                 <img
                   src="https://www.svgrepo.com/show/475692/whatsapp-color.svg"
                   width="30"
                   height="30"
                   alt="fb"
-                  class="transition-transform duration-300 hover:scale-110 hover:opacity-80"
+                  className="transition-transform duration-300 hover:scale-110 hover:opacity-80"
                 />
               </a>
 
@@ -140,11 +140,11 @@ export const Footer = () => {
                   width="30"
                   height="30"
                   alt="inst"
-                  class="transition-transform duration-300 hover:scale-110 hover:opacity-80"
+                  className="transition-transform duration-300 hover:scale-110 hover:opacity-80"
                 />
               </a>
             </div>
-            <p class="font-medium pt-3 md:pt-0 text-gray-700 text-start md:text-center text-sm md:text-lg md:p-0">
+            <p className="font-medium pt-3 md:pt-0 text-gray-700 text-start md:text-center text-sm md:text-lg md:p-0">
               © 2024 Progressus. Todos los derechos reservados.
             </p>
           </div>

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { MdErrorOutline } from "react-icons/md";
 import { loginUser } from "../../service/auth/use-login";
-import { useStoreUser, useStoreAlert } from "../../store";
+import { useStoreUser, useStoreAlert, useStoreUserData } from "../../store";
 
 export const Login = () => {
   const [errorLogin, setErrorLogin] = useState(false);
@@ -13,7 +13,7 @@ export const Login = () => {
   // TOKEN DEL USER
   const localToken = localStorage.getItem("auth-token");
   const storeLocalToken = useStoreUser((state) => state.setToken);
-
+  const setEmail = useStoreUserData((state) => state.setEmail);
   // RECORDAR USUARIO
   const remember = useStoreUser((state) => state.remember);
   const setRemember = useStoreUser((state) => state.setRemember);
@@ -56,7 +56,6 @@ export const Login = () => {
     // CAMBIAR EL RECORDAR EN EL STORE
     setRemember(isChecked);
   };
-  console.log(remember, "esto es el recordar");
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -75,16 +74,28 @@ export const Login = () => {
     }
 
     try {
-      const enviarUser = await loginUser(formLogin.email, formLogin.password);
+      // const enviarUser = await loginUser(formLogin.email, formLogin.password);
 
-      if (enviarUser.status == "200") {
-        if (enviarUser.data.accessToken) {
-          storeLocalToken(enviarUser.data);
-        }
-        closeAlert();
+      // if (enviarUser.status == "200") {
+      //   if (enviarUser.data.accessToken) {
+      //     storeLocalToken(enviarUser.data);
+      //   }
+      //   setEmail(formLogin.email);
+
+      //   closeAlert();
+      //   navigate("/home");
+      // } else {
+      //   // VALIDACION EN EL BACK
+      //   setErrorLogin(true);
+      // }
+      if (
+        formLogin.email === "admin@admin.com" &&
+        formLogin.password === "admin123"
+      ) {
+        console.log("gomeeeee");
+
         navigate("/home");
       } else {
-        // VALIDACION EN EL BACK
         setErrorLogin(true);
       }
     } catch (e) {

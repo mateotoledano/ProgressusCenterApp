@@ -54,26 +54,26 @@ export const PricingPrices = () => {
         return (
           <div
             key={card.title}
-            class="max-w-sm  w-full transition duration-300 transform hover:scale-105"
+            className="max-w-sm p-5 md:p-0 w-full transition duration-300 transform hover:scale-105"
           >
-            <div class="relative group ">
-              <div class="absolute -inset-0 bg-gradient-to-r  from-green-600 to-blue-600 rounded-lg blur opacity-20 group-hover:opacity-80 transition duration-1000 group-hover:duration-200"></div>
-              <div class="relative px-7 py-6 bg-white ring-1  ring-gray-900/5 rounded-lg leading-none flex flex-col items-top justify-start space-y-6">
-                <div class="flex justify-between items-center">
-                  <span class="text-lg font-bold text-gray-900">
+            <div className="relative group ">
+              <div className="absolute -inset-0 bg-gradient-to-r  from-green-600 to-blue-600 rounded-lg blur opacity-20 group-hover:opacity-80 transition duration-1000 group-hover:duration-200"></div>
+              <div className="relative px-7 py-6 bg-white ring-1  ring-gray-900/5 rounded-lg leading-none flex flex-col items-top justify-start space-y-6">
+                <div className="flex justify-between items-center">
+                  <span className="text-lg font-bold text-gray-900">
                     {card.title}
                   </span>
                   {card.popular && (
-                    <span class="px-3 py-1 text-sm text-white bg-customTextBlue rounded-full">
+                    <span className="px-3 py-1 text-sm text-white bg-customTextBlue rounded-full">
                       Popular
                     </span>
                   )}
                 </div>
-                <div class="text-4xl font-bold text-gray-900">
+                <div className="text-4xl font-bold text-gray-900">
                   ${card.price}
-                  <span class="text-lg font-normal text-gray-600"></span>
+                  <span className="text-lg font-normal text-gray-600"></span>
                 </div>
-                <ul className="space-y-3">
+                <ul classNameName="space-y-3">
                   {card.list.map((item, index) => (
                     <li
                       key={index}
@@ -98,11 +98,11 @@ export const PricingPrices = () => {
                   ))}
                 </ul>
 
-                <button class="w-full py-3 font-bold text-white bg-customTextGreen rounded-lg">
+                <button className="w-full py-3 font-bold text-white bg-customTextGreen rounded-lg">
                   Elegir plan
                 </button>
                 {card.popular && (
-                  <div class="absolute -top-16 right-0 -mt-4 -mr-6 w-16 h-16 float-animation">
+                  <div className="absolute -top-16 right-0 -mt-4 -mr-6 w-16 h-16 float-animation">
                     <CgGym className="w-full h-full object-cover rounded-full "></CgGym>
                   </div>
                 )}

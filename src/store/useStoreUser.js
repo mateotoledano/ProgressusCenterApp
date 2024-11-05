@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-// GUARDAR TOKEN CON CONDICIÓN
+// autenticacion
 export const useStoreUser = create((set, get) => ({
   remember: false, // Estado que determina si se debe recordar el usuario
   token: null, // Estado del token
@@ -30,5 +30,46 @@ export const useStoreUser = create((set, get) => ({
     sessionStorage.removeItem("auth-token");
     localStorage.removeItem("auth-token");
     set({ token: null, remember: false });
+  },
+}));
+
+// Store para los datos del usuario
+export const useStoreUserData = create((set) => ({
+  // Estado inicial del usuario (se intenta cargar desde localStorage si existe)
+  email: localStorage.getItem("user-email") || "",
+  userData: JSON.parse(localStorage.getItem("user-data")) || {
+    apellido: "Gimenez",
+    email: "admin@admin.com",
+    identityUserId: "",
+    nombre: "Eduardo",
+    roles: [],
+    telefono: null,
+  },
+
+  // Función para actualizar el email del usuario y guardarlo en localStorage
+  setEmail: (data) => {
+    set({ email: data });
+    localStorage.setItem("user-email", data);
+  },
+
+  // Función para actualizar los datos del usuario y guardarlos en localStorage
+  setUserData: (data) => {
+    set({ userData: data });
+    localStorage.setItem("user-data", JSON.stringify(data));
+  },
+  clearUserData: () => {
+    set({
+      email: "",
+      userData: {
+        apellido: "",
+        email: "",
+        identityUserId: "",
+        nombre: "",
+        roles: [],
+        telefono: null,
+      },
+    });
+    localStorage.removeItem("user-email");
+    localStorage.removeItem("user-data");
   },
 }));
