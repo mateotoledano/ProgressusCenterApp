@@ -1,10 +1,11 @@
-import axios from "axios";
+
+import { api } from "../api";
 
 // TRAER LA DATA DEL USUARIO
 export const useDataUser = async (email) => {
   try {
-    const response = await axios.get(
-      `https://localhost:7140/api/Auth/ObtenerDatosDelUsuario?email=${email}`
+    const response = await api.get(
+      `/api/Auth/ObtenerDatosDelUsuario?email=${email}`
     );
     return response;
   } catch (e) {

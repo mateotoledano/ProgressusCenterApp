@@ -6,6 +6,7 @@ export const Button = ({
   disabled = false,
   className = "",
   type = "button",
+  Icon
 }) => {
   return (
     <button
@@ -15,6 +16,7 @@ export const Button = ({
       className={`py-[7px] my-2 px-5 bg-customButtonGreen text-white rounded-sm  font-medium ${className}`}
     >
       {label}
+      {Icon && <Icon className="text-base md:text-lg"></Icon>}
     </button>
   );
 };

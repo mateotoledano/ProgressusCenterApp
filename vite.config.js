@@ -7,11 +7,13 @@ export default defineConfig({
   server: {
     proxy: {
       // Proxy para el backend en C# .NET
-      '/api': {
-        target: 'https://localhost:7140/', // URL de tu backend
+      "/api": {
+        target:
+          "https://localhost:7140/" ||
+          "https://www.progressuscenter.somee.com/", // URL de tu backend
         changeOrigin: true,
         secure: false, // Esto ignora los certificados SSL en localhost
-        rewrite: (path) => path.replace(/^\/api/, ''), // Elimina el prefijo /api en la solicitud
+        rewrite: (path) => path.replace(/^\/api/, ""), // Elimina el prefijo /api en la solicitud
       },
     },
   },

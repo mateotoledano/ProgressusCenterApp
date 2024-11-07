@@ -11,8 +11,9 @@ import { useSendReserve } from "../../../service/turns/use-sendReserve";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import dayjs from "dayjs";
+import { useGetTurns } from "../../../service/turns/use-getTurns";
 import { Alert } from "../../ui/alert/Alert";
-
+import { useStoreUserData } from "../../../store";
 const Fade = React.forwardRef(function Fade(props, ref) {
   const {
     children,
@@ -68,20 +69,27 @@ const style = {
   p: 2,
 };
 
-export const ModalTurns = ({ open, setOpen, horaInicio, horaFinal }) => {
+export const ModalTurns = ({
+  open,
+  setOpen,
+  horaInicio,
+  horaFinal,
+  setOpenAlert,
+  setOpenAlertError,
+  setTurnosReservados,
+}) => {
   // HORARIO Y FECHA PARA MOSTRAR EN HOME
   // const today = dayjs().format("dddd, D [de] MMMM [de] YYYY");
   // const setTime = useStoreTime((state) => state.setTime);
   // const setDate = useStoreTime((state) => state.setTDate);
+  const userData = useStoreUserData((state) => state.userData);
 
-  const [openAlert, setOpenAlert] = React.useState(false);
-  const [openAlertError, setOpenAlertError] = React.useState(false);
   dayjs.extend(utc);
   dayjs.extend(timezone);
   const fechaArgentina = dayjs()
     .tz("America/Argentina/Buenos_Aires")
     .toISOString();
-  const idUser = "23347ad5-e2f9-4a7b-9c0c-cd535a967c14";
+  const idUser = userData.identityUserId;
 
   // Obtener la fecha actual en formato 'YYYY-MM-DD'
   const fechaBase = dayjs()
@@ -120,9 +128,10 @@ export const ModalTurns = ({ open, setOpen, horaInicio, horaFinal }) => {
       console.log(responseTurn, "response returnm");
 
       if (responseTurn && responseTurn.status == "200") {
+        const upadateTurns = await useGetTurns(userData.identityUserId);
+        setTurnosReservados(upadateTurns.data.value)
         setOpen(false);
         setOpenAlert(true);
- 
       } else {
         setOpen(false);
         setOpenAlertError(true);
@@ -174,24 +183,6 @@ export const ModalTurns = ({ open, setOpen, horaInicio, horaFinal }) => {
           </Box>
         </Fade>
       </Modal>
-      {openAlert && (
-        <Alert
-          position="bottom-center"
-          type="success"
-          theme="dark"
-          autoclose={5000}
-          message="Su turno se ha guardado correctamente"
-        ></Alert>
-      )}
-      {openAlertError && (
-        <Alert
-          position="bottom-center"
-          type="warning"
-          theme="dark"
-          autoclose={5000}
-          message="Error al guardar su turno , intentelo nuevamente"
-        ></Alert>
-      )}
     </div>
   );
 };

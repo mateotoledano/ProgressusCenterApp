@@ -1,12 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MainLayout } from "../../layout/MainLayout";
-import { Acordion, Location, Stack, Title } from "../../components";
+import {
+  Acordion,
+  Alert,
+  Button,
+  Location,
+  Stack,
+  Title,
+  GridAlertsTurns,
+} from "../../components";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
+import { CgDanger } from "react-icons/cg";
+import { MdDeleteOutline } from "react-icons/md";
 
 import { FaRegCalendarCheck } from "react-icons/fa";
 import { IoIosTimer } from "react-icons/io";
-
+import { useGetTurns } from "../../service/turns/use-getTurns";
+import { useDeleteTurns } from "../../service/turns/use-deleteTurn";
+import { useStoreUserData } from "../../store";
 dayjs.locale("es");
 
 export const Turns = () => {
@@ -24,17 +36,48 @@ export const Turns = () => {
       horarios: ["19:00", "20:00", "21:00", "22:00"],
     },
   ];
-
+  const dataUser = useStoreUserData((state) => state.userData);
+  const [turnosReservados, setTurnosReservados] = useState([]);
   const today = dayjs().format("dddd, D [de] MMMM [de] YYYY");
+  const [alertDelete, setAlertDelete] = useState(false);
+  // MANEJO DEL ALERT AL SELECCIONAR TURNO
+  const [openAlert, setOpenAlert] = useState(false);
+  const [openAlertError, setOpenAlertError] = useState(false);
+
+  useEffect(() => {
+    const traerTurnos = async () => {
+      try {
+        const response = await useGetTurns(dataUser.identityUserId);
+        setTurnosReservados(response.data.value);
+      } catch (error) {
+        console.error("Error al traer los turnos:", error);
+      }
+    };
+
+    // Llamar solo una vez al montar el componente
+    traerTurnos();
+  }, []); // Agrega una dependencia vacía para ejecutar solo al montar
+
+  const handleDeleteTurn = async () => {
+    try {
+      const response = await useDeleteTurns(dataUser.identityUserId);
+      if (response.status == "200") {
+        setAlertDelete(true);
+
+        // Esperar a que la alerta se cierre antes de actualizar los turnos
+        const updatedTurns = await useGetTurns(dataUser.identityUserId);
+        setTurnosReservados(updatedTurns.data.value);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <MainLayout>
       <section className="animate-fade-in-down bg-white md:mx-auto   rounded shadow-xl w-full md:w-11/12 p-4 overflow-hidden mb-4">
-        <section className="w-full md:flex items-start md:mt-0 gap-12">
-          
-          <div className="flex flex-col  items-center justify-center gap-4 w-full mt-0 md:w-1/4 ">
-
-          
+        <section className="w-full md:flex items-start md:mt-0 gap-0  ">
+          <div className="flex flex-col md:border-r  md:pr-5 items-center justify-center gap-4 w-full mt-0 md:w-1/4 ">
             <div className="flex flex-col w-full justify-center md:items-start md:gap-3">
               <Location
                 route={"Turnos"}
@@ -47,69 +90,93 @@ export const Turns = () => {
             </div>
             {turnos.map((turno, index) => (
               <Acordion
+                openAlert={openAlert}
+                openAlertError={openAlertError}
+                // PARA ACTUALIZAR TURNOS RESERVADOS
+                setTurnosReservados={setTurnosReservados}
+                //////////////////////
+                setOpenAlert={setOpenAlert}
+                setOpenAlertError={setOpenAlertError}
                 key={index}
                 title={turno.title}
                 content={turno.horarios}
               />
             ))}
           </div>
-          <section className="md:w-3/4 md:border-l  md:pl-12">
+          <section className="md:w-3/4  md:px-4  ">
             <div className="md:mt-0 mt-3 flex w-full gap-5 flex-col justify-center items-center">
-              <Title title={"Mis turnos"} icon={<IoIosTimer />}></Title>
-              <Stack
-                titulo="Turno mañana"
-                duracion="10:30"
-                fechaFinalizacion={today}
-              ></Stack>
-              <Stack
-                titulo="Turno mañana"
-                duracion="10:30"
-                fechaFinalizacion={today}
-              ></Stack>
-              <Stack
-                titulo="Turno mañana"
-                duracion="10:30"
-                fechaFinalizacion={today}
-              ></Stack>
-              <Stack
-                titulo="Turno mañana"
-                duracion="10:30"
-                fechaFinalizacion={today}
-              ></Stack>
-            </div>
-            <div className="mt-3 flex w-full gap-5 flex-col justify-center items-center">
               <Title
-                title={"Turnos a lo que asisti"}
-                icon={<FaRegCalendarCheck />}
+                className={""}
+                title={"Mis turnos"}
+                icon={<IoIosTimer />}
               ></Title>
-              <Stack
-                titulo="Turno mañana"
-                duracion="10:30"
-                fechaFinalizacion={today}
-                className="bg-red-200"
-              ></Stack>
-              <Stack
-                titulo="Turno mañana"
-                duracion="10:30"
-                fechaFinalizacion={today}
-                className="bg-red-200"
-              ></Stack>
-              <Stack
-                titulo="Turno mañana"
-                duracion="10:30"
-                fechaFinalizacion={today}
-                className="bg-red-200"
-              ></Stack>
-              <Stack
-                titulo="Turno mañana"
-                duracion="10:30"
-                fechaFinalizacion={today}
-                className="bg-red-200"
-              ></Stack>
+              {turnosReservados.length > 0 ? (
+                turnosReservados.map((turn) => {
+                  const fechaReserva = turn.fechaReserva.split("T")[0];
+                  // Crear el objeto Date usando el método 'split' para evitar problemas de zona horaria
+                  const [year, month, day] = fechaReserva.split("-");
+                  const fechaObj = new Date(year, month - 1, day); // Los meses en JavaScript son base 0 (enero es 0, diciembre es 11)
+
+                  // Array para los días de la semana
+                  const diasSemana = [
+                    "Domingo",
+                    "Lunes",
+                    "Martes",
+                    "Miércoles",
+                    "Jueves",
+                    "Viernes",
+                    "Sábado",
+                  ];
+                  const diaSemana = diasSemana[fechaObj.getDay()];
+                  // Convertimos la hora de inicio en un número para compararla
+                  const hora = parseInt(turn.horaInicio.split(":")[0], 10);
+                  // Definimos el título según la hora
+                  let tituloTurno = "";
+                  if (hora >= 6 && hora < 12) {
+                    tituloTurno = "Turno mañana";
+                  } else if (hora >= 12 && hora < 18) {
+                    tituloTurno = "Turno tarde";
+                  } else {
+                    tituloTurno = "Turno noche";
+                  }
+
+                  return (
+                    <Stack
+                      key={turn.id}
+                      titulo={tituloTurno}
+                      duracion={`${turn.horaInicio} hs`}
+                      fechaFinalizacion={`${diaSemana}, ${fechaReserva}`}
+                    ></Stack>
+                  );
+                })
+              ) : (
+                <Stack
+                  Icon={CgDanger}
+                  titulo={"No tienes turnos reservados"}
+                ></Stack>
+              )}
+              {turnosReservados.length > 0 && (
+                <div className="w-full flex justify-end">
+                  <Button
+                    onClick={handleDeleteTurn}
+                    Icon={MdDeleteOutline}
+                    className="px-[6px] py-[3px] flex items-center gap-1 bg-red-600 hover:bg-red-700 text-sm md:text-base"
+                    label={"Eliminar turnos"}
+                  ></Button>
+                </div>
+              )}
             </div>
           </section>
         </section>
       </section>
+      {/* ALERTAS AL GUARDAR , ELIMINAR EL TURNO */}
+
+      <GridAlertsTurns
+        setAlertDelete={setAlertDelete}
+        alertDelete={alertDelete}
+        openAlert={openAlert}
+        openAlertError={openAlertError}
+      ></GridAlertsTurns>
     </MainLayout>
   );
 };

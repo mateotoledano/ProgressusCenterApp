@@ -9,6 +9,8 @@ export const Alert = ({
   autoclose,
   theme,
 }) => {
+  if (!message) return null;
+
   const notify = () => {
     switch (type) {
       case "success":

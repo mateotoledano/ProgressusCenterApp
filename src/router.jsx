@@ -22,74 +22,74 @@ export const router = createBrowserRouter([
     path: "/home",
 
     element: (
-      <HomePage />
-      // <ProtectedRoute>
-      // </ProtectedRoute>
+      <ProtectedRoute>
+        <HomePage />
+      </ProtectedRoute>
     ),
   },
   {
     path: "/acount",
 
     element: (
-      <Profile />
-      // <ProtectedRoute>
-      // </ProtectedRoute>
+      <ProtectedRoute>
+        <Profile />
+      </ProtectedRoute>
     ),
   },
   {
     path: "/plans",
     element: (
-      <Plans />
-      // <ProtectedRoute>
-      // </ProtectedRoute>
+      <ProtectedRoute>
+        <Plans />
+      </ProtectedRoute>
     ),
   },
   {
     path: "/plans/myplans",
     element: (
-      <MyPlans />
-      // <ProtectedRoute>
-      // </ProtectedRoute>
+      <ProtectedRoute>
+        <MyPlans />
+      </ProtectedRoute>
     ),
   },
   {
     path: "/membership",
     element: (
-      <MemberShip />
-      // <ProtectedRoute>
-      // </ProtectedRoute>
+      <ProtectedRoute>
+        <MemberShip />
+      </ProtectedRoute>
     ),
   },
   {
     path: "/turns",
     element: (
-      <Turns />
-      // <ProtectedRoute>
-      // </ProtectedRoute>
+      <ProtectedRoute>
+        <Turns />
+      </ProtectedRoute>
     ),
   },
   {
     path: "/inventary",
     element: (
-      <Inventary />
-      // <ProtectedRoute>
-      // </ProtectedRoute>
+      <ProtectedRoute>
+        <Inventary />
+      </ProtectedRoute>
     ),
   },
   {
     path: "/stats",
     element: (
-      <Stats />
-      // <ProtectedRoute>
-      // </ProtectedRoute>
+      <ProtectedRoute>
+        <Stats />
+      </ProtectedRoute>
     ),
   },
   {
     path: "/notifications",
     element: (
-      <Notifications />
-      // <ProtectedRoute>
-      // </ProtectedRoute>
+      <ProtectedRoute>
+        <Notifications />
+      </ProtectedRoute>
     ),
   },
 ]);

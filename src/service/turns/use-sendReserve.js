@@ -1,5 +1,4 @@
-
-import { api } from '../api'; // Asegúrate de que la ruta sea correcta
+import { api } from "../api"; // Asegúrate de que la ruta sea correcta
 
 export const useSendReserve = async (
   userId,
@@ -8,6 +7,8 @@ export const useSendReserve = async (
   horaFin,
   confirmada
 ) => {
+  console.log(horaInicio, "hora iicioooo");
+
   try {
     const response = await api.post(
       `/api/ReservasTurnos/crear`,

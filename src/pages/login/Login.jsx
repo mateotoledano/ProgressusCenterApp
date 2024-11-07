@@ -74,30 +74,31 @@ export const Login = () => {
     }
 
     try {
-      // const enviarUser = await loginUser(formLogin.email, formLogin.password);
+      const enviarUser = await loginUser(formLogin.email, formLogin.password);
 
-      // if (enviarUser.status == "200") {
-      //   if (enviarUser.data.accessToken) {
-      //     storeLocalToken(enviarUser.data);
-      //   }
-      //   setEmail(formLogin.email);
+      if (enviarUser.status == "200") {
+        if (enviarUser.data.accessToken) {
+          storeLocalToken(enviarUser.data);
+        }
+        setEmail(formLogin.email);
 
-      //   closeAlert();
-      //   navigate("/home");
-      // } else {
-      //   // VALIDACION EN EL BACK
-      //   setErrorLogin(true);
-      // }
-      if (
-        formLogin.email === "admin@admin.com" &&
-        formLogin.password === "admin123"
-      ) {
-        console.log("gomeeeee");
-
+        closeAlert();
         navigate("/home");
       } else {
+        // VALIDACION EN EL BACK
         setErrorLogin(true);
       }
+      // HARDCODEADO
+      // if (
+      //   formLogin.email === "admin@admin.com" &&
+      //   formLogin.password === "admin123"
+      // ) {
+      //   console.log("gomeeeee");
+
+      //   navigate("/home");
+      // } else {
+      //   setErrorLogin(true);
+      // }
     } catch (e) {
       console.log("error", e);
     }

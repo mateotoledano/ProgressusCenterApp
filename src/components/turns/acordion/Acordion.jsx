@@ -7,7 +7,14 @@ import { CgGym } from "react-icons/cg";
 import { IoSettingsOutline } from "react-icons/io5";
 import { ModalTurns } from "../modalTurns/ModalTurns";
 // Recibiendo props en el componente
-export const Acordion = ({ title, content, onClick }) => {
+export const Acordion = ({
+  title,
+  content,
+  onClick,
+  setOpenAlert,
+  setOpenAlertError,
+  setTurnosReservados
+}) => {
   const [open, setOpen] = React.useState(false);
 
   // MANEJO DE HORARIOS
@@ -69,6 +76,9 @@ export const Acordion = ({ title, content, onClick }) => {
         </AccordionDetails>
       </Accordion>
       <ModalTurns
+      setTurnosReservados={setTurnosReservados}
+        setOpenAlert={setOpenAlert}
+        setOpenAlertError={setOpenAlertError}
         open={open}
         setOpen={setOpen}
         horaInicio={horaInicio}
