@@ -93,7 +93,7 @@ export const Footer = () => {
 
   return (
     <>
-      <footer className="bg-customGreenLigth shadow-top font-sans dark:bg-gray-900 mt-6 md:mt-14">
+      <footer className="bg-customGreenLigth shadow-top font-sans  mt-6 md:mt-14">
         <div className="container md:px-0 px-2 py-2 mx-auto">
           <section className="flex flex-col md:flex-row w-full justify-between items-end text-gray-800 md:gap-0 gap-4">
             <div className="flex justify-center md:justify-start   w-full md:w-1/3 items-end md:items-center gap-5  ">
@@ -125,7 +125,7 @@ export const Footer = () => {
                   <Link
                     to={route.link}
                     key={index}
-                    className="text-start  transition-colors duration-300 dark:text-gray-300 dark:hover:text-blue-400 hover:underline hover:cursor-pointer hover:text-blue-500"
+                    className="text-start  transition-colors duration-300 hover:underline hover:cursor-pointer hover:text-blue-500"
                   >
                     {route.title}{" "}
                     {/* Ajusta esto según la propiedad que quieras mostrar */}
@@ -137,7 +137,7 @@ export const Footer = () => {
                   <Link
                     to={route.link}
                     key={index}
-                    className="text-start  transition-colors duration-300 dark:text-gray-300 dark:hover:text-blue-400 hover:underline hover:cursor-pointer hover:text-blue-500"
+                    className="text-start  transition-colors duration-300  hover:underline hover:cursor-pointer hover:text-blue-500"
                   >
                     {route.title}{" "}
                     {/* Ajusta esto según la propiedad que quieras mostrar */}
@@ -147,7 +147,7 @@ export const Footer = () => {
             </div>
           </section>
 
-          <hr className="my-2 border-customTextGreen md:mt-5 dark:border-gray-700 h-2" />
+          <hr className="my-2 border-customTextGreen md:mt-5  h-2" />
 
           <div className="sm:flex md:justify-between md:flex-row-reverse sm:items-center sm:justify-between ">
             <div className="flex justify-center md:justify-end gap-4 hover:cursor-pointer">
