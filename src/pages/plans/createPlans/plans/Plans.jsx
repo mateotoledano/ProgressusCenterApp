@@ -14,7 +14,7 @@ import {
 import { Link } from "react-router-dom";
 import { useStoreUserData } from "../../../../store";
 import { CreatePlans } from "../createPlans/CreatePlans";
-import { EditPlans } from "../editPlans/editPlans";
+
 import { MyPlans } from "../myPlans/MyPlans";
 const ejercicios = [
   {
