@@ -23,6 +23,7 @@ export const BasicTable = ({
   setAlertExerciseAdded,
   loading,
   myplans,
+  textSinEjercicios
 }) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -115,7 +116,7 @@ export const BasicTable = ({
                     sx={{ fontSize: "18px" }}
                     align="center"
                   >
-                    No tienes ejercicios en este plan
+                    {` ${textSinEjercicios}`}
                   </TableCell>
                 </TableRow>
               ) : (

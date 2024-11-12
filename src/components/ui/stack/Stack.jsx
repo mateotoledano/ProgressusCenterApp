@@ -6,6 +6,7 @@ export const Stack = ({
   fechaFinalizacion,
   className,
   Icon,
+  classNameText
 }) => {
   return (
     <div
@@ -17,7 +18,7 @@ export const Stack = ({
         <span className="text-sm md:text-lg text-slate-600">{duracion}</span>
         {/* <span className="text-sm md:text-lg text-slate-600">estado:Pendiente</span> */}
       </div>
-      <p className=" text-sm md:text-base text-black  font-medium ml-auto ">
+      <p className={`${classNameText} text-sm md:text-xl text-black  font-semibold ml-auto `}>
         {fechaFinalizacion}
       </p>
     </div>

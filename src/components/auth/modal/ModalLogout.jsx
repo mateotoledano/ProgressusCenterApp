@@ -6,7 +6,7 @@ import Modal from "@mui/material/Modal";
 import { RiLogoutBoxLine } from "react-icons/ri";
 import Typography from "@mui/material/Typography";
 import { useSpring, animated } from "@react-spring/web";
-import { useStoreUser, useStoreUserData } from "../../../store";
+import { useStoreUser, useStoreUserData, useStoreMenu } from "../../../store";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "../../ui/buttons/Button";
 const style = {
@@ -25,12 +25,14 @@ const style = {
 export const ModalLogout = ({ openModalLogout, setOpenModalLogout }) => {
   const closeSession = useStoreUser((state) => state.clearToken);
   const clearUserData = useStoreUserData((state) => state.clearUserData);
+  const closeNavBar = useStoreMenu((state) => state.closeNavBar);
   const navigate = useNavigate();
   const handleClose = () => setOpenModalLogout(false);
   const handleLogout = () => {
     closeSession();
     clearUserData();
     navigate("/");
+    closeNavBar(false);
   };
 
   return (
@@ -45,11 +47,11 @@ export const ModalLogout = ({ openModalLogout, setOpenModalLogout }) => {
           <div className="flex justify-center mb-3">
             <Typography
               id="modal-modal-title"
-              fontWeight={"500"}
+              fontWeight="500"
               variant="h6"
               component="h2"
             >
-              Estas seguro que deseas cerrar sesion ?
+              ¿Seguro que quieres salir de tu cuenta?
             </Typography>
           </div>
           <div className=" flex justify-center">

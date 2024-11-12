@@ -48,63 +48,74 @@ export const HomePage = () => {
           ></Title>
         </div>
         <div className=" mx-3 md:m-0 md:mx-8 md:p-2 rounded shadow-sm flex justify-center items-center ">
-          <img src={gif} className="md:w-3/5 md:py-2" alt="Progressus" />
+          <img
+            src={gif}
+            className={` md:py-2 ${
+              dataUser && dataUser.email === "frantrainer15@gmail.com"
+                ? "md:w-4/5"
+                : "md:w-3/5"
+            }`}
+            alt="Progressus"
+          />
         </div>
-        {turnosReservados.length > 0 ? (
-          turnosReservados.map((turno, index) => {
-            const fecha = new Date(turno.fechaReserva);
-            const opciones = {
-              weekday: "long",
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            };
-            const fechaFormateada = fecha.toLocaleDateString("es-ES", opciones);
-            console.log(turno, "turn");
+        {turnosReservados.length > 0
+          ? turnosReservados.map((turno, index) => {
+              const fecha = new Date(turno.fechaReserva);
+              const opciones = {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              };
+              const fechaFormateada = fecha.toLocaleDateString(
+                "es-ES",
+                opciones
+              );
+              console.log(turno, "turn");
 
-            return (
-              <div
-                key={index}
-                className="bg-white mx-3 md:m-0 md:mx-8 p-2 rounded shadow-sm gap-1 flex flex-col md:flex-col justify-center items-center"
-              >
-                <div className="flex flex-col items-center  md:flex-row  gap-1">
-                  <Title title={"Tu próximo turno es el día:  "}> </Title>
+              return (
+                <div
+                  key={index}
+                  className="bg-white mx-3 md:m-0 md:mx-8 p-2 rounded shadow-sm gap-1 flex flex-col md:flex-col justify-center items-center"
+                >
+                  <div className="flex flex-col items-center  md:flex-row  gap-1">
+                    <Title title={"Tu próximo turno es el día:  "}> </Title>
+                    <Title
+                      className="text-customNavBar font-bold"
+                      title={fechaFormateada.toUpperCase()}
+                    ></Title>
+                    <Title
+                      className="text-customNavBar font-bold md:hidden"
+                      title={`${turno.horaInicio} hs`}
+                    ></Title>
+                  </div>
                   <Title
-                    className="text-customNavBar font-bold"
-                    title={fechaFormateada.toUpperCase()}
-                  ></Title>
-                  <Title
-                    className="text-customNavBar font-bold md:hidden"
-                    title={`${turno.horaInicio} hs`}
-                  ></Title>
-                </div>
-                <Title
                     className="hidden md:block text-customNavBar font-bold "
                     title={`${turno.horaInicio} hs`}
                   ></Title>
+                  <Link to={"/turns"}>
+                    <Button
+                      label={"Administrar mis turnos"}
+                      className="py-1 px-2 text-sm md:text-base "
+                    ></Button>
+                  </Link>
+                </div>
+              );
+            })
+          : dataUser.email !== "frantrainer15@gmail.com" && (
+              <div className="bg-white mx-3 md:m-0 md:mx-8 p-2 rounded shadow-sm gap-1 flex md:flex-col justify-center items-center">
+                <Title
+                  title={"No tienes turnos reservados"}
+                  className={"text-base"}
+                ></Title>
                 <Link to={"/turns"}>
                   <Button
-                    label={"Administrar mis turnos"}
-                    className="py-1 px-2 text-sm md:text-base "
+                    label={"Reservar"}
+                    className="py-1 px-2 text-base"
                   ></Button>
                 </Link>
               </div>
-            );
-          })
-        ) : (
-          <div className="bg-white mx-3 md:m-0 md:mx-8 p-2 rounded shadow-sm gap-1 flex md:flex-col justify-center items-center">
-            <Title
-              title={"No tienes turnos reservados"}
-              className={"text-base"}
-            ></Title>
-            <Link to={"/turns"}>
-              <Button
-                label={"Reservar"}
-                className="py-1 px-2 text-base"
-              ></Button>
-            </Link>
-          </div>
-        )}
+            )}
       </div>
     </MainLayout>
   );

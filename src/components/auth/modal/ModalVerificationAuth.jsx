@@ -76,14 +76,16 @@ export const ModalVerificationAuth = ({ open, email, setOpen }) => {
   const [code, setCode] = useState(Array(4).fill(""));
   const handleSendCode = async () => {
     const codeString = code.join("");
+    console.log(email, typeof codeString, "email and codeaster");
+
     try {
       const responseSendCode = await sendCodeVerificationAuth(
         email,
         codeString
       );
-     
-
-      if (responseSendCode.status == "200") {
+    console.log(responseSendCode , "respuesta al enviar el response");
+    
+      if (responseSendCode && responseSendCode.status == "200") {
         changeToLogin();
         openAlertAuth();
         setOpen(false);

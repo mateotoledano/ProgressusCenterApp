@@ -49,7 +49,10 @@ export const CreatePlans = ({ setAlertExerciseAdded }) => {
     };
     getExercises();
   }, []);
-
+  // Filtra los ejercicios según el valor de searchPlan
+  const filteredExercises = exercises.filter((exercise) =>
+    exercise.nombre.toLowerCase().includes(searchPlan.toLowerCase())
+  );
   return (
     <>
       <div className="px-3 mt-0    flex flex-col md:flex-row md:justify-between   md:items-center">
@@ -77,9 +80,11 @@ export const CreatePlans = ({ setAlertExerciseAdded }) => {
         <BasicTable
           setAlertExerciseAdded={setAlertExerciseAdded}
           loading={loading}
-          arreglo={exercises}
+          arreglo={filteredExercises}
           arregloColumns={columnsTrainer}
           action="add"
+          textSinEjercicios={"No se encontraron ejercicios en su busqueda"}
+          
           admin={true}
         ></BasicTable>
       </div>

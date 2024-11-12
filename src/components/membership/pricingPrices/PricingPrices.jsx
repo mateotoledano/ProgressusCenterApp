@@ -14,16 +14,32 @@ import { useGetRequestPaymentSocio } from "../../../service/membership/useGetReq
 import { useCancelRequestPayment } from "../../../service/membership/useCancelRequestPayment";
 import { Title } from "../../ui/title/Title";
 import { Stack } from "../../ui/stack/Stack";
+import { CustomInput } from "../../ui/input/CustomInput";
+import { IoSearchSharp } from "react-icons/io5";
+import { useDataUser } from "../../../service/auth/use-dataUser";
 export const PricingPrices = ({
   setAlertCreateRequest,
   setAlertConfirmRequest,
   setAlertCancelPayment,
+  setAlertUsuarioEncontrado,
 }) => {
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
   const userData = useStoreUserData((state) => state.userData);
   const [dataPedido, setDataPedido] = useState(null);
-  const [idByRequestPayment, setIdRequestPayment] = useState(null);
+
+  //PLANES QUE AGREGAR EL DE LA VENTANILLA
+  const [planElegido, setPlanElegido] = useState(null);
+
+  // Buscador de user
+
+  const [emailUser, setEmailUser] = useState("");
+  const [dataUserBuscado, setDataUserBuscado] = useState();
+
+  const handleChange = (e) => {
+    setEmailUser(e.target.value);
+  };
+  console.log(emailUser, "emailUser");
 
   // CONFIGURAR FECHA PARA MOSTRAR EN EL STACK PANTALLA DE ADMIN
   const fechaHora = dataPedido?.fechaCreacion;
@@ -72,7 +88,6 @@ export const PricingPrices = ({
         idUser
       );
 
-
       if (response.status === 200) {
         setAlertCreateRequest(true);
       }
@@ -80,13 +95,16 @@ export const PricingPrices = ({
       console.error("Error en lenviar la solicitud de pago", error);
     }
   };
+  console.log(planElegido, "plan elegido");
+
   // CONFIRMAR PAGO DEL LADO DE VENTANILLA
   const handleRegisterPayment = async () => {
     setAlertConfirmRequest(false);
     try {
+      await handleBuy(planElegido.id, 1, dataUserBuscado.identityUserId);
       // HARDCODE
       const requestPayment = await useGetRequestPaymentSocio(
-        "1acd1716-2710-4e7f-96f1-488de2f6423e"
+        dataUserBuscado.identityUserId
       );
       console.log(requestPayment.data, "requestPaymeny");
       setDataPedido(requestPayment.data.value.value);
@@ -103,7 +121,6 @@ export const PricingPrices = ({
       console.log(e);
     }
   };
-  console.log(dataPedido, "dataPedido");
 
   // CANCELAR SOLICITUD DE PAGO DEL LADO DE VENTANILLA
   const handleCancelRequest = async () => {
@@ -111,24 +128,35 @@ export const PricingPrices = ({
     try {
       // HARDCODE
       const requestPayment = await useGetRequestPaymentSocio(
-        "1acd1716-2710-4e7f-96f1-488de2f6423e"
+        dataUserBuscado.identityUserId
       );
 
       ////////////////////////////////
       const cancelPayment = await useCancelRequestPayment(
         requestPayment.data.value.value.id
       );
-      console.log(cancelPayment, "cancel payment");
 
       if (cancelPayment.status === 200) {
         console.log("enteraaaa");
         setAlertCancelPayment(true);
-        setDataPedido(null);
+        setPlanElegido(null);
       }
     } catch (e) {
       console.log(e);
     }
   };
+  // traerDataDelUser para obtener el id
+  const traerDataUser = async () => {
+    const response = await useDataUser(emailUser);
+    console.log(response, "response ");
+    if (response && response.status == "200") {
+      setDataUserBuscado(response.data);
+    } else {
+      setAlertUsuarioEncontrado(true);
+      setDataUserBuscado(null);
+    }
+  };
+
   return (
     <div className="flex flex-col flex-wrap justify-center items-center md:items-start md:justify-around gap-8 md:gap-5 md:flex-row w-full">
       {loading ? (
@@ -137,7 +165,7 @@ export const PricingPrices = ({
           className={"w-4/5 md:w-full"}
           count={4}
           width={400}
-          height={230}
+          height={300}
         />
       ) : (
         cards.map((card) => {
@@ -178,16 +206,14 @@ export const PricingPrices = ({
                     </li>
                   </ul>
                   {userData.email === "frantrainer15@gmail.com" ? (
-                    <></>
-                  ) : (
                     <button
-                      onClick={() =>
-                        handleBuy(card.id, 1, userData.identityUserId)
-                      }
+                      onClick={() => setPlanElegido(card)}
                       className="w-full py-3 font-bold text-white bg-customTextGreen rounded-lg"
                     >
-                      Elegir plan
+                      Agregar Plan
                     </button>
+                  ) : (
+                    <></>
                   )}
                   {card.id == 3 && (
                     <div className="absolute -top-16 right-0 -mt-4 -mr-6 w-16 h-16 float-animation">
@@ -202,33 +228,59 @@ export const PricingPrices = ({
       )}
       {/*BUTTON PARA REGISTRAR PAGO DEL LADO DEL QUE ATIENDE EL GYM */}
       {/* HARDCODE  */}
-      {userData.email === "frantrainer15@gmail.com" && dataPedido && (
+      {userData.email === "frantrainer15@gmail.com" && (
         <div className="w-full justify-center ">
           <section className="flex flex-col gap-6 items-center justify-center">
             <Title title={"Solicitudes de pago"}></Title>
-            {dataPedido && (
+            <div className="w-full flex justify-center mt-0 items-center gap-1  ">
+              <CustomInput
+                className="w-1/2 focus:ring-customButtonGreen focus:border-customButtonGreen "
+                value={emailUser}
+                onChange={handleChange}
+                placeholder="Email del cliente..."
+                type="text"
+              ></CustomInput>
+              <button
+                onClick={traerDataUser}
+                className="bg-customButtonGreen rounded p-2.5 md:p-2"
+              >
+                <IoSearchSharp className="text-white  text-lg md:text-2xl font-semibold"></IoSearchSharp>
+              </button>
+            </div>
+            {planElegido ? (
               <Stack
-                titulo={dataPedido.membresia.nombre}
-                duracion={` ${hora}`}
-                fechaFinalizacion={fecha}
+                titulo={planElegido.nombre}
+                duracion={`${planElegido.mesesDuracion} meses `}
+                fechaFinalizacion={`$ ${planElegido.precio}`}
+                classNameText={"md:text-3xl text-customGreenNavBar"}
               ></Stack>
+            ) : (
+              <Stack titulo={"Ningun plan asignado"}></Stack>
+            )}
+            {dataUserBuscado && (
+              <span className="text-xl font-semibold">{`Solicitud de pago de : ${
+                dataUserBuscado &&
+                dataUserBuscado.nombre + " " + dataUserBuscado.apellido
+              }`}</span>
             )}
           </section>
-          <div className="flex justify-center mt-5 gap-24">
-            <button
-              onClick={handleRegisterPayment}
-              className="py-1 px-1 md:py-3 font-bold md:w-1/3 text-white bg-customTextBlue rounded-lg"
-            >
-              Registrar Pago
-            </button>
-            {/*BUTTON PARA CANCELAR SOLICITUD DE PAGO DEL LADO DEL QUE ATIENDE EL GYM */}
-            <button
-              onClick={handleCancelRequest}
-              className="py-1 px-1 md:py-3 font-bold md:w-1/3 text-white bg-red-600 rounded-lg"
-            >
-              Cancelar Pago
-            </button>
-          </div>
+          {planElegido && dataUserBuscado && (
+            <div className="flex justify-center mt-5 gap-24">
+              <button
+                onClick={handleRegisterPayment}
+                className="py-1 px-1 md:py-3 font-bold md:w-1/3 text-white bg-customTextBlue rounded-lg"
+              >
+                Registrar Pago
+              </button>
+              {/*BUTTON PARA CANCELAR SOLICITUD DE PAGO DEL LADO DEL QUE ATIENDE EL GYM */}
+              <button
+                onClick={handleCancelRequest}
+                className="py-1 px-1 md:py-3 font-bold md:w-1/3 text-white bg-red-600 rounded-lg"
+              >
+                Cancelar Pago
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

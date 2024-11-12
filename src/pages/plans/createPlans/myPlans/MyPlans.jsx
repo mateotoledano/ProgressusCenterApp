@@ -396,6 +396,7 @@ export const MyPlans = ({
         arregloColumns={columnsTrainer}
         arreglo={planCreado}
         action={"delete"}
+        textSinEjercicios={"No tienes ejercicios agregados en este plan"}
       ></BasicTable>
       <div className="flex justify-center my-2 px-3 gap-6">
         <Button
@@ -418,6 +419,7 @@ export const MyPlans = ({
         setAlertCreate={setAlertCreate}
         open={openModalCreate}
         setOpen={setOpenModalCreate}
+      
       ></ModalCreatePlans>
     </>
   );

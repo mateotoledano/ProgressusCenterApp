@@ -9,6 +9,7 @@ export const MemberShip = () => {
   const [alertCreateRequest, setAlertCreateRequest] = useState(false);
   const [alertConfirmRequest, setAlertConfirmRequest] = useState(false);
   const [alertCancelPayment, setAlertCancelPayment] = useState(false);
+  const [alertUserEncontrado, setAlertUsuarioEncontrado] = useState(false);
   const userData = useStoreUserData((state) => state.userData);
   return (
     <MainLayout>
@@ -33,24 +34,24 @@ export const MemberShip = () => {
         </div>
         {/* DIVISION GRAY */}
         <div className="w-full h-2 md:h-4 bg-customGray"></div>
-        
-          <div className="p-5 mt-2">
-            <PricingPrices
-              setAlertCreateRequest={setAlertCreateRequest}
-              setAlertConfirmRequest={setAlertConfirmRequest}
-              setAlertCancelPayment={setAlertCancelPayment}
-            ></PricingPrices>
-          </div>
-        
+
+        <div className="p-5 mt-2">
+          <PricingPrices
+            setAlertCreateRequest={setAlertCreateRequest}
+            setAlertConfirmRequest={setAlertConfirmRequest}
+            setAlertCancelPayment={setAlertCancelPayment}
+            setAlertUsuarioEncontrado={setAlertUsuarioEncontrado}
+          ></PricingPrices>
+        </div>
       </section>
 
-      <SnackbarDefault
+      {/* <SnackbarDefault
         open={alertCreateRequest}
         setOpen={setAlertCreateRequest}
         severity="info"
         message="Su solicitud de pago se realizo y se encuentra en estado pandiente! "
         position={{ vertical: "center", horizontal: "center" }}
-      ></SnackbarDefault>
+      ></SnackbarDefault> */}
 
       <SnackbarDefault
         open={alertConfirmRequest}
@@ -71,6 +72,13 @@ export const MemberShip = () => {
         // position="bottom-center"
         // autoclose={5000}
         // message="Pago cancelado con exito ! "
+      ></SnackbarDefault>
+
+      <SnackbarDefault
+        open={alertUserEncontrado}
+        setOpen={setAlertUsuarioEncontrado}
+        message={"El email no corresponde a ningun usuario"}
+        severity={"warning"}
       ></SnackbarDefault>
     </MainLayout>
   );

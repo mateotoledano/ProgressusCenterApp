@@ -13,6 +13,7 @@ import { IoStatsChartOutline } from "react-icons/io5";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { Title } from "../title/Title";
 import { useStoreUserData } from "../../../store";
+
 const routeAdminNavigation = [
   {
     title: "Inicio",
@@ -25,7 +26,7 @@ const routeAdminNavigation = [
     link: "/acount",
   },
   {
-    title: "Membresias",
+    title: "Membresías",
     icon: <FaRegAddressCard />,
     link: "/membership",
   },
@@ -36,7 +37,7 @@ const routeAdminNavigation = [
     link: "/inventary",
   },
   {
-    title: "Estadisticas",
+    title: "Estadísticas",
     icon: <IoStatsChartOutline />,
     link: "/stats",
   },
@@ -46,6 +47,7 @@ const routeAdminNavigation = [
     link: "/notifications",
   },
 ];
+
 const routeNavigation = [
   {
     title: "Inicio",
@@ -58,7 +60,7 @@ const routeNavigation = [
     link: "/acount",
   },
   {
-    title: "Membresias",
+    title: "Membresías",
     icon: <FaRegAddressCard />,
     link: "/membership",
   },
@@ -114,7 +116,7 @@ export const Footer = () => {
                   <span>08:00 am - 22:00 pm </span>
                 </div>
                 <div className="flex flex-col justify-end  ">
-                  <span className="font-semibold p-1">Sabados </span>
+                  <span className="font-semibold p-1">Sábados </span>
                   <span>08:00 am - 12:00 am </span>
                 </div>
               </div>
