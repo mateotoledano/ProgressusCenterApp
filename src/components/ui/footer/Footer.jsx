@@ -12,55 +12,85 @@ import { MdOutlineInventory } from "react-icons/md";
 import { IoStatsChartOutline } from "react-icons/io5";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { Title } from "../title/Title";
+import { useStoreUserData } from "../../../store";
+const routeAdminNavigation = [
+  {
+    title: "Inicio",
+    icon: <GoHome />,
+    link: "/home",
+  },
+  {
+    title: "Mi cuenta",
+    icon: <CgProfile />,
+    link: "/acount",
+  },
+  {
+    title: "Membresias",
+    icon: <FaRegAddressCard />,
+    link: "/membership",
+  },
+
+  {
+    title: "Inventario",
+    icon: <MdOutlineInventory />,
+    link: "/inventary",
+  },
+  {
+    title: "Estadisticas",
+    icon: <IoStatsChartOutline />,
+    link: "/stats",
+  },
+  {
+    title: "Notificaciones",
+    icon: <IoMdNotificationsOutline />,
+    link: "/notifications",
+  },
+];
+const routeNavigation = [
+  {
+    title: "Inicio",
+    icon: <GoHome />,
+    link: "/home",
+  },
+  {
+    title: "Mi cuenta",
+    icon: <CgProfile />,
+    link: "/acount",
+  },
+  {
+    title: "Membresias",
+    icon: <FaRegAddressCard />,
+    link: "/membership",
+  },
+  {
+    title: "Planes",
+    icon: <GrPlan />,
+    link: "/plans",
+  },
+  {
+    title: "Turnos",
+    icon: <BsMenuButtonWide />,
+    link: "/turns",
+  },
+  {
+    title: "Notificaciones",
+    icon: <IoMdNotificationsOutline />,
+    link: "/notifications",
+  },
+];
+
 export const Footer = () => {
+  const userData = useStoreUserData((state) => state.userData);
+  const isAdmin = userData.email === "frantrainer15@gmail.com";
+
+  const routesToDisplay = isAdmin ? routeAdminNavigation : routeNavigation;
   const iconsTab = [
     { icon: <FaFacebookF /> },
     { icon: <AiOutlineTwitter /> },
     { icon: <AiFillYoutube /> },
     { icon: <BiLogoPinterestAlt /> },
   ];
-  const routeNavigation = [
-    {
-      title: "Inicio",
-      icon: <GoHome />,
-      link: "/home",
-    },
-    {
-      title: "Mi cuenta",
-      icon: <CgProfile />,
-      link: "/acount",
-    },
-    {
-      title: "Membresias",
-      icon: <FaRegAddressCard />,
-      link: "/membership",
-    },
-    {
-      title: "Planes",
-      icon: <GrPlan />,
-      link: "/plans",
-    },
-    {
-      title: "Turnos",
-      icon: <BsMenuButtonWide />,
-      link: "/turns",
-    },
-    {
-      title: "Inventario",
-      icon: <MdOutlineInventory />,
-      link: "/inventary",
-    },
-    {
-      title: "Estadisticas",
-      icon: <IoStatsChartOutline />,
-      link: "/stats",
-    },
-    {
-      title: "Notificaciones",
-      icon: <IoMdNotificationsOutline />,
-      link: "/notifications",
-    },
-  ];
+
   return (
     <>
       <footer className="bg-customGreenLigth shadow-top font-sans dark:bg-gray-900 mt-6 md:mt-14">
@@ -91,7 +121,7 @@ export const Footer = () => {
             </div>
             <div className="w-full md:w-1/3 md:mt-0 mt-3   flex gap-28 md:gap-10 justify-center   md:justify-end  font-semibold items-end">
               <div className="flex flex-col items-start justify-end">
-                {routeNavigation.slice(0, 4).map((route, index) => (
+                {routesToDisplay.slice(0, 4).map((route, index) => (
                   <Link
                     to={route.link}
                     key={index}
@@ -103,7 +133,7 @@ export const Footer = () => {
                 ))}
               </div>
               <div className="flex flex-col items-start justify-end">
-                {routeNavigation.slice(4, 8).map((route, index) => (
+                {routesToDisplay.slice(4, 8).map((route, index) => (
                   <Link
                     to={route.link}
                     key={index}

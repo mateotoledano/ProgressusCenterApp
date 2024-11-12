@@ -11,7 +11,10 @@ import {
   Stats,
   Notifications,
   MyPlans,
+  CreateallExercise
 } from "./pages";
+import { HomePlans } from "./pages/plans/HomePlans";
+
 //RUTAS PROTEGIDAS
 export const router = createBrowserRouter([
   {
@@ -40,15 +43,31 @@ export const router = createBrowserRouter([
     path: "/plans",
     element: (
       <ProtectedRoute>
+        <HomePlans />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/plans/createPlans/",
+    element: (
+      <ProtectedRoute>
         <Plans />
       </ProtectedRoute>
     ),
   },
   {
-    path: "/plans/myplans",
+    path: "/plans/createPlans/myPlans",
     element: (
       <ProtectedRoute>
         <MyPlans />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/plans/createallExercise",
+    element: (
+      <ProtectedRoute>
+        <CreateallExercise />
       </ProtectedRoute>
     ),
   },

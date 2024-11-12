@@ -115,7 +115,7 @@ export const Register = () => {
         formRegister.lastname,
         formRegister.tel
       );
-      console.log(userData, "userrrrrr data");
+
       // ENVIAR EMAIL DE VERIFICACION
       if (user.status == "200" && userData.status == "200") {
         setOpen(true);

@@ -39,24 +39,28 @@ export const Turns = () => {
   const dataUser = useStoreUserData((state) => state.userData);
   const [turnosReservados, setTurnosReservados] = useState([]);
   const today = dayjs().format("dddd, D [de] MMMM [de] YYYY");
+  // ALERT AL ELMINAR RESERVA
   const [alertDelete, setAlertDelete] = useState(false);
-  // MANEJO DEL ALERT AL SELECCIONAR TURNO
+  // MANEJO DEL ALERT AL RESERVAR TURNO
   const [openAlert, setOpenAlert] = useState(false);
   const [openAlertError, setOpenAlertError] = useState(false);
-
+  // ALERTA AL SELECCIONAR HORA ANTES DE LA ACTUAL
+  const [alertHoraError, setAlertHoraError] = useState(false);
+  //ALERT PARA NO RESERVAR DOS VECES EL MISMO HORARIO
+  const [alertDuplicatedTurn, setAlertDuplicatedTurn] = useState(false);
   useEffect(() => {
     const traerTurnos = async () => {
       try {
         const response = await useGetTurns(dataUser.identityUserId);
+
         setTurnosReservados(response.data.value);
       } catch (error) {
         console.error("Error al traer los turnos:", error);
       }
     };
 
-    // Llamar solo una vez al montar el componente
     traerTurnos();
-  }, []); // Agrega una dependencia vacía para ejecutar solo al montar
+  }, []);
 
   const handleDeleteTurn = async () => {
     try {
@@ -75,7 +79,7 @@ export const Turns = () => {
 
   return (
     <MainLayout>
-      <section className="animate-fade-in-down bg-white md:mx-auto   rounded shadow-xl w-full md:w-11/12 p-4 overflow-hidden mb-4">
+      <section className="animate-fade-in-down bg-white md:mx-auto   rounded shadow-xl w-full md:w-11/12 p-4 overflow-hidden mb-20">
         <section className="w-full md:flex items-start md:mt-0 gap-0  ">
           <div className="flex flex-col md:border-r  md:pr-5 items-center justify-center gap-4 w-full mt-0 md:w-1/4 ">
             <div className="flex flex-col w-full justify-center md:items-start md:gap-3">
@@ -90,10 +94,13 @@ export const Turns = () => {
             </div>
             {turnos.map((turno, index) => (
               <Acordion
+                setAlertDuplicatedTurn={setAlertDuplicatedTurn}
+                setAlertHoraError={setAlertHoraError}
                 openAlert={openAlert}
                 openAlertError={openAlertError}
                 // PARA ACTUALIZAR TURNOS RESERVADOS
                 setTurnosReservados={setTurnosReservados}
+                turnosReservados={turnosReservados}
                 //////////////////////
                 setOpenAlert={setOpenAlert}
                 setOpenAlertError={setOpenAlertError}
@@ -113,11 +120,12 @@ export const Turns = () => {
               {turnosReservados.length > 0 ? (
                 turnosReservados.map((turn) => {
                   const fechaReserva = turn.fechaReserva.split("T")[0];
-                  // Crear el objeto Date usando el método 'split' para evitar problemas de zona horaria
-                  const [year, month, day] = fechaReserva.split("-");
-                  const fechaObj = new Date(year, month - 1, day); // Los meses en JavaScript son base 0 (enero es 0, diciembre es 11)
 
-                  // Array para los días de la semana
+                  const [year, month, day] = fechaReserva.split("-");
+                  const fechaFormateada = `${day}-${month}-${year}`; // Formato '07-11-2024'
+
+                  const fechaObj = new Date(year, month - 1, day); // Los meses en JavaScript son de 0 a 11
+
                   const diasSemana = [
                     "Domingo",
                     "Lunes",
@@ -128,9 +136,15 @@ export const Turns = () => {
                     "Sábado",
                   ];
                   const diaSemana = diasSemana[fechaObj.getDay()];
-                  // Convertimos la hora de inicio en un número para compararla
+
+                  // Extraer solo la hora y los minutos de 'horaInicio' y 'horaFin'
+                  const horaInicioFormateada = turn.horaInicio.substring(0, 5); // "07:00"
+                  const horaFinFormateada = turn.horaFin.substring(0, 5); // "08:00"
+
+                  // pasamos la hora a num
                   const hora = parseInt(turn.horaInicio.split(":")[0], 10);
-                  // Definimos el título según la hora
+
+                  //  título según la hora
                   let tituloTurno = "";
                   if (hora >= 6 && hora < 12) {
                     tituloTurno = "Turno mañana";
@@ -144,8 +158,8 @@ export const Turns = () => {
                     <Stack
                       key={turn.id}
                       titulo={tituloTurno}
-                      duracion={`${turn.horaInicio} hs`}
-                      fechaFinalizacion={`${diaSemana}, ${fechaReserva}`}
+                      duracion={`${horaInicioFormateada} hs - ${horaFinFormateada} hs`}
+                      fechaFinalizacion={`${diaSemana}, ${fechaFormateada}`}
                     ></Stack>
                   );
                 })
@@ -161,7 +175,11 @@ export const Turns = () => {
                     onClick={handleDeleteTurn}
                     Icon={MdDeleteOutline}
                     className="px-[6px] py-[3px] flex items-center gap-1 bg-red-600 hover:bg-red-700 text-sm md:text-base"
-                    label={"Eliminar turnos"}
+                    label={`${
+                      turnosReservados.length == 1
+                        ? `Eliminar turno`
+                        : `Eliminar Turnos`
+                    }`}
                   ></Button>
                 </div>
               )}
@@ -169,13 +187,17 @@ export const Turns = () => {
           </section>
         </section>
       </section>
-      {/* ALERTAS AL GUARDAR , ELIMINAR EL TURNO */}
+      {/* ALERTAS AL GUARDAR , ELIMINAR , TURNO NO DISPONIBLE Y TURNO DUPLICADO */}
 
       <GridAlertsTurns
         setAlertDelete={setAlertDelete}
         alertDelete={alertDelete}
         openAlert={openAlert}
         openAlertError={openAlertError}
+        alertHoraError={alertHoraError}
+        setAlertHoraError={setAlertHoraError}
+        alertDuplicatedTurn={alertDuplicatedTurn}
+        setAlertDuplicatedTurn={setAlertDuplicatedTurn}
       ></GridAlertsTurns>
     </MainLayout>
   );

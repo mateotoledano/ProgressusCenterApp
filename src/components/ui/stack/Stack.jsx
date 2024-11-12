@@ -15,6 +15,7 @@ export const Stack = ({
       <div className="leading-3">
         <p className="text-sm md:text-lg font-bold text-slate-600">{titulo}</p>
         <span className="text-sm md:text-lg text-slate-600">{duracion}</span>
+        {/* <span className="text-sm md:text-lg text-slate-600">estado:Pendiente</span> */}
       </div>
       <p className=" text-sm md:text-base text-black  font-medium ml-auto ">
         {fechaFinalizacion}

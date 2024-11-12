@@ -11,7 +11,7 @@ export const useSendReserve = async (
 
   try {
     const response = await api.post(
-      `/api/ReservasTurnos/crear`,
+      `/api/ReservasTurnos/crear/`,
       {
         userId: userId,
         fecha: fecha,

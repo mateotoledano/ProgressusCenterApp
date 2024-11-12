@@ -1,10 +1,21 @@
-import React, { useState } from "react";
-import { MainLayout } from "../../layout/MainLayout";
+import React, { useEffect, useState } from "react";
+import { MainLayout } from "../../../../layout/MainLayout";
 import { IoSearchSharp } from "react-icons/io5";
+import { useGetAllExercises } from "../../../../service/plans/useGetExercises";
 
 import { GrPlan } from "react-icons/gr";
-import { Title, Location, CustomInput, BasicTable } from "../../components";
+import {
+  Title,
+  Location,
+  CustomInput,
+  BasicTable,
+  SnackbarDefault,
+} from "../../../../components";
 import { Link } from "react-router-dom";
+import { useStoreUserData } from "../../../../store";
+import { CreatePlans } from "../createPlans/CreatePlans";
+import { EditPlans } from "../editPlans/editPlans";
+import { MyPlans } from "../myPlans/MyPlans";
 const ejercicios = [
   {
     grupoMuscular: "Pecho",
@@ -293,7 +304,7 @@ const ejercicios = [
     link: "https://www.youtube.com/watch?v=wkD8rjkodUI",
   },
 ];
-const columns = [
+const columnsUser = [
   "Grupo Muscular",
   "Ejercicio",
   "Peso",
@@ -302,59 +313,119 @@ const columns = [
   "Ver",
   "Agregar",
 ];
+const columnsTrainer = [
+  "Musculos",
+  "Ejercicio",
+  "Descripcion",
+  "Imagen",
+  "Ver",
+  "Agregar",
+];
 export const Plans = () => {
-  const [searchPlan, setSearchPlan] = useState("");
-  const handleChange = (e) => {
-    setSearchPlan(e.target.value);
-  };
-  console.log(searchPlan, "search");
+  const [selectNav, setSelectNav] = useState("Crear Plan");
+  const dataUser = useStoreUserData((state) => state.userData);
+  const [alertPlanVacio, setAlertPlanVacio] = useState(false);
+  const [alertCreate, setAlertCreate] = useState(false);
+  const [alertExerciseAdded, setAlertExerciseAdded] = useState(false);
 
+  const [errorServer, setErrorServer] = useState(false);
   return (
     <MainLayout>
-      <section className="animate-fade-in-down md:mx-auto bg-white rounded shadow-xl w-full md:w-11/12  overflow-hidden mb-4 flex flex-col ">
+      <section className="animate-fade-in-down md:mx-auto bg-white rounded shadow-xl w-full md:w-11/12  overflow-hidden mb-20 flex flex-col ">
         <div className="b p-3 ">
-          <Location route={"Planes"} subroute={"Crear Plan"}></Location>
+          <Location route={"Planes"} subroute={selectNav}></Location>
           <div className="flex flex-col md:flex-row md:justify-between md:items-center">
-            <Title title={"Crear Plan de Entrenamiento"}></Title>
-            <Link to={"/plans/myplans"} className="flex  gap-2 items-center">
+            <Title title={"Planes de entrenamiento"}></Title>
+            {/* <Link
+              to={"/plans/createPlans/myPlans"}
+              className="flex  gap-2 items-center"
+            >
               <span className="text-sm md:text-lg text-customTextGreen underline">
                 Mis planes
               </span>
               <GrPlan className="text-customNavBar text-sm md:text-2xl"></GrPlan>
-            </Link>
+            </Link> */}
           </div>
         </div>
         {/* DIVISION GRAY */}
         <div className="w-full h-2 md:h-4 bg-customGray"></div>
         {/* BUSCAR EJERCICIO */}
-        <div className="p-3 mt-0  flex flex-col md:flex-row md:justify-between  md:items-center">
-          <div className="flex justify-start items-center gap-2">
-            <h2 className="md:text-2xl">{`Plan de Mariano`}</h2>
-
-            <GrPlan className="text-customNavBar text-sm md:text-2xl"></GrPlan>
-          </div>
-          <div className="flex justify-center items-center gap-1 mt-3 md:w-1/3">
-            <CustomInput
-            className="focus:ring-customButtonGreen focus:border-customButtonGreen "
-              value={searchPlan}
-              onChange={handleChange}
-              placeholder="Buscar ejercicio..."
-              type="text"
-            ></CustomInput>
-            <button className="bg-customButtonGreen p-2 md:p-2  rounded">
-              <IoSearchSharp className="text-white  text-lg md:text-2xl font-semibold"></IoSearchSharp>{" "}
-            </button>
-          </div>
+        <div className="p-3 mb-3 w-full flex justify-between md:justify-center items-center gap-0 md:gap-12  ">
+          <span
+            onClick={() => setSelectNav("Crear Plan")}
+            className={`transition-all font-bold cursor-pointer p-1  ${
+              selectNav === "Crear Plan" &&
+              "border-b-2 border-customTextGreen text-customTextGreen md:text-lg"
+            }`}
+          >
+            Crear Plan
+          </span>
+          {/* <span
+            onClick={() => setSelectNav("Editar Planes")}
+            className={`transition-all font-bold cursor-pointer p-1 ${
+              selectNav === "Editar Planes" &&
+              "border-b-2 border-customTextGreen text-customTextGreen md:text-lg"
+            }`}
+          >
+            Editar Planes
+          </span> */}
+          <span
+            onClick={() => setSelectNav("Mis Planes")}
+            className={`transition-all font-bold cursor-pointer p-1 ${
+              selectNav === "Mis Planes" &&
+              "border-b-2 border-customTextGreen text-customTextGreen md:text-lg"
+            }`}
+          >
+            Mis Planes
+          </span>
         </div>
-        {/* TABLA DE EJERCICIOS */}
-        <div className="mt-3">
-          <BasicTable
-            arreglo={ejercicios}
-            arregloColumns={columns}
-            action="add"
-          ></BasicTable>
-        </div>
+        {selectNav == "Crear Plan" && (
+          <CreatePlans
+            setAlertExerciseAdded={setAlertExerciseAdded}
+          ></CreatePlans>
+        )}
+        {/* {selectNav == "Editar Planes" && <EditPlans></EditPlans>} */}
+        {selectNav == "Mis Planes" && (
+          <MyPlans
+            setErrorServer={setErrorServer}
+            setAlertCreate={setAlertCreate}
+            setAlertPlanVacio={setAlertPlanVacio}
+          ></MyPlans>
+        )}
       </section>
+      <SnackbarDefault
+        open={alertPlanVacio}
+        setOpen={setAlertPlanVacio}
+        severity={"warning"}
+        message={"Debe agregar ejercicios al Plan"}
+        position={{ vertical: "bottom", horizontal: "left" }}
+      ></SnackbarDefault>
+      {/* ALERT ERROR 500(SERVIDOr) */}
+      <SnackbarDefault
+        open={errorServer}
+        setOpen={setErrorServer}
+        severity={"error"}
+        message={"Ocurrio un error intentelo nuevamente"}
+        position={{ vertical: "bottom", horizontal: "left" }}
+      ></SnackbarDefault>
+
+      <SnackbarDefault
+        open={alertExerciseAdded}
+        setOpen={setAlertExerciseAdded}
+        severity={"success"}
+        message={
+          "El ejercicio se agregó a tu plan. Puedes consultarlo en Mis Planes."
+        }
+        position={{ vertical: "bottom", horizontal: "left" }}
+      ></SnackbarDefault>
+
+      <SnackbarDefault
+        open={alertCreate}
+        setOpen={setAlertCreate}
+        severity={"success"}
+        message={"El plan se creo correctamente."}
+        position={{ vertical: "bottom", horizontal: "left" }}
+      ></SnackbarDefault>
     </MainLayout>
   );
 };

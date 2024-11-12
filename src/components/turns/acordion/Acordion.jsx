@@ -13,13 +13,18 @@ export const Acordion = ({
   onClick,
   setOpenAlert,
   setOpenAlertError,
-  setTurnosReservados
+  turnosReservados,
+  setTurnosReservados,
+
+  setAlertHoraError,
+  setAlertDuplicatedTurn,
 }) => {
   const [open, setOpen] = React.useState(false);
 
   // MANEJO DE HORARIOS
   const [horaInicio, setHorario] = React.useState("");
   const [horaFinal, setHoraFinal] = React.useState("");
+
   const onChangeHora = (cont, index) => {
     setHorario(cont);
 
@@ -76,13 +81,16 @@ export const Acordion = ({
         </AccordionDetails>
       </Accordion>
       <ModalTurns
-      setTurnosReservados={setTurnosReservados}
+        setAlertDuplicatedTurn={setAlertDuplicatedTurn}
+        turnosReservados={turnosReservados}
+        setTurnosReservados={setTurnosReservados}
         setOpenAlert={setOpenAlert}
         setOpenAlertError={setOpenAlertError}
         open={open}
         setOpen={setOpen}
         horaInicio={horaInicio}
         horaFinal={horaFinal}
+        setAlertHoraError={setAlertHoraError}
       ></ModalTurns>
     </div>
   );

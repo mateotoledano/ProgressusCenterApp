@@ -11,6 +11,7 @@ export const CustomInput = ({
   className = "",
   Icon,
   iconColor,
+  required,
   label,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -28,18 +29,19 @@ export const CustomInput = ({
 
   return (
     <div
-      className={`flex my-2 bg-white items-center border border-gray-300 rounded-sm w-full ${className}`}
+      className={`flex  bg-white items-center border border-gray-300 rounded-sm w-full ${className}`}
     >
       {Icon && <span className="p-1">{<Icon className={iconColor} />}</span>}
 
       <input
+        required={required}
         name={name}
         type={inputType()}
         value={value}
         onChange={onChange}
         placeholder={placeholder}
         disabled={disabled}
-        className="flex-1 p-1 md:p-2 focus:outline-none font-medium"
+        className="flex-1 p-1.5 md:p-2 focus:outline-none font-medium"
         aria-label={placeholder}
       />
       {type === "password" && (

@@ -1,14 +1,36 @@
 import React, { useState } from "react";
-import { MainLayout } from "../../../layout/MainLayout";
-import { Title, Location, BasicTable, Select } from "../../../components";
-
-const columns = [
+import { MainLayout } from "../../../../layout/MainLayout";
+import {
+  Title,
+  Location,
+  BasicTable,
+  Select,
+  Button,
+} from "../../../../components";
+import { MdDeleteOutline } from "react-icons/md";
+import { useStoreUserData } from "../../../../store";
+import { GrPlan } from "react-icons/gr";
+import { useStorePlanCreado } from "../../../../store/useStorePlanCreado";
+import { IoIosAddCircleOutline } from "react-icons/io";
+import { ModalCreatePlans } from "../../../../components";
+const columnsUser = [
   "Grupo Muscular",
   "Ejercicio",
   "Peso",
   "Series",
   "Repeticiones",
   "Ver",
+  "Agregar",
+];
+const columnsTrainer = [
+  "Musculos",
+  "Ejercicio",
+  "Descripcion",
+  "Series",
+  "Repeticiones",
+  "Imagen",
+  "Ver",
+  "Agregar",
 ];
 const ejercicios = [
   {
@@ -319,33 +341,84 @@ const ejercicios = [
   },
 ];
 
-export const MyPlans = () => {
+export const MyPlans = ({
+  setAlertPlanVacio,
+  setAlertCreate,
+  setErrorServer,
+}) => {
   const [selectedDay, setSelectedDay] = useState("Lunes");
-  console.log(selectedDay, "selected day");
+  const dataUser = useStoreUserData((state) => state.userData);
+  const nameUser = dataUser.nombre;
+  const [openModalCreate, setOpenModalCreate] = useState(false);
+  const planCreado = useStorePlanCreado((state) => state.planCreado);
+  const clearPlanActual = useStorePlanCreado((state) => state.clearPlan);
 
+  const createPlan = () => {
+    if (planCreado.length > 0) {
+      setOpenModalCreate(true);
+    } else {
+      setAlertPlanVacio(true);
+    }
+  };
+  const deletePlan = () => {
+    clearPlanActual();
+  };
   return (
-    <MainLayout>
-      <section className="animate-fade-in-down md:mx-auto bg-white rounded shadow-xl w-full md:w-11/12  overflow-hidden mb-4 flex flex-col ">
-        <div className="p-3">
+    <>
+      {/* <div className="p-3">
           <Location route={"Planes"} subroute={"Mis Planes"}></Location>
           <Title title={"Mis Planes"}></Title>
+        </div> */}
+      {/* DIVISION GRAY */}
+      {/* <div className="w-full h-2 md:h-4 bg-customGray"></div> */}
+      <div className="px-3 mt-0  flex flex-col md:flex-row md:justify-between mb-0 md:items-center">
+        <div className="flex justify-start items-center gap-2 mb-4">
+          <h2 className="md:text-2xl">{`Planes de ${nameUser}`}</h2>
+
+          <GrPlan className="text-customNavBar text-sm md:text-2xl"></GrPlan>
         </div>
-        {/* DIVISION GRAY */}
-        <div className="w-full h-2 md:h-4 bg-customGray"></div>
-        <div className="w-full flex md:flex-row flex-col items-start md:gap-0 gap-2 md:justify-between md:items-center p-3 mb-3">
-          <Title title={`Plan de Mariano`}></Title>
-          <Select
-            selectedDay={selectedDay}
-            setSelectedDay={setSelectedDay}
-          ></Select>
-        </div>
-        <BasicTable
+        <Select
           selectedDay={selectedDay}
-          arregloColumns={columns}
-          arreglo={ejercicios}
-          action={"delete"}
-        ></BasicTable>
-      </section>
-    </MainLayout>
+          setSelectedDay={setSelectedDay}
+        ></Select>
+      </div>
+
+      <div className="flex justify-center px-3 text-center my-3 ">
+        <h2 className="text-lg md:text-2xl p-1 border-customNavBar border-b-2 font-semibold">
+          Plan actual
+        </h2>
+      </div>
+
+      <BasicTable
+        myplans={true}
+        loading={false}
+        selectedDay={selectedDay}
+        arregloColumns={columnsTrainer}
+        arreglo={planCreado}
+        action={"delete"}
+      ></BasicTable>
+      <div className="flex justify-center my-2 px-3 gap-6">
+        <Button
+          onClick={createPlan}
+          Icon={IoIosAddCircleOutline}
+          className="flex items-center gap-2 md:px-[8px] md:py-[5px]"
+          classNameIcon="text-xl md:text-xl font-semibold"
+          label={"Crear Plan"}
+        ></Button>
+        <Button
+          onClick={deletePlan}
+          Icon={MdDeleteOutline}
+          className="flex bg-red-600 items-center gap-2 px-[8px] py-[5px]"
+          classNameIcon="text-xl md:text-xl font-semibold"
+          label={"Eliminar Plan"}
+        ></Button>
+      </div>
+      <ModalCreatePlans
+        setErrorServer={setErrorServer}
+        setAlertCreate={setAlertCreate}
+        open={openModalCreate}
+        setOpen={setOpenModalCreate}
+      ></ModalCreatePlans>
+    </>
   );
 };

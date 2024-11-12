@@ -81,7 +81,7 @@ export const ModalVerificationAuth = ({ open, email, setOpen }) => {
         email,
         codeString
       );
-      console.log(responseSendCode, "ressssss");
+     
 
       if (responseSendCode.status == "200") {
         changeToLogin();

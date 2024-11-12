@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
@@ -14,6 +15,7 @@ import dayjs from "dayjs";
 import { useGetTurns } from "../../../service/turns/use-getTurns";
 import { Alert } from "../../ui/alert/Alert";
 import { useStoreUserData } from "../../../store";
+import { SnackbarDefault } from "../../ui/snackbar/Snackbar";
 const Fade = React.forwardRef(function Fade(props, ref) {
   const {
     children,
@@ -60,7 +62,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: window.innerWidth < 700 ? "78%" : 800,
+  width: window.innerWidth < 700 ? "76%" : 800,
   maxWidth: 400,
   bgcolor: "#E6F7FF",
   border: "1px solid #1890FF",
@@ -77,18 +79,43 @@ export const ModalTurns = ({
   setOpenAlert,
   setOpenAlertError,
   setTurnosReservados,
+  setAlertHoraError,
+  turnosReservados,
+  setAlertDuplicatedTurn,
 }) => {
+  
+
   // HORARIO Y FECHA PARA MOSTRAR EN HOME
   // const today = dayjs().format("dddd, D [de] MMMM [de] YYYY");
   // const setTime = useStoreTime((state) => state.setTime);
   // const setDate = useStoreTime((state) => state.setTDate);
+  let encontrado = false;
+  let horaFormat = `${horaInicio}:00`;
+  for (let index = 0; index < turnosReservados.length; index++) {
+    const element = turnosReservados[index];
+    if (element.horaInicio == horaFormat && !encontrado) {
+      encontrado = true;
+    }
+  }
+
+
   const userData = useStoreUserData((state) => state.userData);
 
   dayjs.extend(utc);
   dayjs.extend(timezone);
+  // Comparación de la hora actual con la hora de inicio del turno
+  const horaActual = dayjs();
+  const horaInicioTurno = dayjs()
+    .hour(parseInt(horaInicio.split(":")[0], 10))
+    .minute(parseInt(horaInicio.split(":")[1], 10));
+
+  const turnoDisponible = horaActual.isBefore(horaInicioTurno);
+  
+
   const fechaArgentina = dayjs()
     .tz("America/Argentina/Buenos_Aires")
     .toISOString();
+
   const idUser = userData.identityUserId;
 
   // Obtener la fecha actual en formato 'YYYY-MM-DD'
@@ -115,30 +142,41 @@ export const ModalTurns = ({
 
   const handleTurn = async (e) => {
     e.preventDefault();
-    try {
-      setOpenAlert(false);
-      setOpenAlertError(false);
-      const responseTurn = await useSendReserve(
-        idUser,
-        fechaArgentina,
-        horaInicioFormatted, // Enviando la hora en formato HH:mm:ss
-        horaFinFormatted, // Enviando la hora en formato HH:mm:ss
-        confirm
-      );
-      console.log(responseTurn, "response returnm");
 
-      if (responseTurn && responseTurn.status == "200") {
-        const upadateTurns = await useGetTurns(userData.identityUserId);
-        setTurnosReservados(upadateTurns.data.value)
-        setOpen(false);
-        setOpenAlert(true);
+    if (!turnoDisponible) {
+      setAlertHoraError(true); // Mostrar alerta de error
+      console.log(
+        "No se puede reservar este turno porque ya ha pasado la hora de inicio."
+      );
+    } else {
+      if (!encontrado) {
+        try {
+          setOpenAlert(false);
+          setOpenAlertError(false);
+          const responseTurn = await useSendReserve(
+            idUser,
+            fechaArgentina,
+            horaInicioFormatted, // Enviando la hora en formato HH:mm:ss
+            horaFinFormatted, // Enviando la hora en formato HH:mm:ss
+            confirm
+          );
+
+          if (responseTurn && responseTurn.status == "200") {
+            const upadateTurns = await useGetTurns(userData.identityUserId);
+            setTurnosReservados(upadateTurns.data.value);
+            setOpen(false);
+            setOpenAlert(true);
+          } else {
+            setOpen(false);
+            setOpenAlertError(true);
+          }
+          console.log(responseTurn, "response");
+        } catch (e) {
+          console.log(e, "error");
+        }
       } else {
-        setOpen(false);
-        setOpenAlertError(true);
+        setAlertDuplicatedTurn(true);
       }
-      console.log(responseTurn, "response");
-    } catch (e) {
-      console.log(e, "error");
     }
   };
 

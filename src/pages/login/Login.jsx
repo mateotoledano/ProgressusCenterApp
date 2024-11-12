@@ -107,10 +107,11 @@ export const Login = () => {
   return (
     <form
       onSubmit={handleLogin}
-      className="w-3/4 animate-fade-in-right flex flex-col justify-center items-center md:w-1/3 md:gap-2 md:items-center mt-4"
+      className="w-3/4 animate-fade-in-right gap-2 flex flex-col justify-center items-center md:w-1/3 md:gap-2 md:items-center mt-4"
     >
       {/* Inputs */}
       <CustomInput
+        className="my-1"
         iconColor={"text-customTextGreen"}
         onChange={handleChange}
         placeholder="Usuario"
@@ -121,6 +122,7 @@ export const Login = () => {
       {errors.email && <ErrorAuth messageError={errors.email} />}
 
       <CustomInput
+        className="my-1"
         iconColor={"text-customTextGreen"}
         onChange={handleChange}
         placeholder="Contraseña"

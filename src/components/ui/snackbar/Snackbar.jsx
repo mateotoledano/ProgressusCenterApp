@@ -2,30 +2,48 @@ import * as React from "react";
 import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import { Title } from "../title/Title";
 
-export const SnackbarDefault = ({ alertDelete, setAlertDelete }) => {
+export const SnackbarDefault = ({
+  open,
+  setOpen,
+  message,
+  severity,
+  position,
+  mt
+}) => {
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
 
-    setAlertDelete(false);
+    setOpen(false);
   };
 
   return (
     <div>
       <Snackbar
-        open={alertDelete}
+        open={open}
         autoHideDuration={5000}
         onClose={handleClose}
+        anchorOrigin={{
+          vertical: position?.vertical || "bottom",
+          horizontal: position?.horizontal || "center",
+        }}
+        sx={{ mt: `${mt}` }}
       >
         <Alert
           onClose={handleClose}
-          severity="info"
+          severity={severity}
           variant="filled"
-          sx={{ width: "100%" }}
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
         >
-          Turno eliminado con exito !
+          <h1 className="md:text-lg"> {message}</h1>
         </Alert>
       </Snackbar>
     </div>
