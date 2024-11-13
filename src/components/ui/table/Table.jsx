@@ -23,7 +23,7 @@ export const BasicTable = ({
   setAlertExerciseAdded,
   loading,
   myplans,
-  textSinEjercicios
+  textSinEjercicios,
 }) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -105,7 +105,8 @@ export const BasicTable = ({
                   <TableCell colSpan={6} align="center">
                     <LoadingSkeleton
                       width={"100%"}
-                      count={38}
+                       height={100}
+                      count={5}
                     ></LoadingSkeleton>
                   </TableCell>
                 </TableRow>

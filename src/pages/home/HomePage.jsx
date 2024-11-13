@@ -109,7 +109,7 @@ export const HomePage = () => {
         ) : (
           dataUser.email !== "frantrainer15@gmail.com" &&
           turnosReservados &&
-          userData && (
+          dataUser && (
             <div className="bg-white mx-3 md:m-0 md:mx-8 p-2 rounded shadow-sm gap-1 flex md:flex-col justify-center items-center">
               <Title
                 title={"No tienes turnos reservados"}

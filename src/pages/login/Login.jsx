@@ -11,8 +11,12 @@ import { useNavigate } from "react-router-dom";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { MdErrorOutline } from "react-icons/md";
 import { loginUser } from "../../service/auth/use-login";
-import { useStoreUser, useStoreAlert, useStoreUserData ,useSpinnerStore} from "../../store";
-
+import {
+  useStoreUser,
+  useStoreAlert,
+  useStoreUserData,
+  useSpinnerStore,
+} from "../../store";
 
 export const Login = () => {
   const [errorLogin, setErrorLogin] = useState(false);
@@ -81,8 +85,10 @@ export const Login = () => {
       setErrors(formErrors);
       return;
     }
-    showSpinner();
     try {
+      showSpinner();
+      console.log(formLogin.email, formLogin.password ,"email and password");
+      
       const enviarUser = await loginUser(formLogin.email, formLogin.password);
 
       if (enviarUser.status == "200") {

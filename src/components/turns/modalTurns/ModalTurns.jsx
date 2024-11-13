@@ -16,6 +16,7 @@ import { useGetTurns } from "../../../service/turns/use-getTurns";
 import { Alert } from "../../ui/alert/Alert";
 import { useStoreUserData } from "../../../store";
 import { SnackbarDefault } from "../../ui/snackbar/Snackbar";
+import { ButtonSpinner } from "../../ui/buttons/ButtonSpinner";
 const Fade = React.forwardRef(function Fade(props, ref) {
   const {
     children,
@@ -83,12 +84,6 @@ export const ModalTurns = ({
   turnosReservados,
   setAlertDuplicatedTurn,
 }) => {
-  
-
-  // HORARIO Y FECHA PARA MOSTRAR EN HOME
-  // const today = dayjs().format("dddd, D [de] MMMM [de] YYYY");
-  // const setTime = useStoreTime((state) => state.setTime);
-  // const setDate = useStoreTime((state) => state.setTDate);
   let encontrado = false;
   let horaFormat = `${horaInicio}:00`;
   for (let index = 0; index < turnosReservados.length; index++) {
@@ -97,8 +92,7 @@ export const ModalTurns = ({
       encontrado = true;
     }
   }
-
-
+  const [buttonLoader, setButtonLoader] = useState(false);
   const userData = useStoreUserData((state) => state.userData);
 
   dayjs.extend(utc);
@@ -110,7 +104,6 @@ export const ModalTurns = ({
     .minute(parseInt(horaInicio.split(":")[1], 10));
 
   const turnoDisponible = horaActual.isBefore(horaInicioTurno);
-  
 
   const fechaArgentina = dayjs()
     .tz("America/Argentina/Buenos_Aires")
@@ -145,11 +138,12 @@ export const ModalTurns = ({
 
     if (!turnoDisponible) {
       setAlertHoraError(true); // Mostrar alerta de error
-      console.log(
-        "No se puede reservar este turno porque ya ha pasado la hora de inicio."
-      );
+      // console.log(
+      //   "No se puede reservar este turno porque ya ha pasado la hora de inicio."
+      // );
     } else {
       if (!encontrado) {
+        setButtonLoader(true);
         try {
           setOpenAlert(false);
           setOpenAlertError(false);
@@ -173,6 +167,8 @@ export const ModalTurns = ({
           console.log(responseTurn, "response");
         } catch (e) {
           console.log(e, "error");
+        } finally {
+          setButtonLoader(false);
         }
       } else {
         setAlertDuplicatedTurn(true);
@@ -212,11 +208,12 @@ export const ModalTurns = ({
               >
                 {`¿Estás seguro de reservar el turno de las ${horaInicio}?`}
               </Typography>
-              <Button
-                label="Elegir turno"
+              <ButtonSpinner
+                loading={buttonLoader}
                 type="submit"
-                className="px-[7px] py-[5px] md:px-2 md:py-2 text-sm md:text-sm"
-              ></Button>
+                label="Elegir turno"
+                className=""
+              ></ButtonSpinner>
             </form>
           </Box>
         </Fade>

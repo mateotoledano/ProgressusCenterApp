@@ -18,7 +18,7 @@ import { FaRegCalendarCheck } from "react-icons/fa";
 import { IoIosTimer } from "react-icons/io";
 import { useGetTurns } from "../../service/turns/use-getTurns";
 import { useDeleteTurns } from "../../service/turns/use-deleteTurn";
-import { useStoreUserData } from "../../store";
+import { useSpinnerStore, useStoreUserData } from "../../store";
 dayjs.locale("es");
 
 export const Turns = () => {
@@ -38,6 +38,10 @@ export const Turns = () => {
   ];
   const dataUser = useStoreUserData((state) => state.userData);
   const [turnosReservados, setTurnosReservados] = useState([]);
+
+  // SPINNER LOGIN
+  const { showSpinner, hideSpinner } = useSpinnerStore();
+  // DIA FROMATEADO
   const today = dayjs().format("dddd, D [de] MMMM [de] YYYY");
   // ALERT AL ELMINAR RESERVA
   const [alertDelete, setAlertDelete] = useState(false);
@@ -63,6 +67,7 @@ export const Turns = () => {
   }, []);
 
   const handleDeleteTurn = async () => {
+    showSpinner();
     try {
       const response = await useDeleteTurns(dataUser.identityUserId);
       if (response.status == "200") {
@@ -74,6 +79,8 @@ export const Turns = () => {
       }
     } catch (e) {
       console.log(e);
+    } finally {
+      hideSpinner();
     }
   };
 

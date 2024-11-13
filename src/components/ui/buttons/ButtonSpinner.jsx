@@ -18,7 +18,7 @@ export const ButtonSpinner = ({
     onClick={!loading ? onClick : null} // Evitar múltiples clics mientras carga
     disabled={loading}
     className={`py-[7px] my-2 px-5 bg-customButtonGreen text-white rounded-sm  font-medium ${className} button ${
-      loading ? "flex justify-center items-center px-9 " : ""
+      loading ? "flex justify-center items-center px-12 " : ""
     }`} // Cambia el estilo si está cargando
   >
     {loading ? (

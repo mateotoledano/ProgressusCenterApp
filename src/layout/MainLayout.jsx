@@ -1,12 +1,13 @@
 import React from "react";
 import { Footer, NavBar, TopMenu } from "../components";
-import { useStoreAlert } from "../store";
-
+import { useSpinnerStore, useStoreAlert } from "../store";
+import { Spinner } from "../components";
 export const MainLayout = ({ children }) => {
   const prueba = useStoreAlert((state) => state.alert);
-
+  const isLoading = useSpinnerStore((state) => state.isLoading);
   return (
     <body className="bg-customGray ">
+      <Spinner open={isLoading}></Spinner>
       <TopMenu />
       <NavBar />
 
