@@ -5,12 +5,16 @@ import { useStoreSelectAuth } from "./store";
 import logoProgressus from "/progressus.png";
 
 import { LayoutLoginRegister } from "./layout/LayoutLoginRegiste";
+import { Spinner } from "./components";
+import { useState } from "react";
 function App() {
   // MANEJO DE ESTADO PARA MOVERSE DE LOGIN A REGISTER
   const selectedAuth = useStoreSelectAuth((state) => state.auth);
   const setSelectedLogin = useStoreSelectAuth((state) => state.authLogin);
   const setSelectedRegister = useStoreSelectAuth((state) => state.authRegister);
   ///////////////////////
+
+  const [openSpinner , setOpenSpinner] = useState(false)
   return (
     <LayoutLoginRegister>
       <div className="animate-fade-in-down w-full min-h-screen  items-center  justify-center p-4 bg-customGray md:flex  md:flex-col md:items-start md:justify-start ">
@@ -36,9 +40,10 @@ function App() {
               Registrarse
             </span>
           </div>
-          {selectedAuth === "login" ? <Login></Login> : <Register></Register>}
+          {selectedAuth === "login" ? <Login ></Login> : <Register></Register>}
         </div>
       </div>
+      
     </LayoutLoginRegister>
   );
 }

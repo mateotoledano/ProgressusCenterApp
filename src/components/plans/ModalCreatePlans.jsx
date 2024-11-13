@@ -13,6 +13,7 @@ import { useStoreUserData } from "../../store";
 import { useStorePlanCreado } from "../../store/useStorePlanCreado";
 import { useCreatePlan } from "../../service/plans/useCreatePlan";
 import { useAddExercises } from "../../service/plans/useCreatePlan";
+import { ButtonSpinner } from "../ui/buttons/ButtonSpinner";
 const Fade = React.forwardRef(function Fade(props, ref) {
   const {
     children,
@@ -68,11 +69,17 @@ const style = {
   p: 2,
 };
 
-export const ModalCreatePlans = ({ open, setOpen, setAlertCreate ,setErrorServer}) => {
+export const ModalCreatePlans = ({
+  open,
+  setOpen,
+  setAlertCreate,
+  setErrorServer,
+}) => {
   const dataUser = useStoreUserData((state) => state.userData);
   const planCreado = useStorePlanCreado((state) => state.planCreado);
   const clearPlanActual = useStorePlanCreado((state) => state.clearPlan);
-
+  // loading del button
+  const [loading, setLoading] = useState(false);
   const nameUser = dataUser.nombre;
   const [form, setForm] = useState({
     nombre: "",
@@ -84,29 +91,42 @@ export const ModalCreatePlans = ({ open, setOpen, setAlertCreate ,setErrorServer
   const handleClose = () => setOpen(false);
   const onSubmitSendPlan = async (e) => {
     e.preventDefault();
-    // CREAR PLAN PRIMERAMENTE
-    const responseSendPlan = await useCreatePlan(form);
-    let idPlan;
-    let responseAddExercices;
-    // SI ES STATUS 200 AGREGA LOS EJERCICIOS QUE AGREGO EL USUARIO
-    if (responseSendPlan.status == "200") {
-      idPlan = responseSendPlan.data.id;
-      responseAddExercices = await useAddExercises(idPlan, planCreado);
-      console.log(responseAddExercices, "resp añadir ejerciciso");
-    }
-    // SI ES CORRECTO EL AGREGAR EJERCICIOS CIERRA EL MODAL Y MANDA LOS DATOS AL BACKEND
-    if (
-      responseAddExercices &&
-      responseAddExercices.status == "200" &&
-      responseSendPlan &&
-      responseSendPlan.status == "200"
-    ) {
-      setAlertCreate(true);
-      setOpen(false);
-      clearPlanActual();
-    } else { 
-      console.log("errroes");
+    setLoading(true);
+    try {
+      // CREAR PLAN PRIMERAMENTE
+      const responseSendPlan = await useCreatePlan(form);
+      let idPlan;
+      let responseAddExercices;
+
+      // SI ES STATUS 200 AGREGA LOS EJERCICIOS QUE AGREGO EL USUARIO
+      if (responseSendPlan.status == "200") {
+        idPlan = responseSendPlan.data.id;
+        responseAddExercices = await useAddExercises(idPlan, planCreado);
+        console.log(responseAddExercices, "resp añadir ejercicios");
+      }
+
+      // SI ES CORRECTO EL AGREGAR EJERCICIOS CIERRA EL MODAL Y MANDA LOS DATOS AL BACKEND
+      if (
+        responseAddExercices &&
+        responseAddExercices.status == "200" &&
+        responseSendPlan &&
+        responseSendPlan.status == "200"
+      ) {
+        setAlertCreate(true);
+        setOpen(false);
+        clearPlanActual();
+      } else {
+        console.log("Error en la creación del plan o en el agregar ejercicios");
+        setErrorServer(true);
+      }
+    } catch (error) {
+      console.error("Error al crear el plan o agregar ejercicios:", error);
       setErrorServer(true);
+    } finally {
+      setLoading(false);
+      // Este bloque se ejecuta siempre, haya o no error
+      // Aquí puedes poner tareas como resetear el estado de carga, cerrar el spinner, etc.
+      console.log("Proceso de creación de plan finalizado");
     }
   };
 
@@ -170,11 +190,12 @@ export const ModalCreatePlans = ({ open, setOpen, setAlertCreate ,setErrorServer
                 value={form.diasPorSemana}
                 onChange={handleChange}
               ></CustomInput>
-              <Button
+              <ButtonSpinner
                 label="Crear Plan"
                 type="submit"
-                className="px-[7px] py-[5px] md:px-2 md:py-2 text-sm md:text-sm"
-              ></Button>
+                loading={loading}
+                className=""
+              ></ButtonSpinner>
             </form>
           </Box>
         </Fade>

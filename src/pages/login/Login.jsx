@@ -1,15 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { FiUser } from "react-icons/fi";
-import { Button, CustomInput, ErrorAuth, Checkbox } from "../../components";
+import {
+  Button,
+  CustomInput,
+  ErrorAuth,
+  Checkbox,
+  Spinner,
+} from "../../components";
 import { useNavigate } from "react-router-dom";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { MdErrorOutline } from "react-icons/md";
 import { loginUser } from "../../service/auth/use-login";
-import { useStoreUser, useStoreAlert, useStoreUserData } from "../../store";
+import { useStoreUser, useStoreAlert, useStoreUserData ,useSpinnerStore} from "../../store";
+
 
 export const Login = () => {
   const [errorLogin, setErrorLogin] = useState(false);
   const closeAlert = useStoreAlert((state) => state.closeAlert);
+  // SPINNER LOGIN
+  const { showSpinner, hideSpinner } = useSpinnerStore();
   // TOKEN DEL USER
   const localToken = localStorage.getItem("auth-token");
   const storeLocalToken = useStoreUser((state) => state.setToken);
@@ -72,7 +81,7 @@ export const Login = () => {
       setErrors(formErrors);
       return;
     }
-
+    showSpinner();
     try {
       const enviarUser = await loginUser(formLogin.email, formLogin.password);
 
@@ -101,6 +110,8 @@ export const Login = () => {
       // }
     } catch (e) {
       console.log("error", e);
+    } finally {
+      hideSpinner(); // Oculta el Spinner después de la petición
     }
   };
 

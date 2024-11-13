@@ -4,13 +4,18 @@ import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import ConfirmCode from "../confirmCode/ConfirmCode";
-import { Button } from "../../ui/buttons/Button";
+
 import { useState } from "react";
-import { useStoreAlert, useStoreSelectAuth } from "../../../store";
+import {
+  useSpinnerStore,
+  useStoreAlert,
+  useStoreSelectAuth,
+} from "../../../store";
 import { useSpring, animated } from "@react-spring/web";
 import { sendCodeVerificationAuth } from "../../../service/auth/use-sendCodeVerificationAuth";
 import { MdErrorOutline } from "react-icons/md";
 
+import { ButtonSpinner } from "../../ui/buttons/ButtonSpinner";
 const Fade = React.forwardRef(function Fade(props, ref) {
   const {
     children,
@@ -67,6 +72,8 @@ const style = {
 };
 
 export const ModalVerificationAuth = ({ open, email, setOpen }) => {
+  // SPINNER
+  const [openSpinner, setOpenSpinner] = useState(false);
   // ESTADO DEL ALERT CUANDO SE VERIFICA EL CODIGO
   const openAlertAuth = useStoreAlert((state) => state.openAlert);
   // CAMBIAR AL LOGIN
@@ -77,24 +84,27 @@ export const ModalVerificationAuth = ({ open, email, setOpen }) => {
   const handleSendCode = async () => {
     const codeString = code.join("");
     console.log(email, typeof codeString, "email and codeaster");
-
+    setOpenSpinner(true);
     try {
       const responseSendCode = await sendCodeVerificationAuth(
         email,
         codeString
       );
-    console.log(responseSendCode , "respuesta al enviar el response");
-    
+
       if (responseSendCode && responseSendCode.status == "200") {
         changeToLogin();
         openAlertAuth();
         setOpen(false);
       } else {
+        console.log("fallo el status");
+
         setAlertFailed(true);
         setCode(Array(4).fill(""));
       }
     } catch (e) {
       console.log(e, "error");
+    } finally {
+      setOpenSpinner(false);
     }
   };
   return (
@@ -124,11 +134,12 @@ export const ModalVerificationAuth = ({ open, email, setOpen }) => {
                   <MdErrorOutline width={15} />
                 </span>
               )}
-              <Button
+              <ButtonSpinner
+                loading={openSpinner}
                 label="Verificar Codigo"
                 type="text"
                 onClick={handleSendCode}
-              ></Button>
+              ></ButtonSpinner>
             </div>
           </Box>
         </Fade>

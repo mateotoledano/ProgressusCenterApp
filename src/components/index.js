@@ -12,7 +12,9 @@ export * from "./ui/table/Table";
 export * from "./ui/select/Select"
 export * from "./ui/snackbar/Snackbar"
 export * from "./ui/footer/Footer"
+export * from "./ui/spinnerLoading/Spinner"
 export * from "./ui/skeleton/LoadingSkeleton"
+export * from "./ui/buttons/ButtonSpinner"
 export * from "./auth/modal/ModalVerificationAuth";
 export * from "./auth/confirmCode/ConfirmCode";
 export * from "./turns/acordion/Acordion";

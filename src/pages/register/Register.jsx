@@ -6,6 +6,7 @@ import {
   ErrorAuth,
   ModalVerificationAuth,
   Checkbox,
+  ButtonSpinner,
 } from "../../components";
 import { FiUser } from "react-icons/fi";
 import { RiLockPasswordLine } from "react-icons/ri";
@@ -16,12 +17,14 @@ import {
   registerUserWhitData,
 } from "../../service/auth/use-register";
 import { useAuthValidation } from "../../service/auth/use-authValidation";
+import { useSpinnerStore } from "../../store";
 export const Register = () => {
+  // SPINNER DE CARGA
+  const { showSpinner, hideSpinner } = useSpinnerStore();
   // MANEJO DE ESTADO DE ERRORES QUE VIENEN DEL BACK
   const [errorEmailBack, setErrorEmailBack] = useState(false);
   const [errorPasswordBack, setErrorPasswordBack] = useState([]);
   const [open, setOpen] = useState(false);
-
   const [check, setChecked] = useState(false);
   const [formRegister, setFormRegister] = useState({
     name: "",
@@ -103,7 +106,7 @@ export const Register = () => {
       setErrors(formErrors);
       return;
     }
-
+    showSpinner();
     try {
       const user = await registerUser(
         formRegister.email,
@@ -162,6 +165,8 @@ export const Register = () => {
       }
     } catch (error) {
       console.error("Error al enviar el formulario:", error);
+    } finally {
+      hideSpinner();
     }
   };
 
