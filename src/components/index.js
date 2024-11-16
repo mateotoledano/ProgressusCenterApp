@@ -25,3 +25,8 @@ export * from "./turns/gridAlertsTurns/GridAlertsTurns"
 export * from "./auth/modal/ModalLogout"
 export * from "./plans/ModalCreatePlans"
 export * from "./plans/ModalAddToPlan"
+// INVENTARY 
+export * from "./inventary/TableInventary/TableInventary"
+export * from "./inventary/modalInventary/ModalInventary"
+export * from "./inventary/modalInventary/ModalEditInventary"
+export * from "./inventary/modalInventary/ModalDeleteInventary"

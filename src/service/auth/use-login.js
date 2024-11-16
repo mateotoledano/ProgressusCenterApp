@@ -15,7 +15,8 @@ export const loginUser = async (email, password) => {
       }
     );
 
-    return response;
+    
+    return response
   } catch (error) {
     console.error("Error al registrar usuario:", error.response.data.errors);
 

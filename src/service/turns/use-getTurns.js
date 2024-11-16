@@ -5,6 +5,8 @@ import { api } from "../api";
 export const useGetTurns = async (idUser) => {
   try {
     const response = await api.get(`/api/ReservasTurnos/usuario/${idUser}`);
+    console.log(response ,"response");
+    
     return response;
   } catch (e) {
     console.log(e, "errores");

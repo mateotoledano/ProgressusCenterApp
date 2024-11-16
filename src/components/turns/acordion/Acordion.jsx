@@ -6,6 +6,9 @@ import { IoIosArrowDown } from "react-icons/io";
 import { CgGym } from "react-icons/cg";
 import { IoSettingsOutline } from "react-icons/io5";
 import { ModalTurns } from "../modalTurns/ModalTurns";
+import { useTraerTurnosPorHora } from "../../../service/turns/useTraerTurnosPorHora";
+import { useEffect } from "react";
+
 // Recibiendo props en el componente
 export const Acordion = ({
   title,
@@ -15,15 +18,49 @@ export const Acordion = ({
   setOpenAlertError,
   turnosReservados,
   setTurnosReservados,
-
   setAlertHoraError,
   setAlertDuplicatedTurn,
 }) => {
+  const [reservasPorHora, setReservasPorHora] = React.useState({});
   const [open, setOpen] = React.useState(false);
 
   // MANEJO DE HORARIOS
   const [horaInicio, setHorario] = React.useState("");
   const [horaFinal, setHoraFinal] = React.useState("");
+
+  // Obtener la fecha actual en el formato YYYY-MM-DD
+  const obtenerFechaActual = () => {
+    const fecha = new Date();
+    const year = fecha.getFullYear();
+    const month = String(fecha.getMonth() + 1).padStart(2, "0");
+    const day = String(fecha.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  };
+
+  const fecha = obtenerFechaActual();
+console.log(fecha , "fecha");
+
+  // TRAER RESERVAS POR HORA
+  const fetchReservas = async (hora) => {
+    try {
+      const response = await useTraerTurnosPorHora(fecha, `${hora}:00`);
+      console.log(response, "respondesee");
+
+      const cantidadReservada = response ? response.data.length : 0; // Ajusta `cantidad` según la respuesta real de la API
+
+      setReservasPorHora((prev) => ({
+        ...prev,
+        [hora]: cantidadReservada,
+      }));
+    } catch (error) {
+      console.log("Error al traer los turnos reservados", error);
+    }
+  };
+
+  useEffect(() => {
+    content.forEach((hora) => fetchReservas(hora));
+  }, [content, fecha]);
 
   const onChangeHora = (cont, index) => {
     setHorario(cont);
@@ -45,7 +82,6 @@ export const Acordion = ({
 
   return (
     <div className="w-full">
-      {/* Cambiamos el fondo según si está seleccionado o no */}
       <Accordion>
         <AccordionSummary
           expandIcon={<IoIosArrowDown className="text-customTextBlue" />}
@@ -55,7 +91,7 @@ export const Acordion = ({
         >
           <div className="flex items-center gap-3">
             <IoSettingsOutline size={22} className="text-customTextBlue" />
-            <h2 className="text-base md:text-lg font-semibold">{title} </h2>
+            <h2 className="text-base md:text-lg font-semibold">{title}</h2>
           </div>
         </AccordionSummary>
         <AccordionDetails>
@@ -67,14 +103,14 @@ export const Acordion = ({
                 onClick={() => onChangeHora(cont, index)}
               >
                 <div className="flex flex-row-reverse items-center justify-start gap-3">
-                  <span
-                    key={index}
-                    className="text-base md:text-lg  font-semibold  "
-                  >
-                    {cont}
+                  <span className="text-base md:text-lg font-semibold">
+                    {`${cont} hs`}
                   </span>
-                  <CgGym size={24}></CgGym>
+                  <CgGym size={24} />
                 </div>
+                <span className="font-semibold">
+                  {reservasPorHora[cont] || 0}/40
+                </span>
               </div>
             ))}
           </div>
@@ -91,7 +127,7 @@ export const Acordion = ({
         horaInicio={horaInicio}
         horaFinal={horaFinal}
         setAlertHoraError={setAlertHoraError}
-      ></ModalTurns>
+      />
     </div>
   );
 };

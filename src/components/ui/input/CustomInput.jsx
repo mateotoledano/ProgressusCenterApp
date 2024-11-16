@@ -13,6 +13,7 @@ export const CustomInput = ({
   iconColor,
   required,
   label,
+  classNameInput
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -41,7 +42,7 @@ export const CustomInput = ({
         onChange={onChange}
         placeholder={placeholder}
         disabled={disabled}
-        className="flex-1 p-1.5 md:p-2 focus:outline-none font-medium"
+        className={`flex-1 p-1.5 md:p-2 focus:outline-none font-medium ${classNameInput}`}
         aria-label={placeholder}
       />
       {type === "password" && (

@@ -35,7 +35,7 @@ export const MemberShip = () => {
         {/* DIVISION GRAY */}
         <div className="w-full h-2 md:h-4 bg-customGray"></div>
 
-        <div className="p-5 mt-2">
+        <div className=" mt-2">
           <PricingPrices
             setAlertCreateRequest={setAlertCreateRequest}
             setAlertConfirmRequest={setAlertConfirmRequest}

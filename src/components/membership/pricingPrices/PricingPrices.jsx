@@ -17,6 +17,7 @@ import { Stack } from "../../ui/stack/Stack";
 import { CustomInput } from "../../ui/input/CustomInput";
 import { IoSearchSharp } from "react-icons/io5";
 import { useDataUser } from "../../../service/auth/use-dataUser";
+import { Button } from "../../ui/buttons/Button";
 export const PricingPrices = ({
   setAlertCreateRequest,
   setAlertConfirmRequest,
@@ -158,7 +159,7 @@ export const PricingPrices = ({
   };
 
   return (
-    <div className="flex flex-col flex-wrap justify-center items-center md:items-start md:justify-around gap-8 md:gap-5 md:flex-row w-full">
+    <div className="flex flex-col flex-wrap justify-center items-center md:items-start md:justify-around gap-8 md:gap-5 md:flex-row w-full  ">
       {loading ? (
         <LoadingSkeleton
           variant="rectangular"
@@ -172,7 +173,7 @@ export const PricingPrices = ({
           return (
             <div
               key={card.id}
-              className="max-w-sm p-5 md:p-0 w-full md:my-4 transition duration-300 transform hover:scale-105"
+              className="max-w-sm m-5 p-5 md:p-0 w-full md:my-4 transition duration-300 transform hover:scale-105 "
             >
               <div className="relative group ">
                 <div className="absolute -inset-0 bg-gradient-to-r from-green-600 to-blue-600 rounded-lg blur opacity-20 group-hover:opacity-80 transition duration-1000 group-hover:duration-200"></div>
@@ -226,43 +227,55 @@ export const PricingPrices = ({
           );
         })
       )}
+      {planElegido ? (
+        <Stack
+          className={"m-5"}
+          titulo={planElegido.nombre}
+          duracion={`${planElegido.mesesDuracion} meses `}
+          fechaFinalizacion={`$ ${planElegido.precio}`}
+          classNameText={"md:text-3xl text-customGreenNavBar"}
+        ></Stack>
+      ) : (
+        <Stack className={"m-5"} titulo={"Ningun plan elegido"}></Stack>
+      )}
+      {dataUserBuscado && (
+        <span className="text-xl font-semibold">{`Solicitud de pago de : ${
+          dataUserBuscado &&
+          dataUserBuscado.nombre + " " + dataUserBuscado.apellido
+        }`}</span>
+      )}
+      <div className=" w-full h-2 md:h-4 bg-customGray "></div>
       {/*BUTTON PARA REGISTRAR PAGO DEL LADO DEL QUE ATIENDE EL GYM */}
       {/* HARDCODE  */}
       {userData.email === "frantrainer15@gmail.com" && (
-        <div className="w-full justify-center ">
+        <div className="w-full justify-center p-5 ">
           <section className="flex flex-col gap-6 items-center justify-center">
-            <Title title={"Solicitudes de pago"}></Title>
-            <div className="w-full flex justify-center mt-0 items-center gap-1  ">
-              <CustomInput
-                className="w-1/2 focus:ring-customButtonGreen focus:border-customButtonGreen "
-                value={emailUser}
-                onChange={handleChange}
-                placeholder="Email del cliente..."
-                type="text"
-              ></CustomInput>
-              <button
-                onClick={traerDataUser}
-                className="bg-customButtonGreen rounded p-2.5 md:p-2"
-              >
-                <IoSearchSharp className="text-white  text-lg md:text-2xl font-semibold"></IoSearchSharp>
-              </button>
+            <div className="w-full flex justify-between items-center mt-0  gap-4  ">
+              <div className="flex items-center gap-4">
+                <label htmlFor="" className="text-xl font-semibold">
+                  Nombre del cliente :{" "}
+                </label>
+                <div className="flex item gap-2">
+                  <CustomInput
+                    className="w-1/2 focus:ring-customButtonGreen focus:border-customButtonGreen "
+                    value={emailUser}
+                    onChange={handleChange}
+                    placeholder="Buscar.."
+                    type="text"
+                  ></CustomInput>
+                  <button
+                    onClick={traerDataUser}
+                    className="bg-customButtonGreen rounded p-2.5 md:p-2"
+                  >
+                    <IoSearchSharp className="text-white  text-lg md:text-2xl font-semibold"></IoSearchSharp>
+                  </button>
+                </div>
+              </div>
+              <div className="flex gap-8 ">
+                <Button label={"Aceptar"}></Button>
+                <Button className="bg-gray-600" label={"Cancelar"}></Button>
+              </div>
             </div>
-            {planElegido ? (
-              <Stack
-                titulo={planElegido.nombre}
-                duracion={`${planElegido.mesesDuracion} meses `}
-                fechaFinalizacion={`$ ${planElegido.precio}`}
-                classNameText={"md:text-3xl text-customGreenNavBar"}
-              ></Stack>
-            ) : (
-              <Stack titulo={"Ningun plan asignado"}></Stack>
-            )}
-            {dataUserBuscado && (
-              <span className="text-xl font-semibold">{`Solicitud de pago de : ${
-                dataUserBuscado &&
-                dataUserBuscado.nombre + " " + dataUserBuscado.apellido
-              }`}</span>
-            )}
           </section>
           {planElegido && dataUserBuscado && (
             <div className="flex justify-center mt-5 gap-24">
@@ -283,6 +296,10 @@ export const PricingPrices = ({
           )}
         </div>
       )}
+      <div className=" w-full h-2 md:h-4 bg-customGray "></div>
+      <section>
+        <h1>awdawdawdwad</h1>
+      </section>
     </div>
   );
 };

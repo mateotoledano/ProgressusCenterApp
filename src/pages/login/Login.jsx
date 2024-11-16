@@ -87,11 +87,11 @@ export const Login = () => {
     }
     try {
       showSpinner();
-      console.log(formLogin.email, formLogin.password ,"email and password");
-      
+      console.log(formLogin.email, formLogin.password, "email and password");
+
       const enviarUser = await loginUser(formLogin.email, formLogin.password);
 
-      if (enviarUser.status == "200") {
+      if (enviarUser.status == 200) {
         if (enviarUser.data.accessToken) {
           storeLocalToken(enviarUser.data);
         }

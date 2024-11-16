@@ -27,7 +27,7 @@ export const SnackbarDefault = ({
         autoHideDuration={5000}
         onClose={handleClose}
         anchorOrigin={{
-          vertical: position?.vertical || "bottom",
+          vertical: position?.vertical || "top",
           horizontal: position?.horizontal || "center",
         }}
         sx={{ mt: `${mt}` }}
@@ -39,7 +39,7 @@ export const SnackbarDefault = ({
           sx={{
             width: "100%",
             display: "flex",
-            justifyContent: "center",
+            justifyContent: "bottom",
             alignItems: "center",
           }}
         >
