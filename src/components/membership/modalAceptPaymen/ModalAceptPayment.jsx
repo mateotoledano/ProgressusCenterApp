@@ -26,6 +26,8 @@ export const ModalAceptPayment = ({
       const registerPayment = await useRegisterPayment(
         requestPayment.data.value.value.id
       );
+      console.log(registerPayment , "registerPaymenttttttt");
+      
       if (registerPayment && registerPayment.status === 200) {
         setOpen(false);
         setAlertConfirmRequest(true);

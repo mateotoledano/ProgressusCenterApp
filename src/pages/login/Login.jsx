@@ -103,21 +103,11 @@ export const Login = () => {
         // VALIDACION EN EL BACK
         setErrorLogin(true);
       }
-      // HARDCODEADO
-      // if (
-      //   formLogin.email === "admin@admin.com" &&
-      //   formLogin.password === "admin123"
-      // ) {
-      //   console.log("gomeeeee");
-
-      //   navigate("/home");
-      // } else {
-      //   setErrorLogin(true);
-      // }
+    
     } catch (e) {
       console.log("error", e);
     } finally {
-      hideSpinner(); // Oculta el Spinner después de la petición
+      hideSpinner();
     }
   };
 

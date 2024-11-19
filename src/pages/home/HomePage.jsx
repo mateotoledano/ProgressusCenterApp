@@ -43,6 +43,8 @@ export const HomePage = () => {
         const response = await useGetRequestPaymentSocio(
           dataUser.identityUserId
         );
+        console.log(response , "response membresias");
+        
         if (response.data?.value?.value) {
           const allMembership =
             response.data.value.value.historialSolicitudDePagos || [];
@@ -54,7 +56,7 @@ export const HomePage = () => {
             setMembership(lastMembership); // Actualiza el store
           }
         }
-        // TURNO MAS CERCANO
+       
       } catch (error) {
         console.error("Error al cargar datos:", error);
       } finally {
