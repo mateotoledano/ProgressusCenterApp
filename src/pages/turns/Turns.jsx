@@ -51,7 +51,9 @@ export const Turns = () => {
   // ALERTA AL SELECCIONAR HORA ANTES DE LA ACTUAL
   const [alertHoraError, setAlertHoraError] = useState(false);
   //ALERT PARA NO RESERVAR DOS VECES EL MISMO HORARIO
-  const [alertDuplicatedTurn, setAlertDuplicatedTurn] = useState(false);
+  // const [alertDuplicatedTurn, setAlertDuplicatedTurn] = useState("");
+
+  
   useEffect(() => {
     const traerTurnos = async () => {
       try {
@@ -101,7 +103,8 @@ export const Turns = () => {
             </div>
             {turnos.map((turno, index) => (
               <Acordion
-                setAlertDuplicatedTurn={setAlertDuplicatedTurn}
+               
+    
                 setAlertHoraError={setAlertHoraError}
                 openAlert={openAlert}
                 openAlertError={openAlertError}
@@ -203,8 +206,7 @@ export const Turns = () => {
         openAlertError={openAlertError}
         alertHoraError={alertHoraError}
         setAlertHoraError={setAlertHoraError}
-        alertDuplicatedTurn={alertDuplicatedTurn}
-        setAlertDuplicatedTurn={setAlertDuplicatedTurn}
+     
       ></GridAlertsTurns>
     </MainLayout>
   );

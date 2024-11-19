@@ -20,6 +20,8 @@ export * from "./auth/confirmCode/ConfirmCode";
 export * from "./turns/acordion/Acordion";
 export * from "./turns/modalTurns/ModalTurns";
 export * from "./protectedRoute/ProtectedRoute";
+// MEMBERSHIP
+export * from "./membership/selectNavegable/SelectNavegable"
 export * from "./membership/pricingPrices/PricingPrices";
 export * from "./turns/gridAlertsTurns/GridAlertsTurns"
 export * from "./auth/modal/ModalLogout"

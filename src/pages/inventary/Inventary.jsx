@@ -113,14 +113,14 @@ export const Inventary = () => {
     <MainLayout>
       <section className="animate-fade-in-down md:mx-auto bg-white  rounded shadow-xl w-full md:w-11/12 overflow-hidden mb-20">
         <div className="b p-3">
-          {/* HARDCODE */}
+      
           <Location
             route={`Membresia`}
             subroute={"Consultar Inventario"}
           ></Location>
 
           <Title title={"Inventario"}></Title>
-          {/* ///////////////////////////// */}
+        
         </div>
         {/* DIVISION GRAY */}
         <div className="w-full h-2 md:h-4 bg-customGray"></div>

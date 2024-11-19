@@ -14,6 +14,7 @@ import {
   CreateallExercise
 } from "./pages";
 import { HomePlans } from "./pages/plans/HomePlans";
+import { Users } from "./pages/usuarios/Users";
 
 //RUTAS PROTEGIDAS
 export const router = createBrowserRouter([
@@ -31,7 +32,7 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: "/acount",
+    path: "/account",
 
     element: (
       <ProtectedRoute>
@@ -100,6 +101,14 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <Stats />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/users",
+    element: (
+      <ProtectedRoute>
+        <Users/>
       </ProtectedRoute>
     ),
   },

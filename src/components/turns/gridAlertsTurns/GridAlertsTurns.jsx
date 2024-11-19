@@ -8,8 +8,8 @@ export const GridAlertsTurns = ({
   setAlertDelete,
   alertHoraError,
   setAlertHoraError,
-  alertDuplicatedTurn,
-  setAlertDuplicatedTurn,
+
+
 }) => {
   return (
     <>
@@ -52,14 +52,14 @@ export const GridAlertsTurns = ({
         ></SnackbarDefault>
       )}
       {/* ALERT SI INTENTA SELECCIONAR DOS TURNOS AL MISMO HORARIO*/}
-      {alertDuplicatedTurn && (
+      {/* {alertDuplicatedTurn && (
         <SnackbarDefault
           open={alertDuplicatedTurn}
           setOpen={setAlertDuplicatedTurn}
           message="Ya has reservado este turno anteriormente "
           severity="warning"
         ></SnackbarDefault>
-      )}
+      )} */}
     </>
   );
 };

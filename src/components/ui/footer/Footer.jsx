@@ -83,7 +83,8 @@ const routeNavigation = [
 
 export const Footer = () => {
   const userData = useStoreUserData((state) => state.userData);
-  const isAdmin = userData.email === "frantrainer15@gmail.com";
+  const roleUser = userData.roles[0];
+  const isAdmin = roleUser === "ADMIN";
 
   const routesToDisplay = isAdmin ? routeAdminNavigation : routeNavigation;
   const iconsTab = [

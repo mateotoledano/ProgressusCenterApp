@@ -2,58 +2,98 @@ import React, { useEffect, useState } from "react";
 import gym from "/gym.svg";
 import { CgGym } from "react-icons/cg";
 
-import { useCreatePreference } from "../../../service/membership/useCreatePreference";
-import { SnackbarDefault } from "../../ui/snackbar/Snackbar";
+import { useGetAllUsers } from "../../../service/auth/use-getAllUsers";
 import { useGetMemberships } from "../../../service/membership/useGetMembership";
 import { useCreateRequestPayment } from "../../../service/membership/useCreateRequestPayment";
 import { LoadingSkeleton } from "../../ui/skeleton/LoadingSkeleton";
-import { useStoreUserData } from "../../../store";
+import { ModalAceptPayment } from "../modalAceptPaymen/ModalAceptPayment";
+import { IoIosInformationCircleOutline } from "react-icons/io";
+import { useSpinnerStore, useStoreUserData } from "../../../store";
 import { useRegisterPayment } from "../../../service/membership/useRegisterPayment";
 import { Alert } from "../../ui/alert/Alert";
 import { useGetRequestPaymentSocio } from "../../../service/membership/useGetRequestPaymentSocio";
 import { useCancelRequestPayment } from "../../../service/membership/useCancelRequestPayment";
-import { Title } from "../../ui/title/Title";
+
 import { Stack } from "../../ui/stack/Stack";
-import { CustomInput } from "../../ui/input/CustomInput";
-import { IoSearchSharp } from "react-icons/io5";
-import { useDataUser } from "../../../service/auth/use-dataUser";
-import { Button } from "../../ui/buttons/Button";
+import { SelectNavegable } from "../selectNavegable/SelectNavegable";
+
+import { ButtonSpinner } from "../../ui/buttons/ButtonSpinner";
+import { TablePagos } from "../tablePagos/TablePagos";
+import { Title } from "../../ui/title/Title";
+const arregloColumns = ["Membresia", "Fecha", "Precio"];
+const arregloRows = [
+  {
+    membresia: "Anual",
+    fecha: "2024-01-01",
+    precio: "$12000",
+  },
+  {
+    membresia: "Semestral",
+    fecha: "2024-01-01",
+    precio: "$7000",
+  },
+  {
+    membresia: "Mensual",
+    fecha: "2024-01-01",
+    precio: "$1500",
+  },
+  {
+    membresia: "Trimestral",
+    fecha: "2024-01-01",
+    precio: "$4000",
+  },
+];
+
 export const PricingPrices = ({
-  setAlertCreateRequest,
+  setMesaggePlanElegido,
   setAlertConfirmRequest,
   setAlertCancelPayment,
-  setAlertUsuarioEncontrado,
+  setAlertError,
+  setAlertPlanElegido,
 }) => {
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
   const userData = useStoreUserData((state) => state.userData);
   const [dataPedido, setDataPedido] = useState(null);
+  // ROL DE USER
 
+  const roleUser = userData.roles[0];
   //PLANES QUE AGREGAR EL DE LA VENTANILLA
   const [planElegido, setPlanElegido] = useState(null);
 
   // Buscador de user
-
-  const [emailUser, setEmailUser] = useState("");
-  const [dataUserBuscado, setDataUserBuscado] = useState();
-
-  const handleChange = (e) => {
-    setEmailUser(e.target.value);
-  };
-  console.log(emailUser, "emailUser");
-
+  const [allUsers, setAllUsers] = useState([]);
+  const [dataUserBuscado, setDataUserBuscado] = useState(null);
+  //  MODAL PARA CONFIRMAR PAGO
+  const [openModal, setOpenModal] = useState(false);
   // CONFIGURAR FECHA PARA MOSTRAR EN EL STACK PANTALLA DE ADMIN
   const fechaHora = dataPedido?.fechaCreacion;
-
+  // LOADER AL REALIZAR LA SOLICITUD
+  const [loadingRequest, setLoadingRequest] = useState(false);
   const fecha = fechaHora ? new Date(fechaHora).toLocaleDateString() : "";
   const hora = fechaHora ? new Date(fechaHora).toLocaleTimeString() : "";
-
+  // LOADING DEL TABLE
+  const [loadingTable, setLoadingTable] = useState(false);
+  // SPINNER HASTA QUE TRAIGAN TODOS LOS USERA
+  const openSppiner = useSpinnerStore((state) => state.showSpinner);
+  const closeSpinner = useSpinnerStore((state) => state.hideSpinner);
   // TRAER MEMBRESIAS
+
   useEffect(() => {
+    const traerTodosLosUsers = async () => {
+      openSppiner();
+      try {
+        const response = await useGetAllUsers();
+        setAllUsers(response.data);
+      } catch (e) {
+        console.log(e, "errores");
+      } finally {
+        closeSpinner();
+      }
+    };
     const traerMembresias = async () => {
       try {
         const response = await useGetMemberships();
-        console.log(response.data, "dataaaa");
 
         setCards(response.data);
         setLoading(false);
@@ -62,108 +102,104 @@ export const PricingPrices = ({
         setLoading(false);
       }
     };
+    traerMembresias();
+    traerTodosLosUsers();
+  }, []);
+
+  // useEffect para traer dataPedido cuando cambia dataUserBuscado
+  useEffect(() => {
     const traerDataPedido = async () => {
+      setLoadingTable(true);
+      if (!dataUserBuscado || !dataUserBuscado.identityUserId) return;
+
       try {
-        // HARDCODE
         const requestPayment = await useGetRequestPaymentSocio(
-          "1acd1716-2710-4e7f-96f1-488de2f6423e"
+          dataUserBuscado.identityUserId
         );
-        console.log(requestPayment.data, "requestPaymeny");
-        setDataPedido(requestPayment.data.value.value);
-        //////////////////////
+
+        if (requestPayment?.data?.value?.value) {
+          setDataPedido(
+            requestPayment.data.value.value.historialSolicitudDePagos
+          );
+        } else {
+          setDataPedido(null);
+        }
       } catch (e) {
-        console.log(e);
+        console.log(e, "Error al traer dataPedido");
+        setDataPedido(null);
+      } finally {
+        setLoadingTable(false);
       }
     };
-    traerMembresias();
+
     traerDataPedido();
-  }, []);
+  }, [dataUserBuscado]); // Se ejecuta cada vez que cambia dataUserBuscado
 
   // ENVIAR SOLICITUD DE PAGO
   const handleBuy = async (membresiaId, tipoDePagoId, idUser) => {
-    setAlertCreateRequest(false);
+    setLoadingRequest(true);
+
     try {
       const response = await useCreateRequestPayment(
         membresiaId,
         tipoDePagoId,
         idUser
       );
+      console.log(response, "response al crear sollii");
 
-      if (response.status === 200) {
-        setAlertCreateRequest(true);
+      if (response && response.status === 200) {
+        setOpenModal(true);
+      } else {
+        setAlertError(true);
       }
     } catch (error) {
       console.error("Error en lenviar la solicitud de pago", error);
+    } finally {
+      setLoadingRequest(false);
     }
   };
-  console.log(planElegido, "plan elegido");
-
-  // CONFIRMAR PAGO DEL LADO DE VENTANILLA
-  const handleRegisterPayment = async () => {
-    setAlertConfirmRequest(false);
-    try {
-      await handleBuy(planElegido.id, 1, dataUserBuscado.identityUserId);
-      // HARDCODE
-      const requestPayment = await useGetRequestPaymentSocio(
-        dataUserBuscado.identityUserId
-      );
-      console.log(requestPayment.data, "requestPaymeny");
-      setDataPedido(requestPayment.data.value.value);
-      //////////////////////
-      const registerPayment = await useRegisterPayment(
-        requestPayment.data.value.value.id
-      );
-      if (registerPayment.status === 200) {
-        console.log("enteraaaa");
-        setAlertConfirmRequest(true);
-        setDataPedido(null);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  // console.log(planElegido, "plan elegido");
 
   // CANCELAR SOLICITUD DE PAGO DEL LADO DE VENTANILLA
   const handleCancelRequest = async () => {
-    setAlertCancelPayment(false);
-    try {
-      // HARDCODE
-      const requestPayment = await useGetRequestPaymentSocio(
-        dataUserBuscado.identityUserId
-      );
+    setAlertCancelPayment(true);
+    setPlanElegido(null);
+    setDataUserBuscado(null);
 
-      ////////////////////////////////
-      const cancelPayment = await useCancelRequestPayment(
-        requestPayment.data.value.value.id
-      );
+    // try {
 
-      if (cancelPayment.status === 200) {
-        console.log("enteraaaa");
-        setAlertCancelPayment(true);
-        setPlanElegido(null);
-      }
-    } catch (e) {
-      console.log(e);
-    }
+    //   const requestPayment = await useGetRequestPaymentSocio(
+    //     dataUserBuscado.identityUserId
+    //   );
+
+    //   const cancelPayment = await useCancelRequestPayment(
+    //     requestPayment.data.value.value.id
+    //   );
+
+    //   if (cancelPayment.status === 200) {
+    //     console.log("enteraaaa");
+    //     setAlertCancelPayment(true);
+    //     setPlanElegido(null);
+    //   }
+    // } catch (e) {
+    //   console.log(e);
+    // }
   };
-  // traerDataDelUser para obtener el id
-  const traerDataUser = async () => {
-    const response = await useDataUser(emailUser);
-    console.log(response, "response ");
-    if (response && response.status == "200") {
-      setDataUserBuscado(response.data);
-    } else {
-      setAlertUsuarioEncontrado(true);
-      setDataUserBuscado(null);
-    }
+  const elegirPlan = (card) => {
+    setPlanElegido(card);
+    setAlertPlanElegido(true);
+    setMesaggePlanElegido(card.nombre);
   };
-
   return (
-    <div className="flex flex-col flex-wrap justify-center items-center md:items-start md:justify-around gap-8 md:gap-5 md:flex-row w-full  ">
+    <div
+      className={`flex flex-col flex-wrap justify-center items-start md:items-start md:justify-around ${
+        dataUserBuscado !== null ? "gap-0" : "gap-4"
+      } md:gap-5 md:flex-row w-full  `}
+    >
       {loading ? (
         <LoadingSkeleton
           variant="rectangular"
-          className={"w-4/5 md:w-full"}
+          className={"w-full "}
           count={4}
           width={400}
           height={300}
@@ -173,7 +209,7 @@ export const PricingPrices = ({
           return (
             <div
               key={card.id}
-              className="max-w-sm m-5 p-5 md:p-0 w-full md:my-4 transition duration-300 transform hover:scale-105 "
+              className=" md:m-5 p-0 md:p-0 w-full my-5 md:w-1/3 md:my-4 transition duration-300 transform hover:scale-105 "
             >
               <div className="relative group ">
                 <div className="absolute -inset-0 bg-gradient-to-r from-green-600 to-blue-600 rounded-lg blur opacity-20 group-hover:opacity-80 transition duration-1000 group-hover:duration-200"></div>
@@ -190,7 +226,7 @@ export const PricingPrices = ({
                   <ul className="space-y-3">
                     <li className="flex items-center text-start text-sm">
                       <svg
-                        className="w-5 h-5 text-customTextBlue mr-2 flex-shrink-0"
+                        className="w-5 h-5 text-customTextBlue mr-2 flex-shriFnk-0"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -206,9 +242,9 @@ export const PricingPrices = ({
                       {card.descripcion}
                     </li>
                   </ul>
-                  {userData.email === "frantrainer15@gmail.com" ? (
+                  {roleUser === "ADMIN" ? (
                     <button
-                      onClick={() => setPlanElegido(card)}
+                      onClick={() => elegirPlan(card)}
                       className="w-full py-3 font-bold text-white bg-customTextGreen rounded-lg"
                     >
                       Agregar Plan
@@ -227,79 +263,134 @@ export const PricingPrices = ({
           );
         })
       )}
-      {planElegido ? (
-        <Stack
-          className={"m-5"}
-          titulo={planElegido.nombre}
-          duracion={`${planElegido.mesesDuracion} meses `}
-          fechaFinalizacion={`$ ${planElegido.precio}`}
-          classNameText={"md:text-3xl text-customGreenNavBar"}
-        ></Stack>
-      ) : (
-        <Stack className={"m-5"} titulo={"Ningun plan elegido"}></Stack>
+      {roleUser === "ADMIN" &&
+        (planElegido ? (
+          <div className="flex flex-col md:mx-5 px-2 md:px-0 items-center justify-center w-full">
+            <label
+              htmlFor=""
+              className="text-xl mb-3  text-customTextGreen font-semibold"
+            >
+              Membresia seleccionada
+            </label>
+            <Stack
+              className={"w-full   md:w-full md:m-5"}
+              titulo={planElegido.nombre}
+              duracion={`${planElegido.mesesDuracion} meses `}
+              fechaFinalizacion={`$ ${planElegido.precio}`}
+              classNameText={"md:text-3xl text-customGreenNavBar"}
+            ></Stack>
+          </div>
+        ) : (
+          <div className="flex flex-col md:mx-5 px-2 md:px-0 items-center justify-center w-full">
+            <label
+              htmlFor=""
+              className="text-xl mb-3 text-customTextGreen  font-semibold"
+            >
+              Membresia seleccionada
+            </label>
+            <Stack
+              className={"w-full   md:w-full md:m-5"}
+              titulo={"Ningun plan elegido"}
+            ></Stack>
+          </div>
+        ))}
+
+      {roleUser === "ADMIN" && (
+        <div className=" w-full h-2 md:h-4 bg-customGray "></div>
       )}
-      {dataUserBuscado && (
-        <span className="text-xl font-semibold">{`Solicitud de pago de : ${
-          dataUserBuscado &&
-          dataUserBuscado.nombre + " " + dataUserBuscado.apellido
-        }`}</span>
-      )}
-      <div className=" w-full h-2 md:h-4 bg-customGray "></div>
       {/*BUTTON PARA REGISTRAR PAGO DEL LADO DEL QUE ATIENDE EL GYM */}
       {/* HARDCODE  */}
-      {userData.email === "frantrainer15@gmail.com" && (
-        <div className="w-full justify-center p-5 ">
+      {roleUser === "ADMIN" && (
+        <div className="w-full justify-center md:px-5">
+          <div className="w-full flex justify-center mb-7">
+            <label
+              htmlFor=""
+              className="text-xl text-end  text-customTextGreen font-semibold"
+            >
+              Dar de alta
+            </label>
+          </div>
           <section className="flex flex-col gap-6 items-center justify-center">
-            <div className="w-full flex justify-between items-center mt-0  gap-4  ">
-              <div className="flex items-center gap-4">
-                <label htmlFor="" className="text-xl font-semibold">
+            <div className="w-full flex-col md:flex-row flex justify-between items-center mt-0  gap-4  ">
+              <div className="flex flex-col mb-1 md:flex-row md:items-center gap-4">
+                <label htmlFor="" className="md:text-xl font-semibold">
                   Nombre del cliente :{" "}
                 </label>
                 <div className="flex item gap-2">
-                  <CustomInput
-                    className="w-1/2 focus:ring-customButtonGreen focus:border-customButtonGreen "
-                    value={emailUser}
-                    onChange={handleChange}
-                    placeholder="Buscar.."
-                    type="text"
-                  ></CustomInput>
-                  <button
-                    onClick={traerDataUser}
-                    className="bg-customButtonGreen rounded p-2.5 md:p-2"
-                  >
-                    <IoSearchSharp className="text-white  text-lg md:text-2xl font-semibold"></IoSearchSharp>
-                  </button>
+                  <SelectNavegable
+                    label={"Seleccione un cliente"}
+                    options={allUsers}
+                    onSelect={setDataUserBuscado}
+                  ></SelectNavegable>
                 </div>
               </div>
-              <div className="flex gap-8 ">
-                <Button label={"Aceptar"}></Button>
-                <Button className="bg-gray-600" label={"Cancelar"}></Button>
-              </div>
+              {planElegido && dataUserBuscado && (
+                <div className="flex gap-14 md:gap-8 ">
+                  <ButtonSpinner
+                    loading={loadingRequest}
+                    onClick={() =>
+                      handleBuy(
+                        planElegido.id,
+                        1,
+                        dataUserBuscado.identityUserId
+                      )
+                    }
+                    label={"Aceptar pago"}
+                  ></ButtonSpinner>
+                  <ButtonSpinner
+                    onClick={handleCancelRequest}
+                    className="bg-gray-600"
+                    label={"Cancelar "}
+                  ></ButtonSpinner>
+                </div>
+              )}
             </div>
           </section>
-          {planElegido && dataUserBuscado && (
-            <div className="flex justify-center mt-5 gap-24">
-              <button
-                onClick={handleRegisterPayment}
-                className="py-1 px-1 md:py-3 font-bold md:w-1/3 text-white bg-customTextBlue rounded-lg"
-              >
-                Registrar Pago
-              </button>
-              {/*BUTTON PARA CANCELAR SOLICITUD DE PAGO DEL LADO DEL QUE ATIENDE EL GYM */}
-              <button
-                onClick={handleCancelRequest}
-                className="py-1 px-1 md:py-3 font-bold md:w-1/3 text-white bg-red-600 rounded-lg"
-              >
-                Cancelar Pago
-              </button>
-            </div>
-          )}
         </div>
       )}
-      <div className=" w-full h-2 md:h-4 bg-customGray "></div>
-      <section>
-        <h1>awdawdawdwad</h1>
-      </section>
+      {roleUser === "ADMIN" && (
+        <div className=" w-full h-2 md:h-4 bg-customGray "></div>
+      )}
+      {roleUser === "ADMIN" && (
+        <div className="flex px-5 w-full justify-start md:items-start items-center flex-col ">
+          {dataUserBuscado && roleUser === "ADMIN" ? (
+            <>
+              <section className="flex items-center md:flex-row mt-4 md:mt-0 md:gap-2 justify-center flex-col">
+                <span className="md:text-xl font-semibold">{`Ultimos pagos de `}</span>
+                <span className="md:text-xl font-bold text-customTextGreen ">{` ${
+                  dataUserBuscado &&
+                  dataUserBuscado.nombre + " " + dataUserBuscado.apellido
+                }`}</span>
+              </section>
+              <div className="w-full my-6 md:my-16 ">
+                <TablePagos
+                  loading={loadingTable}
+                  arregloColumns={arregloColumns}
+                  arreglo={arregloRows}
+                  textSinEjercicios={"No hay user seleccionado"}
+                ></TablePagos>
+              </div>
+            </>
+          ) : (
+            <div className="flex justify-center my-11 items-center mb-16 md:mb-20 w-full gap-1">
+              <span className="md:text-xl text-gray-500 font-semibold">
+                Ningun cliente seleccionado
+              </span>
+              <IoIosInformationCircleOutline
+                fontWeight={700}
+                className="md:text-2xl  text-customTextBlue  font-bold"
+              ></IoIosInformationCircleOutline>
+            </div>
+          )}
+          <ModalAceptPayment
+            setAlertError={setAlertError}
+            setOpen={setOpenModal}
+            open={openModal}
+            dataUserBuscado={dataUserBuscado}
+            setAlertConfirmRequest={setAlertConfirmRequest}
+          ></ModalAceptPayment>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoCloseOutline, IoSearchOutline } from "react-icons/io5";
 import { BiLogOut } from "react-icons/bi";
-import { useNavigate, useLocation } from "react-router-dom"; // Cambiado a useNavigate para redirigir manualmente
+import { useNavigate, useLocation } from "react-router-dom";
 import { GoHome } from "react-icons/go";
+import { HiOutlineUsers } from "react-icons/hi2";
 import { CgProfile } from "react-icons/cg";
 import { FaRegAddressCard } from "react-icons/fa";
 import { BsMenuButtonWide } from "react-icons/bs";
@@ -10,19 +11,32 @@ import { MdOutlineInventory } from "react-icons/md";
 import { IoStatsChartOutline } from "react-icons/io5";
 import { GrPlan } from "react-icons/gr";
 import { IoMdNotificationsOutline } from "react-icons/io";
+import { useMembershipStore } from "../../../store/useStoreMembership";
 import clsx from "clsx";
-import { useStoreMenu, useStoreUser, useStoreUserData } from "../../../store";
+import {
+  useSpinnerStore,
+  useStoreMenu,
+  useStoreUser,
+  useStoreUserData,
+} from "../../../store";
 import { ModalLogout } from "../../auth/modal/ModalLogout";
+import { useGetRequestPaymentSocio } from "../../../service/membership/useGetRequestPaymentSocio";
+import { SnackbarDefault } from "../snackbar/Snackbar";
 export const NavBar = () => {
   const [openModalLogout, setOpenModalLogout] = useState(false);
-  // CERRAR SESION
-  const closeSession = useStoreUser((state) => state.clearToken);
-  const clearUserData = useStoreUserData((state) => state.clearUserData);
+  const openSppiner = useSpinnerStore((state) => state.showSpinner);
+  const closeSpinner = useSpinnerStore((state) => state.hideSpinner);
   const location = useLocation();
   const path = location.pathname;
-  const userData = useStoreUserData((state) => state.userData);
-  console.log(userData, "userd ");
 
+  const userData = useStoreUserData((state) => state.userData);
+  const roleUser = userData.roles[0];
+
+  // VER SI TIENE MEMBRESIA ACTIVA
+  const membership = useMembershipStore((state) => state.membershipData);
+  const [openErrorTurns, setOpenErrorTurns] = useState(false);
+
+  /////////////////////////////////////
   const menu = useStoreMenu((state) => state.navBar);
   const close = useStoreMenu((state) => state.closeNavBar);
   const navigate = useNavigate();
@@ -33,6 +47,7 @@ export const NavBar = () => {
     // clearUserData();
     // navigate("/");
   };
+
   // HARDCODE
   const routeAdminNavigation = [
     {
@@ -43,7 +58,7 @@ export const NavBar = () => {
     {
       title: "Mi cuenta",
       icon: <CgProfile />,
-      link: "/acount",
+      link: "/account",
     },
     {
       title: "Membresias",
@@ -55,6 +70,11 @@ export const NavBar = () => {
       title: "Inventario",
       icon: <MdOutlineInventory />,
       link: "/inventary",
+    },
+    {
+      title: "Usuarios",
+      icon: <HiOutlineUsers />,
+      link: "/users",
     },
     {
       title: "Estadisticas",
@@ -76,7 +96,7 @@ export const NavBar = () => {
     {
       title: "Mi cuenta",
       icon: <CgProfile />,
-      link: "/acount",
+      link: "/account",
     },
     {
       title: "Membresias",
@@ -101,7 +121,16 @@ export const NavBar = () => {
   ];
 
   const handleLinkClick = (link) => {
+    console.log(membership, "membership");
+
+    if (link === "/turns") {
+      if (!membership || membership.estadoSolicitud.nombre !== "Confirmado") {
+        setOpenErrorTurns(true);
+        return;
+      }
+    }
     close();
+
     setTimeout(() => {
       navigate(link);
     }, 200);
@@ -140,7 +169,7 @@ export const NavBar = () => {
             <BiLogOut size={26} />
           </div>
         </div>
-        {userData.email === "frantrainer15@gmail.com"
+        {roleUser === "ADMIN"
           ? routeAdminNavigation.map((item) => (
               <div
                 key={item.link}
@@ -174,6 +203,13 @@ export const NavBar = () => {
               </div>
             ))}
       </nav>
+      <SnackbarDefault
+        position={{ vertical: "left", horizontal: "center" }}
+        severity={"warning"}
+        message={"Usted no posee membresias activas"}
+        open={openErrorTurns}
+        setOpen={setOpenErrorTurns}
+      ></SnackbarDefault>
       <ModalLogout
         openModalLogout={openModalLogout}
         setOpenModalLogout={setOpenModalLogout}

@@ -84,7 +84,7 @@ export const ModalLayout = ({ open, setOpen, children, Icon }) => {
         <Fade in={open}>
           <Box sx={style}>
             <div className="w-full p-[0px] absolute top-0 left-0">
-              {Icon ? <Icon  size={26}></Icon> : <CgGym size={32}></CgGym>}
+              {Icon ? <Icon size={26}></Icon> : <CgGym size={32}></CgGym>}
             </div>
             <div className="mt-5">{children}</div>
           </Box>

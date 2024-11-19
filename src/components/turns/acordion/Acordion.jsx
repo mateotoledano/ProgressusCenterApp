@@ -19,7 +19,6 @@ export const Acordion = ({
   turnosReservados,
   setTurnosReservados,
   setAlertHoraError,
-  setAlertDuplicatedTurn,
 }) => {
   const [reservasPorHora, setReservasPorHora] = React.useState({});
   const [open, setOpen] = React.useState(false);
@@ -39,7 +38,7 @@ export const Acordion = ({
   };
 
   const fecha = obtenerFechaActual();
-console.log(fecha , "fecha");
+  console.log(turnosReservados, "turnosReservados");
 
   // TRAER RESERVAS POR HORA
   const fetchReservas = async (hora) => {
@@ -80,6 +79,20 @@ console.log(fecha , "fecha");
     setOpen(true);
   };
 
+  // Función para comparar la hora en formato HH:mm
+  const formatHora = (hora) => {
+    return hora.substring(0, 5); // Retorna solo la parte HH:mm
+  };
+
+  // Función para verificar si la hora del botón está reservada
+  const isHoraReservada = (hora) => {
+    const horaFormateada = formatHora(hora); // Formatear la hora para compararla
+    // Verificar si alguno de los turnos reservados tiene la misma hora
+    return turnosReservados.some(
+      (turno) => formatHora(turno.horaInicio) === horaFormateada
+    );
+  };
+
   return (
     <div className="w-full">
       <Accordion>
@@ -96,28 +109,33 @@ console.log(fecha , "fecha");
         </AccordionSummary>
         <AccordionDetails>
           <div className="flex flex-col gap-5">
-            {content.map((cont, index) => (
-              <div
-                key={cont}
-                className="bg-green-50 rounded-lg md:p-2 p-2 px-1 flex justify-between cursor-pointer hover:bg-customNavBar hover:text-white transition-all"
-                onClick={() => onChangeHora(cont, index)}
-              >
-                <div className="flex flex-row-reverse items-center justify-start gap-3">
-                  <span className="text-base md:text-lg font-semibold">
-                    {`${cont} hs`}
+            {content.map((cont, index) => {
+              // Verificar si la hora está reservada
+              const isDisabled = isHoraReservada(cont);
+
+              return (
+                <button
+                  key={cont}
+                  className={`bg-green-50 rounded-lg md:p-2 p-2 px-1 flex justify-between cursor-pointer hover:bg-customNavBar hover:text-white transition-all ${isDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
+                  onClick={() => !isDisabled && onChangeHora(cont, index)} 
+                  disabled={isDisabled}
+                >
+                  <div className="flex flex-row-reverse items-center justify-start gap-3">
+                    <span className="text-base md:text-lg font-semibold">
+                      {`${cont} hs`}
+                    </span>
+                    <CgGym size={24} />
+                  </div>
+                  <span className="font-semibold">
+                    {reservasPorHora[cont] || 0}/40
                   </span>
-                  <CgGym size={24} />
-                </div>
-                <span className="font-semibold">
-                  {reservasPorHora[cont] || 0}/40
-                </span>
-              </div>
-            ))}
+                </button>
+              );
+            })}
           </div>
         </AccordionDetails>
       </Accordion>
       <ModalTurns
-        setAlertDuplicatedTurn={setAlertDuplicatedTurn}
         turnosReservados={turnosReservados}
         setTurnosReservados={setTurnosReservados}
         setOpenAlert={setOpenAlert}

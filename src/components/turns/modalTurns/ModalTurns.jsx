@@ -82,7 +82,7 @@ export const ModalTurns = ({
   setTurnosReservados,
   setAlertHoraError,
   turnosReservados,
-  setAlertDuplicatedTurn,
+
 }) => {
   let encontrado = false;
   let horaFormat = `${horaInicio}:00`;
@@ -106,8 +106,8 @@ export const ModalTurns = ({
   const turnoDisponible = horaActual.isBefore(horaInicioTurno);
 
   const fechaArgentina = dayjs()
-    .tz("America/Argentina/Buenos_Aires")
-    .toISOString();
+  .tz("America/Argentina/Buenos_Aires")
+  .format("YYYY-MM-DD HH:mm:ss");
 
   const idUser = userData.identityUserId;
 
@@ -128,6 +128,7 @@ export const ModalTurns = ({
     console.error("Error: Hora de inicio o fin no es válida.");
     return null;
   }
+console.log(horaInicio, "fecha argentina");
 
   const confirm = true;
 
@@ -170,9 +171,7 @@ export const ModalTurns = ({
         } finally {
           setButtonLoader(false);
         }
-      } else {
-        setAlertDuplicatedTurn(true);
-      }
+      } 
     }
   };
 

@@ -46,7 +46,7 @@ export const TopMenu = () => {
           </span>
           <IoMdNotificationsOutline className="w-9 h-9 md:w-7 md:h-7"></IoMdNotificationsOutline>
         </div>
-        <Link to="/acount" className="flex items-center gap-2 cursor-pointer">
+        <Link to="/account" className="flex items-center gap-2 cursor-pointer">
           <img
             className="w-10  md:w-10 rounded-full cursor-pointer"
             src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8YXZhdGFyfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60"

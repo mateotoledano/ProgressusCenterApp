@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { MainLayout } from "../../layout/MainLayout";
-
+import { LoadingSkeleton } from "../../components";
 import { Stack } from "../../components";
 import { useStoreUserData } from "../../store";
 import { useGetRequestPaymentSocio } from "../../service/membership/useGetRequestPaymentSocio";
@@ -10,12 +10,13 @@ export const Profile = () => {
   const [dataMembership, setDataMembership] = useState(null);
   const [allMembership, setAllMembership] = useState(null);
 
-  const roleUser = dataUser.roles.filter((role) => role != "SOCIO");
-  console.log(dataUser, "data user");
+  const roleUser = dataUser.roles[0];
 
+  const [loadingSkeleton, setLoadingSkeleton] = useState(false);
   useEffect(() => {
-    try {
-      const traerMembresiaActiva = async () => {
+    const traerMembresiaActiva = async () => {
+      setLoadingSkeleton(true); // Activar skeleton
+      try {
         const response = await useGetRequestPaymentSocio(
           dataUser.identityUserId
         );
@@ -25,12 +26,15 @@ export const Profile = () => {
             response.data.value.value.historialSolicitudDePagos || []
           );
         }
-      };
-      traerMembresiaActiva();
-    } catch (e) {
-      console.log(e);
-    }
-  }, []);
+      } catch (error) {
+        console.error("Error al traer membresía activa:", error);
+      } finally {
+        setLoadingSkeleton(false);
+      }
+    };
+
+    traerMembresiaActiva();
+  }, [dataUser.identityUserId]);
 
   const lastMembership =
     Array.isArray(allMembership) && allMembership.length > 0
@@ -93,50 +97,48 @@ export const Profile = () => {
             </div>
             <div className="flex items-center gap-1 md:gap-3 ">
               {/* HARDCODE */}
-              {dataUser.email === "frantrainer15@gmail.com" ? (
-                <span className="rounded-sm bg-yellow-100 px-2 py-1 md:px-3 md:py-2 text-xs md:text-base font-semibold text-yellow-800">
-                  ADMIN
-                </span>
-              ) : roleUser.length === 0 ? (
+              {roleUser === "SOCIO" && (
                 <span className="rounded-sm bg-green-100 px-2 py-1 md:px-3 md:py-2 text-xs md:text-base font-semibold text-green-900">
                   SOCIO
                 </span>
-              ) : (
-                roleUser.map((role) => {
-                  return role === "ADMIN" ? (
-                    <span
-                      key={role}
-                      className="rounded-sm bg-yellow-100 px-2 py-1 md:px-3 md:py-2 text-xs md:text-base font-semibold text-yellow-800"
-                    >
-                      ADMIN
-                    </span>
-                  ) : null;
-                })
+              )}
+
+              {roleUser === "ADMIN" && (
+                <span className="rounded-sm bg-yellow-100 px-2 py-1 md:px-3 md:py-2 text-xs md:text-base font-semibold text-yellow-800">
+                  ADMIN
+                </span>
               )}
             </div>
           </div>
           {/* HARDCODE */}
-          {dataUser.email !== "frantrainer15@gmail.com" && (
-            <div className="flex flex-col items-center md:text-lg gap-3 mt-5 ">
-              <h4 className="text-md font-medium leading-3 mt-6 pb-4 ">
-                Membresias(activas)
-              </h4>
-              {allMembership &&
-              Array.isArray(allMembership) &&
-              allMembership.length > 0 &&
-              lastMembership.estadoSolicitud.nombre === "Confirmado" ? (
-                <Stack
-                  duracion={`${mesesDuracionMembresia} ${
-                    mesesDuracionMembresia === 1 ? "mes" : "meses"
-                  }`}
-                  titulo={`${dataMembership.membresia.nombre}`}
-                  fechaFinalizacion={`finaliza el ${fechaFinal}`}
-                />
-              ) : (
-                <Stack titulo="No tienes membresias activas" />
-              )}
-            </div>
-          )}
+          {roleUser !== "ADMIN" &&
+            (loadingSkeleton ? (
+              <LoadingSkeleton
+                count={1}
+                width={"100%"}
+                className={"mt-20"}
+              ></LoadingSkeleton>
+            ) : (
+              <div className="flex flex-col items-center md:text-lg gap-3 mt-5 ">
+                <h4 className="text-md font-medium leading-3 mt-6 pb-4 ">
+                  Membresias(activas)
+                </h4>
+                {allMembership &&
+                Array.isArray(allMembership) &&
+                allMembership.length > 0 &&
+                lastMembership.estadoSolicitud.nombre === "Confirmado" ? (
+                  <Stack
+                    duracion={`${mesesDuracionMembresia} ${
+                      mesesDuracionMembresia === 1 ? "mes" : "meses"
+                    }`}
+                    titulo={`${dataMembership.membresia.nombre}`}
+                    fechaFinalizacion={`finaliza el ${fechaFinal}`}
+                  />
+                ) : (
+                  <Stack titulo="No tienes membresias activas" />
+                )}
+              </div>
+            ))}
         </div>
       </div>
     </MainLayout>

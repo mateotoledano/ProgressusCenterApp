@@ -6,11 +6,14 @@ import { Title, Location, PricingPrices, Alert } from "../../components";
 import { useStoreUserData } from "../../store";
 import { Stack } from "@mui/material";
 export const MemberShip = () => {
-  const [alertCreateRequest, setAlertCreateRequest] = useState(false);
+  const [alertPlanElegido, setAlertPlanElegido] = useState(false);
+  const [mesaggePlanElegido, setMessagePlanElegido] = useState("");
   const [alertConfirmRequest, setAlertConfirmRequest] = useState(false);
   const [alertCancelPayment, setAlertCancelPayment] = useState(false);
-  const [alertUserEncontrado, setAlertUsuarioEncontrado] = useState(false);
-  const userData = useStoreUserData((state) => state.userData);
+
+  const [alertError, setAlertError] = useState(false);
+  const dataUser = useStoreUserData((state) => state.userData);
+  const roleUser = dataUser.roles[0];
   return (
     <MainLayout>
       <section className="animate-fade-in-down md:mx-auto bg-white  rounded shadow-xl w-full md:w-11/12 overflow-hidden mb-20">
@@ -18,17 +21,11 @@ export const MemberShip = () => {
           {/* HARDCODE */}
           <Location
             route={`Membresia`}
-            subroute={
-              userData.email === "frantrainer15@gmail.com" ? "" : `Abonar`
-            }
+            subroute={roleUser === "ADMIN" ? "" : `Abonar`}
           ></Location>
 
           <Title
-            title={
-              userData.email === "frantrainer15@gmail.com"
-                ? "Gestion de membresias"
-                : `Membresia`
-            }
+            title={roleUser === "ADMIN" ? "Gestion de membresias" : `Membresia`}
           ></Title>
           {/* ///////////////////////////// */}
         </div>
@@ -37,21 +34,22 @@ export const MemberShip = () => {
 
         <div className=" mt-2">
           <PricingPrices
-            setAlertCreateRequest={setAlertCreateRequest}
+            setAlertError={setAlertError}
+            setMesaggePlanElegido={setMessagePlanElegido}
             setAlertConfirmRequest={setAlertConfirmRequest}
             setAlertCancelPayment={setAlertCancelPayment}
-            setAlertUsuarioEncontrado={setAlertUsuarioEncontrado}
+            setAlertPlanElegido={setAlertPlanElegido}
           ></PricingPrices>
         </div>
       </section>
 
-      {/* <SnackbarDefault
-        open={alertCreateRequest}
-        setOpen={setAlertCreateRequest}
-        severity="info"
-        message="Su solicitud de pago se realizo y se encuentra en estado pandiente! "
+      <SnackbarDefault
+        open={alertPlanElegido}
+        setOpen={setAlertPlanElegido}
+        severity="success"
+        message={`${mesaggePlanElegido} agregada ! `}
         position={{ vertical: "center", horizontal: "center" }}
-      ></SnackbarDefault> */}
+      ></SnackbarDefault>
 
       <SnackbarDefault
         open={alertConfirmRequest}
@@ -65,20 +63,16 @@ export const MemberShip = () => {
         position={{ vertical: "center", horizontal: "center" }}
         open={alertCancelPayment}
         setOpen={setAlertCancelPayment}
-        message="Pago cancelado con exito !"
+        message="Pago cancelado !"
         severity="info"
-        // theme="dark"
-        // type="info"
-        // position="bottom-center"
-        // autoclose={5000}
-        // message="Pago cancelado con exito ! "
       ></SnackbarDefault>
 
       <SnackbarDefault
-        open={alertUserEncontrado}
-        setOpen={setAlertUsuarioEncontrado}
-        message={"El email no corresponde a ningun usuario"}
+        open={alertError}
+        setOpen={setAlertError}
+        message={"ha ocurrido un error , intentelo de nuevo mas tarde "}
         severity={"warning"}
+        position={{ vertical: "bottom", horizontal: "center" }}
       ></SnackbarDefault>
     </MainLayout>
   );
