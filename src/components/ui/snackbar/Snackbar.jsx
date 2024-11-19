@@ -10,7 +10,7 @@ export const SnackbarDefault = ({
   message,
   severity,
   position,
-  mt
+  mt,
 }) => {
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -27,7 +27,7 @@ export const SnackbarDefault = ({
         autoHideDuration={5000}
         onClose={handleClose}
         anchorOrigin={{
-          vertical: position?.vertical || "top",
+          vertical: position?.vertical || "bottom",
           horizontal: position?.horizontal || "center",
         }}
         sx={{ mt: `${mt}` }}

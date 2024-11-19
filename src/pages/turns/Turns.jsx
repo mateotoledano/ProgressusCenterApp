@@ -8,6 +8,7 @@ import {
   Stack,
   Title,
   GridAlertsTurns,
+  LoadingSkeleton,
 } from "../../components";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
@@ -51,17 +52,19 @@ export const Turns = () => {
   // ALERTA AL SELECCIONAR HORA ANTES DE LA ACTUAL
   const [alertHoraError, setAlertHoraError] = useState(false);
   //ALERT PARA NO RESERVAR DOS VECES EL MISMO HORARIO
-  // const [alertDuplicatedTurn, setAlertDuplicatedTurn] = useState("");
+  const [skeletonTurn, setSkeletonTurn] = useState(true);
 
-  
   useEffect(() => {
     const traerTurnos = async () => {
+      
       try {
         const response = await useGetTurns(dataUser.identityUserId);
 
         setTurnosReservados(response.data.value);
       } catch (error) {
         console.error("Error al traer los turnos:", error);
+      } finally {
+        setSkeletonTurn(false);
       }
     };
 
@@ -103,8 +106,6 @@ export const Turns = () => {
             </div>
             {turnos.map((turno, index) => (
               <Acordion
-               
-    
                 setAlertHoraError={setAlertHoraError}
                 openAlert={openAlert}
                 openAlertError={openAlertError}
@@ -127,15 +128,18 @@ export const Turns = () => {
                 title={"Mis turnos"}
                 icon={<IoIosTimer />}
               ></Title>
-              {turnosReservados.length > 0 ? (
+              {skeletonTurn ? (
+                <div className="w-full">
+                  <LoadingSkeleton className={"w-full "} width={"100%"} count={4} height={50} />
+
+                </div>
+              ) : turnosReservados.length > 0 ? (
                 turnosReservados.map((turn) => {
                   const fechaReserva = turn.fechaReserva.split("T")[0];
-
                   const [year, month, day] = fechaReserva.split("-");
-                  const fechaFormateada = `${day}-${month}-${year}`; // Formato '07-11-2024'
+                  const fechaFormateada = `${day}-${month}-${year}`;
 
-                  const fechaObj = new Date(year, month - 1, day); // Los meses en JavaScript son de 0 a 11
-
+                  const fechaObj = new Date(year, month - 1, day);
                   const diasSemana = [
                     "Domingo",
                     "Lunes",
@@ -147,14 +151,10 @@ export const Turns = () => {
                   ];
                   const diaSemana = diasSemana[fechaObj.getDay()];
 
-                  // Extraer solo la hora y los minutos de 'horaInicio' y 'horaFin'
-                  const horaInicioFormateada = turn.horaInicio.substring(0, 5); // "07:00"
-                  const horaFinFormateada = turn.horaFin.substring(0, 5); // "08:00"
+                  const horaInicioFormateada = turn.horaInicio.substring(0, 5);
+                  const horaFinFormateada = turn.horaFin.substring(0, 5);
 
-                  // pasamos la hora a num
                   const hora = parseInt(turn.horaInicio.split(":")[0], 10);
-
-                  //  título según la hora
                   let tituloTurno = "";
                   if (hora >= 6 && hora < 12) {
                     tituloTurno = "Turno mañana";
@@ -179,7 +179,8 @@ export const Turns = () => {
                   titulo={"No tienes turnos reservados"}
                 ></Stack>
               )}
-              {turnosReservados.length > 0 && (
+
+              {turnosReservados.length > 0 && !skeletonTurn && (
                 <div className="w-full flex justify-end">
                   <Button
                     onClick={handleDeleteTurn}
@@ -203,10 +204,11 @@ export const Turns = () => {
         setAlertDelete={setAlertDelete}
         alertDelete={alertDelete}
         openAlert={openAlert}
+        setOpenAlert={setOpenAlert}
         openAlertError={openAlertError}
+        setOpenAlertError={setOpenAlertError}
         alertHoraError={alertHoraError}
         setAlertHoraError={setAlertHoraError}
-     
       ></GridAlertsTurns>
     </MainLayout>
   );

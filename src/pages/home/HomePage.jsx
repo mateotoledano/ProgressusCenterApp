@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { MainLayout } from "../../layout/MainLayout";
 import { useSpinnerStore, useStoreUserData } from "../../store";
 import { useGetTurns } from "../../service/turns/use-getTurns";
+import dayjs from "dayjs";
+
 import { useDataUser } from "../../service/auth/use-dataUser";
 import gif from "/Progressus_G5.gif";
 import { Button, Title, Footer, LoadingSkeleton } from "../../components";
@@ -17,36 +19,42 @@ export const HomePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   // MEMBRESIAS
   const setMembership = useMembershipStore((state) => state.setMembershipData);
-
-
+  const [turnoMasCercano, setTurnoMasCercano] = useState(null);
   const [allMembership, setAllMembership] = useState(null);
   const nameUser = dataUser.nombre;
   const openSppiner = useSpinnerStore((state) => state.showSpinner);
   const closeSpinner = useSpinnerStore((state) => state.hideSpinner);
+
   useEffect(() => {
     openSppiner();
     const fetchData = async () => {
       try {
         const userResponse = await useDataUser(email);
         setAllDataUser(userResponse.data);
-  
+
         if (userResponse.data.identityUserId) {
-          const turnsResponse = await useGetTurns(userResponse.data.identityUserId);
+          const turnsResponse = await useGetTurns(
+            userResponse.data.identityUserId
+          );
           setTurnosReservados(turnsResponse.data.value);
         }
-  
+
         // TRAER MEMBRESIA
-        const response = await useGetRequestPaymentSocio(dataUser.identityUserId);
+        const response = await useGetRequestPaymentSocio(
+          dataUser.identityUserId
+        );
         if (response.data?.value?.value) {
-          const allMembership = response.data.value.value.historialSolicitudDePagos || [];
+          const allMembership =
+            response.data.value.value.historialSolicitudDePagos || [];
           setAllMembership(allMembership);
-  
+
           // Solo actualizamos el store si hay nuevas membresías
           if (Array.isArray(allMembership) && allMembership.length > 0) {
             const lastMembership = allMembership[allMembership.length - 1];
             setMembership(lastMembership); // Actualiza el store
           }
         }
+        // TURNO MAS CERCANO
       } catch (error) {
         console.error("Error al cargar datos:", error);
       } finally {
@@ -54,16 +62,58 @@ export const HomePage = () => {
         closeSpinner();
       }
     };
-  
+
     fetchData();
   }, [email, dataUser.identityUserId, setAllDataUser, setMembership]);
-  
 
+  // OBTENER ULTIMO TURNO
+  useEffect(() => {
+    if (turnosReservados.length > 0) {
+      console.log("Turnos Reservados:", turnosReservados);
 
+      const now = dayjs();
+      console.log("Fecha y hora actual:", now.format());
 
+      const filteredTurns = turnosReservados.filter((turno) => {
+        // Crear una cadena con la combinación de fecha y hora
+        const fechaHora = `${turno.fechaReserva.split("T")[0]}T${
+          turno.horaInicio
+        }`;
+        const turnoDateTime = dayjs(fechaHora);
 
+        console.log(
+          `Turno ID ${turno.id} - Fecha y hora combinada:`,
+          fechaHora,
+          turnoDateTime.isValid() ? turnoDateTime.format() : "Invalid Date"
+        );
 
-  
+        return turnoDateTime.isAfter(now);
+      });
+
+      console.log("Turnos futuros filtrados:", filteredTurns);
+
+      const closestTurn =
+        filteredTurns.length > 0
+          ? filteredTurns.sort((a, b) => {
+              const fechaHoraA = `${a.fechaReserva.split("T")[0]}T${
+                a.horaInicio
+              }`;
+              const fechaHoraB = `${b.fechaReserva.split("T")[0]}T${
+                b.horaInicio
+              }`;
+
+              const dateA = dayjs(fechaHoraA);
+              const dateB = dayjs(fechaHoraB);
+
+              return dateA.diff(dateB);
+            })[0]
+          : null;
+
+      setTurnoMasCercano(closestTurn);
+    }
+  }, [turnosReservados]);
+
+  console.log("Turno más cercano:", turnoMasCercano);
   return (
     <MainLayout>
       <div className="animate-fade-in-down w-full flex flex-col justify-start gap-1">
@@ -90,51 +140,35 @@ export const HomePage = () => {
             count={1}
             width={800}
             height={50}
-          /> // Mostrar Skeleton mientras carga
-        ) : turnosReservados.length > 0 ? (
-          turnosReservados.map((turno, index) => {
-            const fecha = new Date(turno.fechaReserva);
-            const opciones = {
-              weekday: "long",
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            };
-            const fechaFormateada = fecha.toLocaleDateString("es-ES", opciones);
-
-            return (
-              <div
-                key={index}
-                className="bg-white mx-3 md:m-0 md:mx-8 p-2 rounded shadow-sm gap-1 flex flex-col md:flex-col justify-center items-center"
-              >
-                <div className="flex flex-col items-center md:flex-row gap-1">
-                  <Title title={"Tu próximo turno es el día: "} />
-                  <Title
-                    className="text-customNavBar font-bold"
-                    title={fechaFormateada.toUpperCase()}
-                  />
-                  <Title
-                    className="text-customNavBar font-bold md:hidden"
-                    title={`${turno.horaInicio} hs`}
-                  />
-                </div>
-                <Title
-                  className="hidden md:block text-customNavBar font-bold"
-                  title={`${turno.horaInicio} hs`}
-                />
-                <Link to={"/turns"}>
-                  <Button
-                    label={"Administrar mis turnos"}
-                    className="py-1 px-2 text-sm md:text-base"
-                  />
-                </Link>
-              </div>
-            );
-          })
+          />
+        ) : turnoMasCercano ? (
+          <div className="bg-white mx-3 md:m-0 md:mx-8 p-2 rounded shadow-sm gap-1 flex flex-col md:flex-col justify-center items-center">
+            <div className="flex flex-col items-center md:flex-row gap-1">
+              <Title title={"Tu próximo turno es el día: "} />
+              <Title
+                className="text-customNavBar font-bold"
+                title={dayjs(turnoMasCercano.fechaReserva)
+                  .format("dddd, D [de] MMMM [de] YYYY")
+                  .toUpperCase()}
+              />
+              <Title
+                className="text-customNavBar font-bold md:hidden"
+                title={`${turnoMasCercano.horaInicio} hs`}
+              />
+            </div>
+            <Title
+              className="hidden md:block text-customNavBar font-bold"
+              title={`${turnoMasCercano.horaInicio} hs`}
+            />
+            <Link to={"/turns"}>
+              <Button
+                label={"Administrar mis turnos"}
+                className="py-1 px-2 text-sm md:text-base"
+              />
+            </Link>
+          </div>
         ) : (
-          roleUser !== "ADMIN" &&
-          turnosReservados &&
-          dataUser && (
+          roleUser !== "ADMIN" && (
             <div className="bg-white mx-3 md:m-0 md:mx-8 p-2 rounded shadow-sm gap-1 flex md:flex-col justify-center items-center">
               <Title
                 title={"No tienes turnos reservados"}

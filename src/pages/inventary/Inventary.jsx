@@ -13,59 +13,14 @@ import {
 import { CiSearch } from "react-icons/ci";
 import { useGetInventary } from "../../service/inventary/useGetInventary";
 import { IoMdAdd } from "react-icons/io";
-const inventarioGym = [
-  {
-    nombre: "Mancuernas",
-    descripcion: "Pesas de diferentes tamaños para ejercicios de fuerza",
-    estado: "disponible",
-  },
-  {
-    nombre: "Bicicleta Estática",
-    descripcion: "Equipo cardiovascular para ejercicios de resistencia",
-    estado: "mantenimiento",
-  },
-  {
-    nombre: "Banco de Pesas",
-    descripcion: "Banco ajustable para levantar pesas y ejercicios variados",
-    estado: "disponible",
-  },
-  {
-    nombre: "Máquina de Pecho",
-    descripcion: "Máquina de resistencia para ejercicios de pecho",
-    estado: "mantenimiento",
-  },
-  {
-    nombre: "Caminadora",
-    descripcion: "Máquina para correr o caminar a diferentes velocidades",
-    estado: "disponible",
-  },
-  {
-    nombre: "Elíptica",
-    descripcion: "Máquina para ejercicios cardiovasculares de bajo impacto",
-    estado: "disponible",
-  },
-  {
-    nombre: "Rack de Pesas",
-    descripcion: "Estante para almacenar pesas y barras de levantamiento",
-    estado: "disponible",
-  },
-  {
-    nombre: "Máquina de Piernas",
-    descripcion: "Máquina para ejercicios de fortalecimiento de piernas",
-    estado: "mantenimiento",
-  },
-  {
-    nombre: "Cuerda de Batalla",
-    descripcion: "Cuerda gruesa para ejercicios de alta intensidad",
-    estado: "disponible",
-  },
-  {
-    nombre: "Máquina de Abdomen",
-    descripcion: "Máquina de resistencia para trabajar el abdomen",
-    estado: "disponible",
-  },
+
+const columnsTable = [
+  "Identificador",
+  "Nombre",
+  "Descripcion",
+  "Estado",
+  "Modificar",
 ];
-const columnsTable = ["Nombre", "Descripcion", "Estado", "Modificar"];
 export const Inventary = () => {
   // ALERTA AL AGREGAR
   const [alertAddItem, setAlertAddItem] = useState(false);
@@ -88,7 +43,6 @@ export const Inventary = () => {
   const filteredInventary = inventary.filter((item) =>
     item.nombre.toLowerCase().includes(findElement.toLowerCase())
   );
-  console.log(alertEditItem);
 
   const handleChange = (e) => {
     setFindElement(e.target.value);
@@ -113,14 +67,12 @@ export const Inventary = () => {
     <MainLayout>
       <section className="animate-fade-in-down md:mx-auto bg-white  rounded shadow-xl w-full md:w-11/12 overflow-hidden mb-20">
         <div className="b p-3">
-      
           <Location
             route={`Membresia`}
             subroute={"Consultar Inventario"}
           ></Location>
 
           <Title title={"Inventario"}></Title>
-        
         </div>
         {/* DIVISION GRAY */}
         <div className="w-full h-2 md:h-4 bg-customGray"></div>
@@ -149,8 +101,8 @@ export const Inventary = () => {
           </div>
         </section>
         <TableInventary
-        setAlertDeleteItem={setAlertDeleteItem}
-        seterrorDeleteiItem={seterrorDeleteiItem}
+          setAlertDeleteItem={setAlertDeleteItem}
+          seterrorDeleteiItem={seterrorDeleteiItem}
           setAlertEditItem={setAlertEditItem}
           setErrorAlertEditItem={setErrorAlertEditItem}
           setInventary={setInventary}

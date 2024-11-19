@@ -14,7 +14,8 @@ import { ModalEditInventary } from "../modalInventary/ModalEditInventary";
 import { ModalDeleteInventary } from "../modalInventary/ModalDeleteInventary";
 import { LoadingSkeleton } from "../../ui/skeleton/LoadingSkeleton";
 import { useEffect } from "react";
-
+import { ModalDeleteUsers } from "../../users/modalUsers/ModalDeleteUsers";
+import { ModalEditUsers } from "../../users/modalUsers/ModalEditUsers";
 export const TableInventary = ({
   arreglo,
   arregloColumns,
@@ -25,6 +26,13 @@ export const TableInventary = ({
   setErrorAlertEditItem,
   setAlertDeleteItem,
   seterrorDeleteiItem,
+  // USAR SOLO EN USERS
+  users,
+  setAlertDeleteUser,
+  seterrorDeleteUser,
+  setAlertEditUser,
+  setErrorAlertEditUser,
+  setUsers ,
 }) => {
   // MODAL DE EDITAR ELEMENTO
   const [openEditElement, setOpenEditElement] = useState(false);
@@ -32,6 +40,12 @@ export const TableInventary = ({
   const [openDeleteElement, setOpenDeleteElement] = useState(false);
   // ESTADO PARA EL ELEMENTO A EDITAR O ELIMINAR
   const [elementEditable, setElementEditable] = useState();
+
+  // USUARIO
+  // MODAL DE EDITAR USER
+  const [openEditUser, setOpenEditUser] = useState(false);
+  // MODAL DE ELIMINAR USER
+  const [openDeleteUser, setOpenDeleteUser] = useState(false);
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -51,13 +65,23 @@ export const TableInventary = ({
   );
   // EDITAR ELEMENTO
   const editElement = (element) => {
+    // llamar solo al modal user si no al de inventario
     setElementEditable(element);
-    setOpenEditElement(true);
+    if (users) {
+      setOpenEditUser(true);
+    } else {
+      setOpenEditElement(true);
+    }
   };
   // ELIMINAR ELEMENTO
   const deleteElement = (element) => {
+    // llamar solo al modal user si no al de inventario
     setElementEditable(element);
-    setOpenDeleteElement(true);
+    if (users) {
+      setOpenDeleteUser(true);
+    } else {
+      setOpenDeleteElement(true);
+    }
   };
   console.log(elementEditable, "elemento a editar");
 
@@ -77,6 +101,8 @@ export const TableInventary = ({
                           ? "right"
                           : column === "Estado"
                           ? "center"
+                          : column === "Email"
+                          ? "center"
                           : "left"
                       }
                       sx={{ fontWeight: "bold", fontSize: "16px" }}
@@ -94,8 +120,8 @@ export const TableInventary = ({
                   <TableCell colSpan={6} align="center">
                     <LoadingSkeleton
                       width={"100%"}
-                      height={55}
-                      count={4}
+                      height={users ? 30 : 55}
+                      count={10}
                     ></LoadingSkeleton>
                   </TableCell>
                 </TableRow>
@@ -109,6 +135,56 @@ export const TableInventary = ({
                     {` ${textSinEjercicios}`}
                   </TableCell>
                 </TableRow>
+              ) : users ? (
+                inventaryPagination.map((element, index) => (
+                  <TableRow
+                    key={index}
+                    sx={{
+                      "&:last-child td, &:last-child th": { border: 0 },
+                      "&:hover": {
+                        backgroundColor: "#E6F7FF",
+                      },
+                    }}
+                  >
+                    <TableCell sx={{ fontSize: "16px" }} align="left">
+                      {element.nombre}
+                    </TableCell>
+                    <TableCell sx={{ fontSize: "16px" }} align="left">
+                      {element.apellido}
+                    </TableCell>
+                    <TableCell
+                      sx={{
+                        fontSize: "16px",
+                        fontWeight: "semibold",
+                        color:
+                          element.estado === "Correcto" ? "#5B8C00" : "red",
+                      }}
+                      align="center"
+                    >
+                      {element.email}
+                    </TableCell>
+
+                    <TableCell sx={{ fontSize: "16px" }} align="right">
+                      <div className="flex justify-end gap-[22px]">
+                        {/* EDITAR ELEMENTO */}
+                        <div
+                          onClick={() => editElement(element)}
+                          className="p-[3px] bg-customTextBlue hover:bg-blue-700 rounded cursor-pointer"
+                        >
+                          <MdOutlineEdit className="text-white text-xl"></MdOutlineEdit>
+                        </div>
+
+                        {/* ELIMINAR ELEMENTO */}
+                        <div
+                          onClick={() => deleteElement(element)}
+                          className="p-[3px] bg-red-600 hover:bg-red-800 rounded  cursor-pointer"
+                        >
+                          <MdDeleteOutline className="text-white text-xl"></MdDeleteOutline>
+                        </div>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
               ) : (
                 inventaryPagination.map((element, index) => (
                   <TableRow
@@ -120,6 +196,9 @@ export const TableInventary = ({
                       },
                     }}
                   >
+                    <TableCell sx={{ fontSize: "16px" }} align="left">
+                      #{element.id}
+                    </TableCell>
                     <TableCell sx={{ fontSize: "16px" }} align="left">
                       {element.nombre}
                     </TableCell>
@@ -187,12 +266,32 @@ export const TableInventary = ({
       {/* MODAL ELIMINAR ELEMENT */}
       <ModalDeleteInventary
         setAlertDeleteItem={setAlertDeleteItem}
-        seterrorDeleteiItem = {seterrorDeleteiItem}
+        seterrorDeleteiItem={seterrorDeleteiItem}
         setInventary={setInventary}
         elementEditable={elementEditable}
         openDeleteElement={openDeleteElement}
         setOpenDeleteElement={setOpenDeleteElement}
       ></ModalDeleteInventary>
+
+      {/* USUARIOS */}
+       {/* MODAL EDITAR User */}
+       <ModalEditUsers
+        setInventary={setUsers}
+        elementEditable={elementEditable}
+        openEditElement={openEditUser}
+        setOpenEditElement={setOpenEditUser}
+        setAlertEditItem={setAlertEditUser}
+        setErrorAlertEditItem={setErrorAlertEditUser}
+      ></ModalEditUsers>
+      {/* MODAL ELIMINAR USER*/}
+      <ModalDeleteUsers
+        setAlertDeleteItem={setAlertDeleteUser}
+        seterrorDeleteiItem={seterrorDeleteUser}
+        setInventary={setUsers}
+        elementEditable={elementEditable}
+        openDeleteElement={openDeleteUser}
+        setOpenDeleteElement={setOpenDeleteUser}
+      ></ModalDeleteUsers>
     </>
   );
 };

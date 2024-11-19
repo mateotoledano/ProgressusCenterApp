@@ -5,7 +5,7 @@ import { ButtonSpinner } from "../../ui/buttons/ButtonSpinner";
 import { CustomInput } from "../../ui/input/CustomInput";
 import { useGetInventary } from "../../../service/inventary/useGetInventary";
 import { useEditItem } from "../../../service/inventary/useEditItem";
-export const ModalEditInventary = ({
+export const ModalEditUsers = ({
   openEditElement,
   setOpenEditElement,
   elementEditable,
@@ -17,8 +17,7 @@ export const ModalEditInventary = ({
 
   const [form, setForm] = useState({
     nombre: elementEditable.nombre,
-    descripcion: elementEditable.descripcion,
-    estado: elementEditable.estado,
+    rol: elementEditable?.roles?.[0] || "SOCIO",
   });
   // LOADING DEL BUTTON
   const [loading, setLoading] = useState(false);
@@ -26,9 +25,8 @@ export const ModalEditInventary = ({
   useEffect(() => {
     // Resync form with elementEditable if it changes externally
     setForm({
-      nombre: elementEditable.nombre,
-      descripcion: elementEditable.descripcion,
-      estado: elementEditable.estado,
+      nombre: elementEditable.nombre || "",
+      rol: elementEditable?.roles?.[0] || "SOCIO",
     });
   }, [elementEditable]);
 
@@ -74,17 +72,17 @@ export const ModalEditInventary = ({
       setLoading(false);
     }
   };
-
+  console.log(form, "fomr en modal de users");
   return (
     <ModalLayout
       Icon={MdOutlineEdit}
       open={openEditElement}
       setOpen={setOpenEditElement}
     >
-      <div className="flex justify-center items-center gap-1 mb-4">
-        <span className="font-semibold text-xl">Editar</span>
+      <div className="flex flex-col justify-center items-center gap-0 mb-4">
+        <span className="font-semibold text-xl">Editar Usuario:</span>
         <span className="font-bold text-xl text-center text-customTextGreen">
-          {elementEditable.nombre}
+          {elementEditable.nombre} {elementEditable.apellido}
         </span>
       </div>
       <form
@@ -103,34 +101,22 @@ export const ModalEditInventary = ({
         ></CustomInput>
 
         <label className="font-semibold text-start w-full" htmlFor="">
-          Descripción:
-        </label>
-        <CustomInput
-          classNameInput=""
-          required={true}
-          name="descripcion"
-          value={form.descripcion}
-          onChange={handleChange}
-        ></CustomInput>
-
-        <label className="font-semibold text-start w-full" htmlFor="">
           Estado del item:
         </label>
         <select
-          name="estado"
-          value={form.estado}
+          name="rol"
+          value={form.rol}
           onChange={handleChange}
           className="border font-medium border-gray-300 rounded outline-none p-2 w-full"
           required
         >
-          <option value="Correcto">Correcto</option>
-          <option value="En Reparación/Mantenimiento">
-            En Reparación/Mantenimiento
-          </option>
+          <option value="SOCIO">SOCIO</option>
+
+          <option value="ENTRENADOR">ENTRENADOR</option>
         </select>
 
         <ButtonSpinner
-          label="Editar Usuario"
+          label="Editar Item"
           type="submit"
           loading={loading}
         ></ButtonSpinner>

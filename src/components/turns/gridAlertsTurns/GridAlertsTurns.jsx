@@ -4,33 +4,31 @@ import { SnackbarDefault } from "../../ui/snackbar/Snackbar";
 export const GridAlertsTurns = ({
   alertDelete,
   openAlert,
+  setOpenAlert,
   openAlertError,
   setAlertDelete,
   alertHoraError,
   setAlertHoraError,
-
-
+  setOpenAlertError,
 }) => {
   return (
     <>
       {/* ALERT AL RESERVAR CORRECTAMENTE EL TURNO */}
       {openAlert && (
-        <Alert
-          type="success"
-          theme="dark"
-          position="bottom-center"
-          message="Turno reservado  con éxito"
-          autoclose={4000}
+        <SnackbarDefault
+          open={openAlert}
+          setOpen={setOpenAlert}
+          message="Turno guardado correctamente !"
+          severity="success"
         />
       )}
       {/* ALERT SI ERROR AL RESERVAR EL TURNO */}
       {openAlertError && (
         <Alert
-          theme="dark"
-          type="error"
-          position="bottom-center"
+          open={openAlertError}
+          setOpen={setOpenAlertError}
+          severity="info"
           message="Ocurrió un error al realizar la operación"
-          autoclose={4000}
         />
       )}
       {/* ALERT AL ELIMINAR */}
