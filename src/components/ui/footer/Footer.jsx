@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaFacebookF, FaRegAddressCard } from "react-icons/fa";
 import { AiOutlineTwitter, AiFillYoutube } from "react-icons/ai";
 import { BiLogoPinterestAlt } from "react-icons/bi";
 import logo from "/progressus.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { GoHome } from "react-icons/go";
 import { CgProfile } from "react-icons/cg";
 import { GrPlan } from "react-icons/gr";
@@ -13,7 +13,8 @@ import { IoStatsChartOutline } from "react-icons/io5";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { Title } from "../title/Title";
 import { useStoreUserData } from "../../../store";
-
+import { useMembershipStore } from "../../../store/useStoreMembership";
+import { SnackbarDefault } from "../snackbar/Snackbar";
 const routeAdminNavigation = [
   {
     title: "Inicio",
@@ -23,7 +24,7 @@ const routeAdminNavigation = [
   {
     title: "Mi cuenta",
     icon: <CgProfile />,
-    link: "/acount",
+    link: "/account",
   },
   {
     title: "Membresías",
@@ -85,7 +86,11 @@ export const Footer = () => {
   const userData = useStoreUserData((state) => state.userData);
   const roleUser = userData.roles[0];
   const isAdmin = roleUser === "ADMIN";
-
+  // VER SI TIENE MEMBRESIA ACTIVA
+  const membership = useMembershipStore((state) => state.membershipData);
+  const [openErrorTurns, setOpenErrorTurns] = useState(false);
+  const navigate = useNavigate();
+  /////////////////////////////////////
   const routesToDisplay = isAdmin ? routeAdminNavigation : routeNavigation;
   const iconsTab = [
     { icon: <FaFacebookF /> },
@@ -93,7 +98,18 @@ export const Footer = () => {
     { icon: <AiFillYoutube /> },
     { icon: <BiLogoPinterestAlt /> },
   ];
+  const handleLinkClick = (link) => {
+    console.log(membership, "membership");
 
+    if (link === "/turns") {
+      if (!membership || membership.estadoSolicitud.nombre !== "Confirmado") {
+        setOpenErrorTurns(true);
+        return;
+      }
+    }
+
+    navigate(link);
+  };
   return (
     <>
       <footer className="bg-customGreenLigth shadow-top font-sans  mt-6 md:mt-14">
@@ -125,26 +141,26 @@ export const Footer = () => {
             <div className="w-full md:w-1/3 md:mt-0 mt-3   flex gap-28 md:gap-10 justify-center   md:justify-end  font-semibold items-end">
               <div className="flex flex-col items-start justify-end">
                 {routesToDisplay.slice(0, 4).map((route, index) => (
-                  <Link
-                    to={route.link}
+                  <div
+                    onClick={() => handleLinkClick(route.link)}
                     key={index}
                     className="text-start  transition-colors duration-300 hover:underline hover:cursor-pointer hover:text-blue-500"
                   >
                     {route.title}{" "}
                     {/* Ajusta esto según la propiedad que quieras mostrar */}
-                  </Link>
+                  </div>
                 ))}
               </div>
               <div className="flex flex-col items-start justify-end">
                 {routesToDisplay.slice(4, 8).map((route, index) => (
-                  <Link
-                    to={route.link}
+                  <div
+                    onClick={() => handleLinkClick(route.link)}
                     key={index}
                     className="text-start  transition-colors duration-300  hover:underline hover:cursor-pointer hover:text-blue-500"
                   >
                     {route.title}{" "}
                     {/* Ajusta esto según la propiedad que quieras mostrar */}
-                  </Link>
+                  </div>
                 ))}
               </div>
             </div>
@@ -183,6 +199,13 @@ export const Footer = () => {
           </div>
         </div>
       </footer>
+      <SnackbarDefault
+        position={{ vertical: "left", horizontal: "center" }}
+        severity={"warning"}
+        message={"Usted no posee membresias activas"}
+        open={openErrorTurns}
+        setOpen={setOpenErrorTurns}
+      ></SnackbarDefault>
     </>
   );
 };

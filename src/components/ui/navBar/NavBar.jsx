@@ -20,7 +20,7 @@ import {
   useStoreUserData,
 } from "../../../store";
 import { ModalLogout } from "../../auth/modal/ModalLogout";
-import { useGetRequestPaymentSocio } from "../../../service/membership/useGetRequestPaymentSocio";
+
 import { SnackbarDefault } from "../snackbar/Snackbar";
 export const NavBar = () => {
   const [openModalLogout, setOpenModalLogout] = useState(false);

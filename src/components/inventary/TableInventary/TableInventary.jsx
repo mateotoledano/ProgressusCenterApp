@@ -83,7 +83,7 @@ export const TableInventary = ({
       setOpenDeleteElement(true);
     }
   };
-  console.log(elementEditable, "elemento a editar");
+
 
   return (
     <>

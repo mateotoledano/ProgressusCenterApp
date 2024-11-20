@@ -108,10 +108,17 @@ export const Profile = () => {
                   ADMIN
                 </span>
               )}
+
+              {roleUser === "ENTRENADOR" && (
+                <span className="rounded-sm bg-blue-200 px-2 py-1 md:px-3 md:py-2 text-xs md:text-base font-semibold text-gray-800">
+                  ENTRENADOR
+                </span>
+              )}
             </div>
           </div>
           {/* HARDCODE */}
           {roleUser !== "ADMIN" &&
+            roleUser !== "ENTRENADOR" &&
             (loadingSkeleton ? (
               <LoadingSkeleton
                 count={1}

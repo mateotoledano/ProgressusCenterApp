@@ -20,6 +20,8 @@ import { IoIosTimer } from "react-icons/io";
 import { useGetTurns } from "../../service/turns/use-getTurns";
 import { useDeleteTurns } from "../../service/turns/use-deleteTurn";
 import { useSpinnerStore, useStoreUserData } from "../../store";
+import { useMembershipStore } from "../../store/useStoreMembership";
+import { useNavigate } from "react-router-dom";
 dayjs.locale("es");
 
 export const Turns = () => {
@@ -37,6 +39,14 @@ export const Turns = () => {
       horarios: ["19:00", "20:00", "21:00", "22:00"],
     },
   ];
+  // VER SI TIENE MEMBRESIA ACTIVA
+  const membership = useMembershipStore((state) => state.membershipData);
+
+  const navigate = useNavigate();
+  if (!membership || membership.estadoSolicitud.nombre !== "Confirmado") {
+    navigate("/membership");
+  }
+  /////////////////////////////////////
   const dataUser = useStoreUserData((state) => state.userData);
   const [turnosReservados, setTurnosReservados] = useState([]);
 
@@ -56,7 +66,6 @@ export const Turns = () => {
 
   useEffect(() => {
     const traerTurnos = async () => {
-      
       try {
         const response = await useGetTurns(dataUser.identityUserId);
 
@@ -130,8 +139,12 @@ export const Turns = () => {
               ></Title>
               {skeletonTurn ? (
                 <div className="w-full">
-                  <LoadingSkeleton className={"w-full "} width={"100%"} count={4} height={50} />
-
+                  <LoadingSkeleton
+                    className={"w-full "}
+                    width={"100%"}
+                    count={4}
+                    height={50}
+                  />
                 </div>
               ) : turnosReservados.length > 0 ? (
                 turnosReservados.map((turn) => {

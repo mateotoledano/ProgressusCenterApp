@@ -28,7 +28,7 @@ export const Users = () => {
       const fetchUsers = async () => {
         try {
           const response = await useGetAllUsers();
-          console.log(response , "response");
+         
           
           setUsers(response.data);
         } catch (e) {
@@ -100,7 +100,7 @@ export const Users = () => {
       <SnackbarDefault
         open={alertEditUser}
         setOpen={setAlertEditUser}
-        message={"Item editado correctamente! "}
+        message={"User editado correctamente! "}
         severity={"success"}
         position={{ vertical: "bottom", horizontal: "left" }}
       ></SnackbarDefault>
@@ -117,7 +117,7 @@ export const Users = () => {
       <SnackbarDefault
         open={alertDeleteUser}
         setOpen={setAlertDeleteUser}
-        message={"Item borrado correctamente ! "}
+        message={"User borrado correctamente ! "}
         severity={"info"}
         position={{ vertical: "bottom", horizontal: "left" }}
       ></SnackbarDefault>

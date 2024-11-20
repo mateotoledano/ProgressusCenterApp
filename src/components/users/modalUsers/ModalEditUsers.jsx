@@ -5,6 +5,8 @@ import { ButtonSpinner } from "../../ui/buttons/ButtonSpinner";
 import { CustomInput } from "../../ui/input/CustomInput";
 import { useGetInventary } from "../../../service/inventary/useGetInventary";
 import { useEditItem } from "../../../service/inventary/useEditItem";
+import { useEditRoleUser } from "../../../service/users/useEditRoleUser";
+import { useGetAllUsers } from "../../../service/auth/use-getAllUsers";
 export const ModalEditUsers = ({
   openEditElement,
   setOpenEditElement,
@@ -16,7 +18,6 @@ export const ModalEditUsers = ({
   if (!elementEditable) return null;
 
   const [form, setForm] = useState({
-    nombre: elementEditable.nombre,
     rol: elementEditable?.roles?.[0] || "SOCIO",
   });
   // LOADING DEL BUTTON
@@ -25,7 +26,6 @@ export const ModalEditUsers = ({
   useEffect(() => {
     // Resync form with elementEditable if it changes externally
     setForm({
-      nombre: elementEditable.nombre || "",
       rol: elementEditable?.roles?.[0] || "SOCIO",
     });
   }, [elementEditable]);
@@ -38,27 +38,23 @@ export const ModalEditUsers = ({
     }));
   };
 
-  const onSubmitEditItem = async (e) => {
+  const onSubmitEditUser = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const responseEditItem = await useEditItem(
-        form.nombre,
-        form.descripcion,
-        form.estado,
-        elementEditable.id
+      const responseEditUser= await useEditRoleUser(
+        elementEditable.identityUserId,
+        form.rol
       );
 
-      if (responseEditItem && responseEditItem.status == 200) {
+      if (responseEditUser && responseEditUser.status == 200) {
         setForm({
-          nombre: "",
-          descripcion: "",
-          estado: "Correcto",
+          rol: elementEditable?.roles?.[0] || "SOCIO",
         });
         // llamamos de nuevo al endpoint para poder setearlo de nuevo
-        const actualizarInventary = await useGetInventary();
-        setInventary(actualizarInventary.data.value);
+        const actualizarUsers= await useGetAllUsers();
+        setInventary(actualizarUsers.data);
         // cerramos modal
         setOpenEditElement(false);
         //Mostramos alert
@@ -72,7 +68,7 @@ export const ModalEditUsers = ({
       setLoading(false);
     }
   };
-  console.log(form, "fomr en modal de users");
+
   return (
     <ModalLayout
       Icon={MdOutlineEdit}
@@ -86,22 +82,11 @@ export const ModalEditUsers = ({
         </span>
       </div>
       <form
-        onSubmit={onSubmitEditItem}
+        onSubmit={onSubmitEditUser}
         className="flex flex-col justify-center items-center text-center gap-2"
       >
         <label className="font-semibold text-start w-full" htmlFor="">
-          Nombre del Item:
-        </label>
-        <CustomInput
-          classNameInput=""
-          required={true}
-          name="nombre"
-          value={form.nombre}
-          onChange={handleChange}
-        ></CustomInput>
-
-        <label className="font-semibold text-start w-full" htmlFor="">
-          Estado del item:
+          Cambiar rol del usuario :
         </label>
         <select
           name="rol"
@@ -116,7 +101,7 @@ export const ModalEditUsers = ({
         </select>
 
         <ButtonSpinner
-          label="Editar Item"
+          label="Editar Usuario"
           type="submit"
           loading={loading}
         ></ButtonSpinner>
