@@ -145,7 +145,6 @@ export const PricingPrices = ({
         tipoDePagoId,
         idUser
       );
-      console.log(response, "response al crear sollii");
 
       if (response && response.status === 200) {
         setOpenModal(true);
@@ -158,7 +157,6 @@ export const PricingPrices = ({
       setLoadingRequest(false);
     }
   };
-  // console.log(planElegido, "plan elegido");
 
   // CANCELAR SOLICITUD DE PAGO DEL LADO DE VENTANILLA
   const handleCancelRequest = async () => {
@@ -190,6 +188,8 @@ export const PricingPrices = ({
     setAlertPlanElegido(true);
     setMesaggePlanElegido(card.nombre);
   };
+  console.log(allUsers , "allusers");
+  
   return (
     <div
       className={`flex flex-col flex-wrap justify-center items-start md:items-start md:justify-around ${
@@ -362,6 +362,9 @@ export const PricingPrices = ({
                   dataUserBuscado.nombre + " " + dataUserBuscado.apellido
                 }`}</span>
               </section>
+              <span className="md:text-base font-light">
+                {dataUserBuscado.email}
+              </span>
               <div className="w-full my-6 md:my-16 ">
                 <TablePagos
                   loading={loadingTable}

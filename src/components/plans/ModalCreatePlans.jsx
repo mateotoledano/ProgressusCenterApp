@@ -102,7 +102,7 @@ export const ModalCreatePlans = ({
       if (responseSendPlan.status == "200") {
         idPlan = responseSendPlan.data.id;
         responseAddExercices = await useAddExercises(idPlan, planCreado);
-        console.log(responseAddExercices, "resp añadir ejercicios");
+       
       }
 
       // SI ES CORRECTO EL AGREGAR EJERCICIOS CIERRA EL MODAL Y MANDA LOS DATOS AL BACKEND
@@ -116,7 +116,7 @@ export const ModalCreatePlans = ({
         setOpen(false);
         clearPlanActual();
       } else {
-        console.log("Error en la creación del plan o en el agregar ejercicios");
+        
         setErrorServer(true);
       }
     } catch (error) {
@@ -126,7 +126,7 @@ export const ModalCreatePlans = ({
       setLoading(false);
       // Este bloque se ejecuta siempre, haya o no error
       // Aquí puedes poner tareas como resetear el estado de carga, cerrar el spinner, etc.
-      console.log("Proceso de creación de plan finalizado");
+      
     }
   };
 

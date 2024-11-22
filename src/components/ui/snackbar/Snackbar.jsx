@@ -11,6 +11,7 @@ export const SnackbarDefault = ({
   severity,
   position,
   mt,
+  duration
 }) => {
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -24,7 +25,7 @@ export const SnackbarDefault = ({
     <div>
       <Snackbar
         open={open}
-        autoHideDuration={5000}
+        autoHideDuration={duration ? duration  : 5000}
         onClose={handleClose}
         anchorOrigin={{
           vertical: position?.vertical || "bottom",

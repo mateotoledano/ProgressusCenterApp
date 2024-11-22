@@ -69,6 +69,35 @@ export const Turns = () => {
       try {
         const response = await useGetTurns(dataUser.identityUserId);
 
+        // // Obtener fecha y hora actual
+        // const ahora = dayjs();
+
+        // // Filtrar turnos después de la fecha y hora actual
+        // const turnosFuturos = response.data.value.filter((turno) => {
+        //   // Extraer solo la parte de la fecha de fechaReserva
+        //   const fecha = turno.fechaReserva.split("T")[0]; // Ejemplo: "2024-11-20"
+
+        //   // Combinar fecha con horaInicio
+        //   const fechaHoraTurno = dayjs(
+        //     `${fecha}T${turno.horaInicio}`,
+        //     "YYYY-MM-DDTHH:mm:ss",
+        //     true
+        //   );
+
+        //   // Verificar si la fechaHoraTurno es válida
+        //   if (!fechaHoraTurno.isValid()) {
+        //     console.warn("Fecha y hora inválidas para dayjs:", {
+        //       turno,
+        //       fecha,
+        //       horaInicio: turno.horaInicio,
+        //     });
+        //     return false;
+        //   }
+
+        //   // Filtrar turnos después de la hora actual
+        //   return fechaHoraTurno.isAfter(ahora);
+        // });
+
         setTurnosReservados(response.data.value);
       } catch (error) {
         console.error("Error al traer los turnos:", error);
@@ -84,12 +113,43 @@ export const Turns = () => {
     showSpinner();
     try {
       const response = await useDeleteTurns(dataUser.identityUserId);
+      console.log(response , "response anashei");
+      
       if (response.status == "200") {
         setAlertDelete(true);
 
         // Esperar a que la alerta se cierre antes de actualizar los turnos
-        const updatedTurns = await useGetTurns(dataUser.identityUserId);
-        setTurnosReservados(updatedTurns.data.value);
+        const response = await useGetTurns(dataUser.identityUserId);
+        // Obtener fecha y hora actual
+        // const ahora = dayjs();
+
+        // // Filtrar turnos después de la fecha y hora actual
+        // const turnosFuturos = response.data.value.filter((turno) => {
+        //   // Extraer solo la parte de la fecha de fechaReserva
+        //   const fecha = turno.fechaReserva.split("T")[0]; // Ejemplo: "2024-11-20"
+
+        //   // Combinar fecha con horaInicio
+        //   const fechaHoraTurno = dayjs(
+        //     `${fecha}T${turno.horaInicio}`,
+        //     "YYYY-MM-DDTHH:mm:ss",
+        //     true
+        //   );
+
+        //   // Verificar si la fechaHoraTurno es válida
+        //   if (!fechaHoraTurno.isValid()) {
+        //     console.warn("Fecha y hora inválidas para dayjs:", {
+        //       turno,
+        //       fecha,
+        //       horaInicio: turno.horaInicio,
+        //     });
+        //     return false;
+        //   }
+
+        //   // Filtrar turnos después de la hora actual
+        //   return fechaHoraTurno.isAfter(ahora);
+        // });
+
+        setTurnosReservados(response.data.value);
       }
     } catch (e) {
       console.log(e);
@@ -97,6 +157,7 @@ export const Turns = () => {
       hideSpinner();
     }
   };
+  console.log(turnosReservados, "turnos reservados");
 
   return (
     <MainLayout>
@@ -147,45 +208,57 @@ export const Turns = () => {
                   />
                 </div>
               ) : turnosReservados.length > 0 ? (
-                turnosReservados.map((turn) => {
-                  const fechaReserva = turn.fechaReserva.split("T")[0];
-                  const [year, month, day] = fechaReserva.split("-");
-                  const fechaFormateada = `${day}-${month}-${year}`;
+                turnosReservados
+                  .filter((turn) => {
+                    // Obtener la fecha del turno
+                    const fechaTurno = turn.fechaReserva.split("T")[0]; // Ejemplo: "2024-11-21"
+                    // Obtener la fecha actual en formato "YYYY-MM-DD"
+                    const hoy = dayjs().format("YYYY-MM-DD");
+                    // Retornar solo los turnos del día actual
+                    return fechaTurno === hoy;
+                  })
+                  .map((turn) => {
+                    const fechaReserva = turn.fechaReserva.split("T")[0];
+                    const [year, month, day] = fechaReserva.split("-");
+                    const fechaFormateada = `${day}-${month}-${year}`;
 
-                  const fechaObj = new Date(year, month - 1, day);
-                  const diasSemana = [
-                    "Domingo",
-                    "Lunes",
-                    "Martes",
-                    "Miércoles",
-                    "Jueves",
-                    "Viernes",
-                    "Sábado",
-                  ];
-                  const diaSemana = diasSemana[fechaObj.getDay()];
+                    const fechaObj = new Date(year, month - 1, day);
+                    const diasSemana = [
+                      "Domingo",
+                      "Lunes",
+                      "Martes",
+                      "Miércoles",
+                      "Jueves",
+                      "Viernes",
+                      "Sábado",
+                    ];
+                    const diaSemana = diasSemana[fechaObj.getDay()];
 
-                  const horaInicioFormateada = turn.horaInicio.substring(0, 5);
-                  const horaFinFormateada = turn.horaFin.substring(0, 5);
+                    const horaInicioFormateada = turn.horaInicio.substring(
+                      0,
+                      5
+                    );
+                    const horaFinFormateada = turn.horaFin.substring(0, 5);
 
-                  const hora = parseInt(turn.horaInicio.split(":")[0], 10);
-                  let tituloTurno = "";
-                  if (hora >= 6 && hora < 12) {
-                    tituloTurno = "Turno mañana";
-                  } else if (hora >= 12 && hora < 18) {
-                    tituloTurno = "Turno tarde";
-                  } else {
-                    tituloTurno = "Turno noche";
-                  }
+                    const hora = parseInt(turn.horaInicio.split(":")[0], 10);
+                    let tituloTurno = "";
+                    if (hora >= 6 && hora < 12) {
+                      tituloTurno = "Turno mañana";
+                    } else if (hora >= 12 && hora < 18) {
+                      tituloTurno = "Turno tarde";
+                    } else {
+                      tituloTurno = "Turno noche";
+                    }
 
-                  return (
-                    <Stack
-                      key={turn.id}
-                      titulo={tituloTurno}
-                      duracion={`${horaInicioFormateada} hs - ${horaFinFormateada} hs`}
-                      fechaFinalizacion={`${diaSemana}, ${fechaFormateada}`}
-                    ></Stack>
-                  );
-                })
+                    return (
+                      <Stack
+                        key={turn.id}
+                        titulo={tituloTurno}
+                        duracion={`${horaInicioFormateada} hs - ${horaFinFormateada} hs`}
+                        fechaFinalizacion={`${diaSemana}, ${fechaFormateada}`}
+                      ></Stack>
+                    );
+                  })
               ) : (
                 <Stack
                   Icon={CgDanger}

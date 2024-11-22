@@ -60,7 +60,7 @@ export const ModalInventary = ({
       [name]: value,
     }));
   };
-  console.log(form, "fomr");
+  
 
   return (
     <ModalLayout open={modalAddElement} setOpen={setModalAddElement}>

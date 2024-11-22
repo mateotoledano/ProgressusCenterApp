@@ -15,7 +15,7 @@ export const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   const userRoles = userData?.roles[0] || [];
   const hasPermission = allowedRoles.includes(userRoles);
 
-  console.log(hasPermission); // true o false
+  
 
   // Redirigir si no tiene permiso
   useEffect(() => {

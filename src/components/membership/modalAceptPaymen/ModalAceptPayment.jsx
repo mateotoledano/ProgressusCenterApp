@@ -21,12 +21,11 @@ export const ModalAceptPayment = ({
       const requestPayment = await useGetRequestPaymentSocio(
         dataUserBuscado.identityUserId
       );
-      console.log(requestPayment.data, "requestPaymeny");
 
       const registerPayment = await useRegisterPayment(
         requestPayment.data.value.value.id
       );
-      console.log(registerPayment , "registerPaymenttttttt");
+     
       
       if (registerPayment && registerPayment.status === 200) {
         setOpen(false);

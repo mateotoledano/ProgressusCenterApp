@@ -6,6 +6,7 @@ import {
   ErrorAuth,
   Checkbox,
   Spinner,
+  ModalOlvidarContraseña,
 } from "../../components";
 import { useNavigate } from "react-router-dom";
 import { RiLockPasswordLine } from "react-icons/ri";
@@ -19,6 +20,8 @@ import {
 } from "../../store";
 
 export const Login = () => {
+  // OLVIDAR CONTRASEÑA
+  const [openOlvidarPassword, setOpenOlvidarPassword] = useState(false);
   const [errorLogin, setErrorLogin] = useState(false);
   const closeAlert = useStoreAlert((state) => state.closeAlert);
   // SPINNER LOGIN
@@ -91,9 +94,9 @@ export const Login = () => {
 
       const enviarUser = await loginUser(formLogin.email, formLogin.password);
 
-      if (enviarUser.status == 200) {
-        if (enviarUser.data.accessToken) {
-          storeLocalToken(enviarUser.data);
+      if (enviarUser && enviarUser.status == 200) {
+        if (enviarUser?.data?.accessToken) {
+          storeLocalToken(enviarUser?.data);
         }
         setEmail(formLogin.email);
 
@@ -109,7 +112,9 @@ export const Login = () => {
       hideSpinner();
     }
   };
-
+  const dontRememberPassword = () => {
+    setOpenOlvidarPassword(true);
+  };
   return (
     <form
       onSubmit={handleLogin}
@@ -152,6 +157,16 @@ export const Login = () => {
       )}
 
       <Button type="submit" label="Ingresar" />
+      <span
+        onClick={dontRememberPassword}
+        class="text-blue-500 hover:text-blue-700 cursor-pointer font-semibold underline transition duration-200 text-sm"
+      >
+        Olvidé mi contraseña
+      </span>
+      <ModalOlvidarContraseña
+        open={openOlvidarPassword}
+        setOpen={setOpenOlvidarPassword}
+      ></ModalOlvidarContraseña>
     </form>
   );
 };

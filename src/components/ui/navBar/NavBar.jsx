@@ -48,7 +48,7 @@ export const NavBar = () => {
     // navigate("/");
   };
 
-  // HARDCODE
+  // NAVIGATION
   const routeAdminNavigation = [
     {
       title: "Inicio",
@@ -75,6 +75,35 @@ export const NavBar = () => {
       title: "Usuarios",
       icon: <HiOutlineUsers />,
       link: "/users",
+    },
+    {
+      title: "Estadisticas",
+      icon: <IoStatsChartOutline />,
+      link: "/stats",
+    },
+    {
+      title: "Notificaciones",
+      icon: <IoMdNotificationsOutline />,
+      link: "/notifications",
+    },
+  ];
+
+  const routeTrainerNavigation = [
+    {
+      title: "Inicio",
+      icon: <GoHome />,
+      link: "/home",
+    },
+    {
+      title: "Mi cuenta",
+      icon: <CgProfile />,
+      link: "/account",
+    },
+
+    {
+      title: "Planes",
+      icon: <GrPlan />,
+      link: "/plans",
     },
     {
       title: "Estadisticas",
@@ -121,8 +150,6 @@ export const NavBar = () => {
   ];
 
   const handleLinkClick = (link) => {
-    console.log(membership, "membership");
-
     if (link === "/turns") {
       if (!membership || membership.estadoSolicitud.nombre !== "Confirmado") {
         setOpenErrorTurns(true);
@@ -134,6 +161,11 @@ export const NavBar = () => {
     setTimeout(() => {
       navigate(link);
     }, 200);
+  };
+  const roleNavigationMap = {
+    ADMIN: routeAdminNavigation,
+    ENTRENADOR: routeTrainerNavigation,
+    DEFAULT: routeNavigation,
   };
 
   return (
@@ -169,7 +201,26 @@ export const NavBar = () => {
             <BiLogOut size={26} />
           </div>
         </div>
-        {roleUser === "ADMIN"
+        {(roleNavigationMap[roleUser] || roleNavigationMap.DEFAULT).map(
+          (item) => (
+            <div
+              key={item.link}
+              onClick={() => handleLinkClick(item.link)}
+              className={clsx(
+                "flex items-center mt-7 p-1 trans-hover rounded-md hover:bg-gray-100 transition-all cursor-pointer",
+                {
+                  "bg-customBlue text-customTextBlue font-semibold":
+                    path.startsWith(item.link),
+                }
+              )}
+            >
+              {item.icon}
+              <span className="ml-3 text-lg md:text-xl">{item.title}</span>
+            </div>
+          )
+        )}
+
+        {/* {roleUser === "ADMIN"
           ? routeAdminNavigation.map((item) => (
               <div
                 key={item.link}
@@ -201,7 +252,7 @@ export const NavBar = () => {
                 {item.icon}
                 <span className="ml-3 text-lg md:text-xl">{item.title}</span>
               </div>
-            ))}
+            ))} */}
       </nav>
       <SnackbarDefault
         position={{ vertical: "left", horizontal: "center" }}

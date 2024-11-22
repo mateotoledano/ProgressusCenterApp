@@ -6,11 +6,19 @@ import dayjs from "dayjs";
 
 import { useDataUser } from "../../service/auth/use-dataUser";
 import gif from "/Progressus_G5.gif";
-import { Button, Title, Footer, LoadingSkeleton } from "../../components";
-import { Link } from "react-router-dom";
+import {
+  Button,
+  Title,
+  Footer,
+  LoadingSkeleton,
+  SnackbarDefault,
+} from "../../components";
+import { Link, useNavigate } from "react-router-dom";
 import { useMembershipStore } from "../../store/useStoreMembership";
 import { useGetRequestPaymentSocio } from "../../service/membership/useGetRequestPaymentSocio";
 export const HomePage = () => {
+  const navigate = useNavigate();
+
   const email = useStoreUserData((state) => state.email);
   const dataUser = useStoreUserData((state) => state.userData);
   const roleUser = dataUser.roles[0];
@@ -19,8 +27,11 @@ export const HomePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   // MEMBRESIAS
   const setMembership = useMembershipStore((state) => state.setMembershipData);
+  const membership = useMembershipStore((state) => state.membershipData);
   const [turnoMasCercano, setTurnoMasCercano] = useState(null);
   const [allMembership, setAllMembership] = useState(null);
+  // ERROR SI NO TIENE MEMBRESIAS ACTIVAS
+  const [openErrorTurns, setOpenErrorTurns] = useState(false);
   const nameUser = dataUser.nombre;
   const openSppiner = useSpinnerStore((state) => state.showSpinner);
   const closeSpinner = useSpinnerStore((state) => state.hideSpinner);
@@ -43,9 +54,8 @@ export const HomePage = () => {
         const response = await useGetRequestPaymentSocio(
           dataUser.identityUserId
         );
-        console.log(response , "response membresias");
-        
-        if (response.data?.value?.value) {
+
+        if (response?.data?.value?.value) {
           const allMembership =
             response.data.value.value.historialSolicitudDePagos || [];
           setAllMembership(allMembership);
@@ -55,8 +65,9 @@ export const HomePage = () => {
             const lastMembership = allMembership[allMembership.length - 1];
             setMembership(lastMembership); // Actualiza el store
           }
+        } else {
+          setMembership(null);
         }
-       
       } catch (error) {
         console.error("Error al cargar datos:", error);
       } finally {
@@ -71,10 +82,7 @@ export const HomePage = () => {
   // OBTENER ULTIMO TURNO
   useEffect(() => {
     if (turnosReservados.length > 0) {
-      console.log("Turnos Reservados:", turnosReservados);
-
       const now = dayjs();
-      console.log("Fecha y hora actual:", now.format());
 
       const filteredTurns = turnosReservados.filter((turno) => {
         // Crear una cadena con la combinación de fecha y hora
@@ -83,16 +91,8 @@ export const HomePage = () => {
         }`;
         const turnoDateTime = dayjs(fechaHora);
 
-        console.log(
-          `Turno ID ${turno.id} - Fecha y hora combinada:`,
-          fechaHora,
-          turnoDateTime.isValid() ? turnoDateTime.format() : "Invalid Date"
-        );
-
         return turnoDateTime.isAfter(now);
       });
-
-      console.log("Turnos futuros filtrados:", filteredTurns);
 
       const closestTurn =
         filteredTurns.length > 0
@@ -115,7 +115,14 @@ export const HomePage = () => {
     }
   }, [turnosReservados]);
 
-  console.log("Turno más cercano:", turnoMasCercano);
+  const handleLinkClick = () => {
+    if (!membership || membership.estadoSolicitud.nombre !== "Confirmado") {
+      setOpenErrorTurns(true);
+      return;
+    }
+    navigate("/turns");
+  };
+
   return (
     <MainLayout>
       <div className="animate-fade-in-down w-full flex flex-col justify-start gap-1">
@@ -176,13 +183,24 @@ export const HomePage = () => {
                 title={"No tienes turnos reservados"}
                 className="text-base"
               />
-              <Link to={"/turns"}>
-                <Button label={"Reservar"} className="py-1 px-2 text-base" />
-              </Link>
+
+              <Button
+                onClick={handleLinkClick}
+                label={"Reservar"}
+                className="py-1 px-2 text-base"
+              />
             </div>
           )
         )}
       </div>
+      {/* // ERROR SI NO TIENE MEMBRESIAS ACTIVAS */}
+      <SnackbarDefault
+        position={{ vertical: "left", horizontal: "center" }}
+        severity={"warning"}
+        message={"Usted no posee membresias activas"}
+        open={openErrorTurns}
+        setOpen={setOpenErrorTurns}
+      ></SnackbarDefault>
     </MainLayout>
   );
 };

@@ -61,7 +61,7 @@ export const Inventary = () => {
     };
     fetchInventary();
   }, []);
-  console.log(alertAddItem, "alert");
+
 
   return (
     <MainLayout>

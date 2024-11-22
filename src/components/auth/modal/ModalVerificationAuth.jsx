@@ -96,7 +96,7 @@ export const ModalVerificationAuth = ({ open, email, setOpen }) => {
         openAlertAuth();
         setOpen(false);
       } else {
-        console.log("fallo el status");
+      
 
         setAlertFailed(true);
         setCode(Array(4).fill(""));

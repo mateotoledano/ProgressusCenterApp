@@ -8,6 +8,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { ModalTurns } from "../modalTurns/ModalTurns";
 import { useTraerTurnosPorHora } from "../../../service/turns/useTraerTurnosPorHora";
 import { useEffect } from "react";
+import { SnackbarDefault } from "../../ui/snackbar/Snackbar";
 
 // Recibiendo props en el componente
 export const Acordion = ({
@@ -22,7 +23,8 @@ export const Acordion = ({
 }) => {
   const [reservasPorHora, setReservasPorHora] = React.useState({});
   const [open, setOpen] = React.useState(false);
-
+  const [unTurnoPorDia, setUnTurnoPorDia] = React.useState(false);
+  const [alertMaxTurns, setAlertMaxTurns] = React.useState(false);
   // MANEJO DE HORARIOS
   const [horaInicio, setHorario] = React.useState("");
   const [horaFinal, setHoraFinal] = React.useState("");
@@ -38,13 +40,11 @@ export const Acordion = ({
   };
 
   const fecha = obtenerFechaActual();
-  console.log(turnosReservados, "turnosReservados");
 
   // TRAER RESERVAS POR HORA
   const fetchReservas = async (hora) => {
     try {
       const response = await useTraerTurnosPorHora(fecha, `${hora}:00`);
-      console.log(response, "respondesee");
 
       const cantidadReservada = response ? response.data.length : 0; // Ajusta `cantidad` según la respuesta real de la API
 
@@ -75,8 +75,6 @@ export const Acordion = ({
     } else {
       setHoraFinal(content[index + 1]);
     }
-
-    setOpen(true);
   };
 
   // Función para comparar la hora en formato HH:mm
@@ -93,6 +91,19 @@ export const Acordion = ({
     );
   };
 
+  const handleModal = (cont, index, isDisabled) => {
+    if (reservasPorHora[cont] > 40) {
+      setAlertMaxTurns(true);
+    } else {
+      if (turnosReservados.length === 1) {
+        setUnTurnoPorDia(true);
+        return;
+      } else {
+        !isDisabled && onChangeHora(cont, index);
+        setOpen(true);
+      }
+    }
+  };
   return (
     <div className="w-full">
       <Accordion>
@@ -116,8 +127,10 @@ export const Acordion = ({
               return (
                 <button
                   key={cont}
-                  className={`bg-green-50 rounded-lg md:p-2 p-2 px-1 flex justify-between cursor-pointer hover:bg-customNavBar hover:text-white transition-all ${isDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
-                  onClick={() => !isDisabled && onChangeHora(cont, index)} 
+                  className={`bg-green-50 rounded-lg md:p-2 p-2 px-1 flex justify-between cursor-pointer hover:bg-customNavBar hover:text-white transition-all ${
+                    isDisabled ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                  onClick={() => handleModal(cont, index, isDisabled)}
                   disabled={isDisabled}
                 >
                   <div className="flex flex-row-reverse items-center justify-start gap-3">
@@ -146,6 +159,22 @@ export const Acordion = ({
         horaFinal={horaFinal}
         setAlertHoraError={setAlertHoraError}
       />
+      <SnackbarDefault
+        open={unTurnoPorDia}
+        setOpen={setUnTurnoPorDia}
+        severity={"warning"}
+        duration={7000}
+        message={"Solo puedes reservar un turno por dia !"}
+      ></SnackbarDefault>
+
+      {/* ALERT MAXIMO DE TURNOS POR ESA HORA */}
+      <SnackbarDefault
+        open={alertMaxTurns}
+        setOpen={setAlertMaxTurns}
+        severity={"warning"}
+        duration={7000}
+        message={"Se alcanzo el maximo de cupos en este horario!"}
+      ></SnackbarDefault>
     </div>
   );
 };

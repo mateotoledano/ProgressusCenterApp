@@ -17,6 +17,8 @@ import { Alert } from "../../ui/alert/Alert";
 import { useStoreUserData } from "../../../store";
 import { SnackbarDefault } from "../../ui/snackbar/Snackbar";
 import { ButtonSpinner } from "../../ui/buttons/ButtonSpinner";
+import { ErrorAuth } from "../../ui/errorAuth/ErrorAuth";
+import { useEffect } from "react";
 const Fade = React.forwardRef(function Fade(props, ref) {
   const {
     children,
@@ -95,6 +97,8 @@ export const ModalTurns = ({
   const [buttonLoader, setButtonLoader] = useState(false);
   const userData = useStoreUserData((state) => state.userData);
 
+ 
+
   dayjs.extend(utc);
   dayjs.extend(timezone);
   // Comparación de la hora actual con la hora de inicio del turno
@@ -106,8 +110,8 @@ export const ModalTurns = ({
   const turnoDisponible = horaActual.isBefore(horaInicioTurno);
 
   const fechaArgentina = dayjs()
-  .tz("America/Argentina/Buenos_Aires")
-  .format("YYYY-MM-DD HH:mm:ss");
+    .tz("America/Argentina/Buenos_Aires")
+    .format("YYYY-MM-DD HH:mm:ss");
 
   const idUser = userData.identityUserId;
 
@@ -128,22 +132,21 @@ export const ModalTurns = ({
     console.error("Error: Hora de inicio o fin no es válida.");
     return null;
   }
-console.log(horaInicio, "fecha argentina");
 
   const confirm = true;
 
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
+
 
   const handleTurn = async (e) => {
     e.preventDefault();
 
     if (!turnoDisponible) {
       setAlertHoraError(true); // Mostrar alerta de error
-      // console.log(
-      //   "No se puede reservar este turno porque ya ha pasado la hora de inicio."
-      // );
     } else {
-      if (!encontrado) {
+      if (!encontrado && turnosReservados.length === 0) {
         setButtonLoader(true);
         try {
           setOpenAlert(false);
@@ -165,7 +168,6 @@ console.log(horaInicio, "fecha argentina");
             setOpen(false);
             setOpenAlertError(true);
           }
-          console.log(responseTurn, "response");
         } catch (e) {
           console.log(e, "error");
         } finally {
@@ -214,6 +216,7 @@ console.log(horaInicio, "fecha argentina");
                 className=""
               ></ButtonSpinner>
             </form>
+         
           </Box>
         </Fade>
       </Modal>

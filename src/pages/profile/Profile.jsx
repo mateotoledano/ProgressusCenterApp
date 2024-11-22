@@ -40,7 +40,6 @@ export const Profile = () => {
     Array.isArray(allMembership) && allMembership.length > 0
       ? allMembership[allMembership.length - 1]
       : null;
-  console.log(lastMembership, "last membership");
 
   let fechaDondeSeActivoMembresia;
   let mesesDuracionMembresia;

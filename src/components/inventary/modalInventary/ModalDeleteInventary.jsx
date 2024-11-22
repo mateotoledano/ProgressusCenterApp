@@ -20,7 +20,7 @@ export const ModalDeleteInventary = ({
     setLoading(true);
     try {
       const responseDelete = await useDeleteItem(elementEditable.id);
-      console.log(responseDelete, "resp del delete");
+      
       if (responseDelete && responseDelete.data.statusCode == 200) {
         // llamamos de nuevo al endpoint para poder setearlo de nuevo
         const actualizarInventary = await useGetInventary();

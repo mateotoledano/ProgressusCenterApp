@@ -287,7 +287,7 @@ export const TableInventary = ({
       <ModalDeleteUsers
         setAlertDeleteItem={setAlertDeleteUser}
         seterrorDeleteiItem={seterrorDeleteUser}
-        setInventary={setUsers}
+        setUsers={setUsers}
         elementEditable={elementEditable}
         openDeleteElement={openDeleteUser}
         setOpenDeleteElement={setOpenDeleteUser}

@@ -32,3 +32,7 @@ export * from "./inventary/TableInventary/TableInventary"
 export * from "./inventary/modalInventary/ModalInventary"
 export * from "./inventary/modalInventary/ModalEditInventary"
 export * from "./inventary/modalInventary/ModalDeleteInventary"
+
+
+// LOGIN
+export * from "./login/ModalOlvidarContraseña"

@@ -1,7 +1,7 @@
 import React from "react";
 import { Autocomplete, TextField, useMediaQuery } from "@mui/material";
 
-export const SelectNavegable = ({ options, label, onSelect }) => {
+export const SelectNavegable = ({ options, label, onSelect}) => {
   // Detectar si la pantalla es chica (ancho menor a 600px)
   const isSmallScreen = useMediaQuery("(max-width:600px)");
 
@@ -18,6 +18,7 @@ export const SelectNavegable = ({ options, label, onSelect }) => {
       isOptionEqualToValue={(option, value) =>
         option.nombre === value.nombre && option.apellido === value.apellido
       }
+
       sx={{ width: isSmallScreen ? 250 : 300 }} // Ancho según pantalla
       renderInput={(params) => (
         <TextField {...params} label={label || "Seleccione un usuario"} />
