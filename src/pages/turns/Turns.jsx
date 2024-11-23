@@ -113,8 +113,8 @@ export const Turns = () => {
     showSpinner();
     try {
       const response = await useDeleteTurns(dataUser.identityUserId);
-      console.log(response , "response anashei");
-      
+      console.log(response, "response anashei");
+
       if (response.status == "200") {
         setAlertDelete(true);
 
@@ -208,57 +208,45 @@ export const Turns = () => {
                   />
                 </div>
               ) : turnosReservados.length > 0 ? (
-                turnosReservados
-                  .filter((turn) => {
-                    // Obtener la fecha del turno
-                    const fechaTurno = turn.fechaReserva.split("T")[0]; // Ejemplo: "2024-11-21"
-                    // Obtener la fecha actual en formato "YYYY-MM-DD"
-                    const hoy = dayjs().format("YYYY-MM-DD");
-                    // Retornar solo los turnos del día actual
-                    return fechaTurno === hoy;
-                  })
-                  .map((turn) => {
-                    const fechaReserva = turn.fechaReserva.split("T")[0];
-                    const [year, month, day] = fechaReserva.split("-");
-                    const fechaFormateada = `${day}-${month}-${year}`;
+                turnosReservados.map((turn) => {
+                  const fechaReserva = turn.fechaReserva.split("T")[0];
+                  const [year, month, day] = fechaReserva.split("-");
+                  const fechaFormateada = `${day}-${month}-${year}`;
 
-                    const fechaObj = new Date(year, month - 1, day);
-                    const diasSemana = [
-                      "Domingo",
-                      "Lunes",
-                      "Martes",
-                      "Miércoles",
-                      "Jueves",
-                      "Viernes",
-                      "Sábado",
-                    ];
-                    const diaSemana = diasSemana[fechaObj.getDay()];
+                  const fechaObj = new Date(year, month - 1, day);
+                  const diasSemana = [
+                    "Domingo",
+                    "Lunes",
+                    "Martes",
+                    "Miércoles",
+                    "Jueves",
+                    "Viernes",
+                    "Sábado",
+                  ];
+                  const diaSemana = diasSemana[fechaObj.getDay()];
 
-                    const horaInicioFormateada = turn.horaInicio.substring(
-                      0,
-                      5
-                    );
-                    const horaFinFormateada = turn.horaFin.substring(0, 5);
+                  const horaInicioFormateada = turn.horaInicio.substring(0, 5);
+                  const horaFinFormateada = turn.horaFin.substring(0, 5);
 
-                    const hora = parseInt(turn.horaInicio.split(":")[0], 10);
-                    let tituloTurno = "";
-                    if (hora >= 6 && hora < 12) {
-                      tituloTurno = "Turno mañana";
-                    } else if (hora >= 12 && hora < 18) {
-                      tituloTurno = "Turno tarde";
-                    } else {
-                      tituloTurno = "Turno noche";
-                    }
+                  const hora = parseInt(turn.horaInicio.split(":")[0], 10);
+                  let tituloTurno = "";
+                  if (hora >= 6 && hora < 12) {
+                    tituloTurno = "Turno mañana";
+                  } else if (hora >= 12 && hora < 18) {
+                    tituloTurno = "Turno tarde";
+                  } else {
+                    tituloTurno = "Turno noche";
+                  }
 
-                    return (
-                      <Stack
-                        key={turn.id}
-                        titulo={tituloTurno}
-                        duracion={`${horaInicioFormateada} hs - ${horaFinFormateada} hs`}
-                        fechaFinalizacion={`${diaSemana}, ${fechaFormateada}`}
-                      ></Stack>
-                    );
-                  })
+                  return (
+                    <Stack
+                      key={turn.id}
+                      titulo={tituloTurno}
+                      duracion={`${horaInicioFormateada} hs - ${horaFinFormateada} hs`}
+                      fechaFinalizacion={`${diaSemana}, ${fechaFormateada}`}
+                    ></Stack>
+                  );
+                })
               ) : (
                 <Stack
                   Icon={CgDanger}
@@ -281,7 +269,6 @@ export const Turns = () => {
                 </div>
               )}
             </div>
-
 
             {/* <div className="md:mt-0 mt-3 flex w-full gap-5 flex-col justify-center items-center">
               <Title
