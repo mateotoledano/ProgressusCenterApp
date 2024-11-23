@@ -54,7 +54,7 @@ export const TopMenu = () => {
           <IoMdNotificationsOutline className="w-9 h-9 md:w-7 md:h-7"></IoMdNotificationsOutline>
         </Link>
         <Link to="/account" className="flex items-center gap-2 cursor-pointer ">
-          <div className="w-6 h-6 md:w-10 md:h-10 rounded-full border-0 overflow-hidden cursor-pointer">
+          <div className="w-8 h-8 md:w-10 md:h-10 rounded-full border-0 overflow-hidden cursor-pointer">
             <img
               className="w-full h-full object-cover"
               src={imageProfile}

@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import gym from "/gym.svg";
 import { CgGym } from "react-icons/cg";
-
+import logoMp from "/logomp.png";
 import { useGetAllUsers } from "../../../service/auth/use-getAllUsers";
 import { useGetMemberships } from "../../../service/membership/useGetMembership";
 import { useCreateRequestPayment } from "../../../service/membership/useCreateRequestPayment";
 import { LoadingSkeleton } from "../../ui/skeleton/LoadingSkeleton";
 import { ModalAceptPayment } from "../modalAceptPaymen/ModalAceptPayment";
-import { IoIosInformationCircleOutline } from "react-icons/io";
+import { IoIosInformationCircleOutline, IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { useSpinnerStore, useStoreUserData } from "../../../store";
-import { useRegisterPayment } from "../../../service/membership/useRegisterPayment";
-import { Alert } from "../../ui/alert/Alert";
+
 import { useGetRequestPaymentSocio } from "../../../service/membership/useGetRequestPaymentSocio";
-import { useCancelRequestPayment } from "../../../service/membership/useCancelRequestPayment";
+// MERCADO PAGO
+// import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
 
 import { Stack } from "../../ui/stack/Stack";
 import { SelectNavegable } from "../selectNavegable/SelectNavegable";
@@ -20,6 +20,7 @@ import { SelectNavegable } from "../selectNavegable/SelectNavegable";
 import { ButtonSpinner } from "../../ui/buttons/ButtonSpinner";
 import { TablePagos } from "../tablePagos/TablePagos";
 import { Title } from "../../ui/title/Title";
+import { useRegisterComoMp } from "../../../service/membership/useRegisterComoMp";
 const arregloColumns = ["Membresia", "Fecha", "Precio"];
 const arregloRows = [
   {
@@ -43,6 +44,21 @@ const arregloRows = [
     precio: "$4000",
   },
 ];
+const buttonStyles = {
+  backgroundColor: "#009EE3", // Azul característico de Mercado Pago
+  color: "white", // Texto blanco
+  padding: "10px 20px", // Espaciado interno
+  borderRadius: "5px", // Bordes redondeados
+  fontWeight: "bold", // Texto negrita
+  fontSize: "16px", // Tamaño de fuente
+  border: "none", // Sin borde
+  cursor: "pointer", // Manito al pasar el cursor
+  display: "flex", // Para alinear icono y texto
+  alignItems: "center", // Centrar verticalmente
+  justifyContent: "center", // Centrar horizontalmente
+  gap: "8px", // Espacio entre icono y texto (si lo hay)
+  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)", // Sombra ligera
+};
 
 export const PricingPrices = ({
   setMesaggePlanElegido,
@@ -51,9 +67,11 @@ export const PricingPrices = ({
   setAlertError,
   setAlertPlanElegido,
 }) => {
+  // initMercadoPago("YOUR_PUBLIC_KEY");
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
   const userData = useStoreUserData((state) => state.userData);
+
   const [dataPedido, setDataPedido] = useState(null);
   // ROL DE USER
 
@@ -188,8 +206,42 @@ export const PricingPrices = ({
     setAlertPlanElegido(true);
     setMesaggePlanElegido(card.nombre);
   };
-  console.log(allUsers , "allusers");
-  
+
+  const hanleCreateSolicitud = async (card) => {
+    openSppiner();
+    try {
+      // CREAR SOLICITUD
+      const response = await useCreateRequestPayment(
+        card.id,
+        4,
+        userData.identityUserId
+      );
+      let idSolicitudMercadoPago;
+      if (response?.status == 200) {
+        idSolicitudMercadoPago = response.data.id;
+      }
+
+      // REGISTRAR SOLICITUD COMO MERCADO PAGO
+      const registerComoMercadoPago = await useRegisterComoMp(
+        idSolicitudMercadoPago
+      );
+
+
+
+      // REDIRECCIÓN AL INIT POINT
+      const initPoint = registerComoMercadoPago?.data?.value?.initPoint;
+      if (initPoint) {
+        window.location.href = initPoint; // Redirige al usuario
+      } else {
+        console.error("InitPoint no encontrado en la respuesta.");
+      }
+    } catch (e) {
+      console.error(e, "error");
+    } finally {
+      closeSpinner();
+    }
+  };
+
   return (
     <div
       className={`flex flex-col flex-wrap justify-center items-start md:items-start md:justify-around ${
@@ -218,31 +270,22 @@ export const PricingPrices = ({
                     <span className="text-lg font-bold text-gray-900">
                       {card.nombre}
                     </span>
+                    {card.id == 10 && (
+                      <span className="text-xs font-semibold bg-customGreenLigth p-1 px-2">
+                        Popular
+                      </span>
+                    )}
                   </div>
                   <div className="text-4xl font-bold text-gray-900">
                     ${card.precio}
                     <span className="text-lg font-normal text-gray-600"></span>
+                  </div> 
+                  <div className="flex w-full items-start justify-start gap-3 ">
+                  <IoMdCheckmarkCircleOutline className=" text-3xl  font-semibold text-customTextBlue"></IoMdCheckmarkCircleOutline>
+                    <span className="w-5/6 font-semibold text-gray-700" style={{ lineHeight: '1.2' }}>{card.descripcion}</span>
                   </div>
-                  <ul className="space-y-3">
-                    <li className="flex items-center text-start text-sm">
-                      <svg
-                        className="w-5 h-5 text-customTextBlue mr-2 flex-shriFnk-0"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                      {card.descripcion}
-                    </li>
-                  </ul>
-                  {roleUser === "ADMIN" ? (
+
+                  {roleUser === "ADMIN" || roleUser === "ENTRENADOR" ? (
                     <button
                       onClick={() => elegirPlan(card)}
                       className="w-full py-3 font-bold text-white bg-customTextGreen rounded-lg"
@@ -250,9 +293,43 @@ export const PricingPrices = ({
                       Agregar Plan
                     </button>
                   ) : (
-                    <></>
+                    // MERCADO PAGO
+                    <>
+                      <button
+                        onClick={() => hanleCreateSolicitud(card)}
+                        style={{
+                          backgroundColor: "#009EE3", // Azul característico de Mercado Pago
+                          color: "white", // Texto blanco
+                          padding: "8px 15px", // Espaciado interno
+                          borderRadius: "5px", // Bordes redondeados
+                          fontWeight: "600", // Texto en negrita
+                          fontSize: "16px", // Tamaño de fuente
+                          border: "none", // Sin borde
+                          cursor: "pointer", // Manito al pasar el cursor
+                          display: "flex", // Para alinear el contenido
+                          alignItems: "center", // Centrar verticalmente
+                          justifyContent: "center", // Centrar horizontalmente
+                          gap: "10px", // Espacio entre el ícono y el texto
+                          boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)", // Sombra ligera
+                          transition: "background-color 0.3s ease", // Animación suave al pasar el cursor
+                        }}
+                        onMouseOver={(e) =>
+                          (e.currentTarget.style.backgroundColor = "#007BBE")
+                        }
+                        onMouseOut={(e) =>
+                          (e.currentTarget.style.backgroundColor = "#009EE3")
+                        }
+                      >
+                        <img
+                          src={logoMp}
+                          alt="Mercado Pago"
+                          className="w-7 md:w-10"
+                        />
+                        Pagar con Mercado Pago
+                      </button>
+                    </>
                   )}
-                  {card.id == 3 && (
+                  {card.id == 10 && (
                     <div className="absolute -top-16 right-0 -mt-4 -mr-6 w-16 h-16 float-animation">
                       <CgGym className="w-full h-full object-cover rounded-full " />
                     </div>
