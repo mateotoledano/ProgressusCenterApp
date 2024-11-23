@@ -137,7 +137,9 @@ export const HomePage = () => {
           <img
             src={gif}
             className={`md:py-2 ${
-              dataUser && roleUser === "ADMIN" ? "md:w-4/5" : "md:w-3/5"
+              (dataUser && roleUser === "ADMIN") || roleUser === "ENTRENADOR"
+                ? "md:w-4/5"
+                : "md:w-3/5"
             }`}
             alt="Progressus"
           />
@@ -150,7 +152,9 @@ export const HomePage = () => {
             width={800}
             height={50}
           />
-        ) : turnoMasCercano ? (
+        ) : turnoMasCercano &&
+          roleUser !== "ENTRENADOR" &&
+          roleUser !== "ADMIN" ? (
           <div className="bg-white mx-3 md:m-0 md:mx-8 p-2 rounded shadow-sm gap-1 flex flex-col md:flex-col justify-center items-center">
             <div className="flex flex-col items-center md:flex-row gap-1">
               <Title title={"Tu próximo turno es el día: "} />
@@ -176,22 +180,20 @@ export const HomePage = () => {
               />
             </Link>
           </div>
-        ) : (
-          roleUser !== "ADMIN" && (
-            <div className="bg-white mx-3 md:m-0 md:mx-8 p-2 rounded shadow-sm gap-1 flex md:flex-col justify-center items-center">
-              <Title
-                title={"No tienes turnos reservados"}
-                className="text-base"
-              />
+        ) : roleUser !== "ADMIN" && roleUser !== "ENTRENADOR" ? (
+          <div className="bg-white mx-3 md:m-0 md:mx-8 p-2 rounded shadow-sm gap-1 flex md:flex-col justify-center items-center">
+            <Title
+              title={"No tienes turnos reservados"}
+              className="text-base"
+            />
 
-              <Button
-                onClick={handleLinkClick}
-                label={"Reservar"}
-                className="py-1 px-2 text-base"
-              />
-            </div>
-          )
-        )}
+            <Button
+              onClick={handleLinkClick}
+              label={"Reservar"}
+              className="py-1 px-2 text-base"
+            />
+          </div>
+        ) : null}
       </div>
       {/* // ERROR SI NO TIENE MEMBRESIAS ACTIVAS */}
       <SnackbarDefault

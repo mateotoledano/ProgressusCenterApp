@@ -50,6 +50,7 @@ export const ModalOlvidarContraseña = ({ open, setOpen }) => {
       const responseSendCode = await sendCodeRecuperarPassword(email);
       if (responseSendCode && responseSendCode.status === 200) {
         setOpenPonerCode(true)
+     
       } else {
         setAlertError(true);
       }
@@ -102,7 +103,7 @@ export const ModalOlvidarContraseña = ({ open, setOpen }) => {
           ></ErrorAuth>
         )}
       </div>
-      <ModalPonerCode open={openPonerCode} setOpen={setOpenPonerCode}></ModalPonerCode>
+      <ModalPonerCode setOpenCorreo = {setOpen} email={email} open={openPonerCode} setOpen={setOpenPonerCode}></ModalPonerCode>
     </ModalLayout>
   );
 };

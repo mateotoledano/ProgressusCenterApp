@@ -11,10 +11,10 @@ import {
 import { SelectNavegable } from "../../components";
 import { useGetAllUsers } from "../../service/auth/use-getAllUsers";
 import { CiSearch } from "react-icons/ci";
-import { GoCheckCircle } from "react-icons/go";
+
 import { useSendAsist } from "../../service/users/useSendAsist";
 export const Users = () => {
-  const columnsTable = ["Nombre", "Apellido", "Email", "Modificar"];
+  const columnsTable = ["Nombre", "Apellido", "Email", "Rol","Modificar"];
   // CONFIRMAR ASISTENCIA
   const [confirmAsist, setConfirmAsist] = useState(false);
   const [cancelAsist, setCacnelAsist] = useState(false);

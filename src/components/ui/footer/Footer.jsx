@@ -16,76 +16,113 @@ import { useStoreUserData } from "../../../store";
 import { useMembershipStore } from "../../../store/useStoreMembership";
 import { SnackbarDefault } from "../snackbar/Snackbar";
 import { HiOutlineUsers } from "react-icons/hi2";
-const routeAdminNavigation = [
-  {
-    title: "Inicio",
-    icon: <GoHome />,
-    link: "/home",
-  },
-  {
-    title: "Mi cuenta",
-    icon: <CgProfile />,
-    link: "/account",
-  },
-  {
-    title: "Membresias",
-    icon: <FaRegAddressCard />,
-    link: "/membership",
-  },
+  // NAVIGATION
+  const routeAdminNavigation = [
+    {
+      title: "Inicio",
+      icon: <GoHome />,
+      link: "/home",
+    },
+    {
+      title: "Mi cuenta",
+      icon: <CgProfile />,
+      link: "/account",
+    },
+    {
+      title: "Membresias",
+      icon: <FaRegAddressCard />,
+      link: "/membership",
+    },
 
-  {
-    title: "Inventario",
-    icon: <MdOutlineInventory />,
-    link: "/inventary",
-  },
-  {
-    title: "Usuarios",
-    icon: <HiOutlineUsers />,
-    link: "/users",
-  },
-  {
-    title: "Estadisticas",
-    icon: <IoStatsChartOutline />,
-    link: "/stats",
-  },
-  {
-    title: "Notificaciones",
-    icon: <IoMdNotificationsOutline />,
-    link: "/notifications",
-  },
-];
-const routeNavigation = [
-  {
-    title: "Inicio",
-    icon: <GoHome />,
-    link: "/home",
-  },
-  {
-    title: "Mi cuenta",
-    icon: <CgProfile />,
-    link: "/acount",
-  },
-  {
-    title: "Membresías",
-    icon: <FaRegAddressCard />,
-    link: "/membership",
-  },
-  {
-    title: "Planes",
-    icon: <GrPlan />,
-    link: "/plans",
-  },
-  {
-    title: "Turnos",
-    icon: <BsMenuButtonWide />,
-    link: "/turns",
-  },
-  {
-    title: "Notificaciones",
-    icon: <IoMdNotificationsOutline />,
-    link: "/notifications",
-  },
-];
+    {
+      title: "Inventario",
+      icon: <MdOutlineInventory />,
+      link: "/inventary",
+    },
+    {
+      title: "Usuarios",
+      icon: <HiOutlineUsers />,
+      link: "/users",
+    },
+    {
+      title: "Estadisticas",
+      icon: <IoStatsChartOutline />,
+      link: "/stats",
+    },
+    {
+      title: "Notificaciones",
+      icon: <IoMdNotificationsOutline />,
+      link: "/notifications",
+    },
+  ];
+
+  const routeTrainerNavigation = [
+    {
+      title: "Inicio",
+      icon: <GoHome />,
+      link: "/home",
+    },
+    {
+      title: "Mi cuenta",
+      icon: <CgProfile />,
+      link: "/account",
+    },
+
+    {
+      title: "Planes",
+      icon: <GrPlan />,
+      link: "/plans",
+    },
+    {
+      title: "Estadisticas",
+      icon: <IoStatsChartOutline />,
+      link: "/stats",
+    },
+    {
+      title: "Notificaciones",
+      icon: <IoMdNotificationsOutline />,
+      link: "/notifications",
+    },
+  ];
+  const routeNavigation = [
+    {
+      title: "Inicio",
+      icon: <GoHome />,
+      link: "/home",
+    },
+    {
+      title: "Mi cuenta",
+      icon: <CgProfile />,
+      link: "/account",
+    },
+    {
+      title: "Membresias",
+      icon: <FaRegAddressCard />,
+      link: "/membership",
+    },
+    {
+      title: "Planes",
+      icon: <GrPlan />,
+      link: "/plans",
+    },
+    {
+      title: "Turnos",
+      icon: <BsMenuButtonWide />,
+      link: "/turns",
+    },
+    {
+      title: "Notificaciones",
+      icon: <IoMdNotificationsOutline />,
+      link: "/notifications",
+    },
+  ];
+
+const roleNavigationMap = {
+  ADMIN: routeAdminNavigation,
+  ENTRENADOR: routeTrainerNavigation,
+  DEFAULT: routeNavigation,
+};
+
 
 export const Footer = () => {
   const userData = useStoreUserData((state) => state.userData);
@@ -96,7 +133,7 @@ export const Footer = () => {
   const [openErrorTurns, setOpenErrorTurns] = useState(false);
   const navigate = useNavigate();
   /////////////////////////////////////
-  const routesToDisplay = isAdmin ? routeAdminNavigation : routeNavigation;
+  const routesToDisplay = roleNavigationMap[roleUser] || routeNavigation;
   const iconsTab = [
     { icon: <FaFacebookF /> },
     { icon: <AiOutlineTwitter /> },

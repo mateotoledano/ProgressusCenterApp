@@ -219,40 +219,6 @@ export const NavBar = () => {
             </div>
           )
         )}
-
-        {/* {roleUser === "ADMIN"
-          ? routeAdminNavigation.map((item) => (
-              <div
-                key={item.link}
-                onClick={() => handleLinkClick(item.link)}
-                className={clsx(
-                  "flex items-center mt-7 p-1 trans-hover rounded-md hover:bg-gray-100 transition-all cursor-pointer",
-                  {
-                    "bg-customBlue text-customTextBlue font-semibold":
-                      path.startsWith(item.link),
-                  }
-                )}
-              >
-                {item.icon}
-                <span className="ml-3 text-lg md:text-xl">{item.title}</span>
-              </div>
-            ))
-          : routeNavigation.map((item) => (
-              <div
-                key={item.link}
-                onClick={() => handleLinkClick(item.link)}
-                className={clsx(
-                  "flex items-center mt-7 p-1 trans-hover rounded-md hover:bg-gray-100 transition-all cursor-pointer",
-                  {
-                    "bg-customBlue text-customTextBlue font-semibold":
-                      path.startsWith(item.link),
-                  }
-                )}
-              >
-                {item.icon}
-                <span className="ml-3 text-lg md:text-xl">{item.title}</span>
-              </div>
-            ))} */}
       </nav>
       <SnackbarDefault
         position={{ vertical: "left", horizontal: "center" }}

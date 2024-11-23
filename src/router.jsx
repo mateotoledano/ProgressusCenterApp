@@ -115,7 +115,7 @@ export const router = createBrowserRouter([
   {
     path: "/notifications",
     element: (
-      <ProtectedRoute allowedRoles={["ADMIN" , "SOCIO"]}>
+      <ProtectedRoute allowedRoles={["ADMIN" , "SOCIO" , "ENTRENADOR"]}>
         <Notifications />
       </ProtectedRoute>
     ),

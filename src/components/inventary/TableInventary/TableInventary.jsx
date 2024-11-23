@@ -32,7 +32,7 @@ export const TableInventary = ({
   seterrorDeleteUser,
   setAlertEditUser,
   setErrorAlertEditUser,
-  setUsers ,
+  setUsers,
 }) => {
   // MODAL DE EDITAR ELEMENTO
   const [openEditElement, setOpenEditElement] = useState(false);
@@ -84,7 +84,6 @@ export const TableInventary = ({
     }
   };
 
-
   return (
     <>
       <Paper>
@@ -102,6 +101,8 @@ export const TableInventary = ({
                           : column === "Estado"
                           ? "center"
                           : column === "Email"
+                          ? "center"
+                          : column === "Rol"
                           ? "center"
                           : "left"
                       }
@@ -156,14 +157,15 @@ export const TableInventary = ({
                       sx={{
                         fontSize: "16px",
                         fontWeight: "semibold",
-                        color:
-                          element.estado === "Correcto" ? "#5B8C00" : "red",
+                       
                       }}
                       align="center"
                     >
                       {element.email}
                     </TableCell>
-
+                    <TableCell sx={{ fontSize: "16px" }} align="center">
+                      {element.roles[0]}
+                    </TableCell>
                     <TableCell sx={{ fontSize: "16px" }} align="right">
                       <div className="flex justify-end gap-[22px]">
                         {/* EDITAR ELEMENTO */}
@@ -274,8 +276,8 @@ export const TableInventary = ({
       ></ModalDeleteInventary>
 
       {/* USUARIOS */}
-       {/* MODAL EDITAR User */}
-       <ModalEditUsers
+      {/* MODAL EDITAR User */}
+      <ModalEditUsers
         setInventary={setUsers}
         elementEditable={elementEditable}
         openEditElement={openEditUser}

@@ -7,10 +7,12 @@ import {
   Checkbox,
   Spinner,
   ModalOlvidarContraseña,
+  SnackbarDefault,
 } from "../../components";
 import { useNavigate } from "react-router-dom";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { MdErrorOutline } from "react-icons/md";
+import { useAlertStore } from "../../store/useAlertChangePassword";
 import { loginUser } from "../../service/auth/use-login";
 import {
   useStoreUser,
@@ -24,6 +26,7 @@ export const Login = () => {
   const [openOlvidarPassword, setOpenOlvidarPassword] = useState(false);
   const [errorLogin, setErrorLogin] = useState(false);
   const closeAlert = useStoreAlert((state) => state.closeAlert);
+
   // SPINNER LOGIN
   const { showSpinner, hideSpinner } = useSpinnerStore();
   // TOKEN DEL USER

@@ -281,6 +281,97 @@ export const Turns = () => {
                 </div>
               )}
             </div>
+
+
+            {/* <div className="md:mt-0 mt-3 flex w-full gap-5 flex-col justify-center items-center">
+              <Title
+                className={""}
+                title={"Turnos de fechas pasadas"}
+                icon={<IoIosTimer />}
+              ></Title>
+              {skeletonTurn ? (
+                <div className="w-full">
+                  <LoadingSkeleton
+                    className={"w-full "}
+                    width={"100%"}
+                    count={4}
+                    height={50}
+                  />
+                </div>
+              ) : turnosReservados.length > 0 ? (
+                turnosReservados
+                  .filter((turn) => {
+                    // Obtener la fecha del turno
+                    const fechaTurno = turn.fechaReserva.split("T")[0]; // Ejemplo: "2024-11-21"
+                    // Obtener la fecha actual en formato "YYYY-MM-DD"
+                    const hoy = dayjs().format("YYYY-MM-DD");
+                    // Retornar solo los turnos del día actual
+                    return fechaTurno === hoy;
+                  })
+                  .map((turn) => {
+                    const fechaReserva = turn.fechaReserva.split("T")[0];
+                    const [year, month, day] = fechaReserva.split("-");
+                    const fechaFormateada = `${day}-${month}-${year}`;
+
+                    const fechaObj = new Date(year, month - 1, day);
+                    const diasSemana = [
+                      "Domingo",
+                      "Lunes",
+                      "Martes",
+                      "Miércoles",
+                      "Jueves",
+                      "Viernes",
+                      "Sábado",
+                    ];
+                    const diaSemana = diasSemana[fechaObj.getDay()];
+
+                    const horaInicioFormateada = turn.horaInicio.substring(
+                      0,
+                      5
+                    );
+                    const horaFinFormateada = turn.horaFin.substring(0, 5);
+
+                    const hora = parseInt(turn.horaInicio.split(":")[0], 10);
+                    let tituloTurno = "";
+                    if (hora >= 6 && hora < 12) {
+                      tituloTurno = "Turno mañana";
+                    } else if (hora >= 12 && hora < 18) {
+                      tituloTurno = "Turno tarde";
+                    } else {
+                      tituloTurno = "Turno noche";
+                    }
+
+                    return (
+                      <Stack
+                        key={turn.id}
+                        titulo={tituloTurno}
+                        duracion={`${horaInicioFormateada} hs - ${horaFinFormateada} hs`}
+                        fechaFinalizacion={`${diaSemana}, ${fechaFormateada}`}
+                      ></Stack>
+                    );
+                  })
+              ) : (
+                <Stack
+                  Icon={CgDanger}
+                  titulo={"No tienes turnos reservados"}
+                ></Stack>
+              )}
+
+              {turnosReservados.length > 0 && !skeletonTurn && (
+                <div className="w-full flex justify-end">
+                  <Button
+                    onClick={handleDeleteTurn}
+                    Icon={MdDeleteOutline}
+                    className="px-[6px] py-[3px] flex items-center gap-1 bg-red-600 hover:bg-red-700 text-sm md:text-base"
+                    label={`${
+                      turnosReservados.length == 1
+                        ? `Eliminar turno`
+                        : `Eliminar Turnos`
+                    }`}
+                  ></Button>
+                </div>
+              )}
+            </div> */}
           </section>
         </section>
       </section>
