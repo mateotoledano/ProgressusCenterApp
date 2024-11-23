@@ -1,21 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { MainLayout } from "../../layout/MainLayout";
 import { LoadingSkeleton } from "../../components";
-import { Stack } from "../../components";
+import { Stack, ModalPhotoProfile } from "../../components";
+import { useUserProfile } from "../../store";
 import { useStoreUserData } from "../../store";
 import { useGetRequestPaymentSocio } from "../../service/membership/useGetRequestPaymentSocio";
-
+import { useSpinnerStore } from "../../store";
+import { BiEditAlt } from "react-icons/bi";
 export const Profile = () => {
   const dataUser = useStoreUserData((state) => state.userData);
   const [dataMembership, setDataMembership] = useState(null);
   const [allMembership, setAllMembership] = useState(null);
-
+  const [loadingSkeleton, setLoadingSkeleton] = useState(false);
+  //  IMAGEN DE FOTO DE PERFIL
+  const [isHovered, setIsHovered] = useState(false); // Estado para hover
+  const fotoProfile = useUserProfile((state) => state.userImage);
+  const [openModal, setOpenModal] = useState(false);
   const roleUser = dataUser.roles[0];
 
-  const [loadingSkeleton, setLoadingSkeleton] = useState(false);
   useEffect(() => {
     const traerMembresiaActiva = async () => {
-      setLoadingSkeleton(true); // Activar skeleton
+      setLoadingSkeleton(true);
       try {
         const response = await useGetRequestPaymentSocio(
           dataUser.identityUserId
@@ -51,27 +56,27 @@ export const Profile = () => {
     mesesDuracionMembresia = dataMembership.membresia.mesesDuracion;
   }
 
-  // Calcular la fecha de finalización de la membresía
   let fechaFinalizacionMembresia = null;
   if (fechaDondeSeActivoMembresia && mesesDuracionMembresia) {
-    // Sumar los meses a la fecha de activación
     fechaFinalizacionMembresia = new Date(fechaDondeSeActivoMembresia);
     fechaFinalizacionMembresia.setMonth(
       fechaFinalizacionMembresia.getMonth() + mesesDuracionMembresia
     );
   }
 
-  // Formatear la fecha de finalización (opcional)
   const fechaFinal = fechaFinalizacionMembresia
     ? `${fechaFinalizacionMembresia.getDate()}/${
         fechaFinalizacionMembresia.getMonth() + 1
       }/${fechaFinalizacionMembresia.getFullYear()}`
     : "Fecha no disponible";
 
+  const selectAvatar = () => {
+    setOpenModal(true);
+  };
   return (
     <MainLayout>
       <div className="animate-fade-in-down bg-white md:mx-auto rounded shadow-xl w-full md:w-11/12 overflow-hidden mb-4">
-        <div className="h-[190px] bg-gradient-to-r ">
+        <div className="h-[190px] bg-gradient-to-r">
           <img
             src="https://wallpapercave.com/wp/wp8077707.jpg"
             alt=""
@@ -79,11 +84,24 @@ export const Profile = () => {
           />
         </div>
         <div className="px-4 py-2 flex flex-col gap-3 pb-6">
-          <div className="md:h-[150px] h-[90px] shadow-md w-[90px] md:w-[150px] rounded-full border-2 overflow-hidden -mt-14 border-white">
+          <div
+            className={`relative md:h-[150px] h-[90px] shadow-md w-[90px] md:w-[150px] rounded-full border-2 overflow-hidden -mt-14 border-white 
+    ${isHovered ? "" : "bg-transparent"} transition duration-300 ease-in-out`}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
             <img
-              src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8YXZhdGFyfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
+              src={fotoProfile}
               className="w-full h-full rounded-full object-center object-cover"
+              alt="Avatar"
             />
+            {isHovered && (
+              <div className="absolute inset-0 cursor-pointer bg-black bg-opacity-75 flex items-center justify-center transition-opacity duration-300 ease-in-out">
+                <button onClick={selectAvatar} className="text-white">
+                  <BiEditAlt size={30} />
+                </button>
+              </div>
+            )}
           </div>
           <div className="flex w-full gap-5 justify-between mt-3">
             <div>
@@ -95,19 +113,16 @@ export const Profile = () => {
               </p>
             </div>
             <div className="flex items-center gap-1 md:gap-3 ">
-              {/* HARDCODE */}
               {roleUser === "SOCIO" && (
                 <span className="rounded-sm bg-green-100 px-2 py-1 md:px-3 md:py-2 text-xs md:text-base font-semibold text-green-900">
                   SOCIO
                 </span>
               )}
-
               {roleUser === "ADMIN" && (
                 <span className="rounded-sm bg-yellow-100 px-2 py-1 md:px-3 md:py-2 text-xs md:text-base font-semibold text-yellow-800">
                   ADMIN
                 </span>
               )}
-
               {roleUser === "ENTRENADOR" && (
                 <span className="rounded-sm bg-blue-200 px-2 py-1 md:px-3 md:py-2 text-xs md:text-base font-semibold text-gray-800">
                   ENTRENADOR
@@ -137,7 +152,7 @@ export const Profile = () => {
                     duracion={`${mesesDuracionMembresia} ${
                       mesesDuracionMembresia === 1 ? "mes" : "meses"
                     }`}
-                    titulo={`${dataMembership.membresia.nombre}`}
+                    titulo={dataMembership.membresia.nombre}
                     fechaFinalizacion={`finaliza el ${fechaFinal}`}
                   />
                 ) : (
@@ -147,6 +162,10 @@ export const Profile = () => {
             ))}
         </div>
       </div>
+      <ModalPhotoProfile
+        open={openModal}
+        setOpen={setOpenModal}
+      ></ModalPhotoProfile>
     </MainLayout>
   );
 };

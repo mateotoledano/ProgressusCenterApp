@@ -36,3 +36,6 @@ export * from "./inventary/modalInventary/ModalDeleteInventary"
 
 // LOGIN
 export * from "./login/ModalOlvidarContraseña"
+
+// PROFILE
+export * from "./profile/ModalPhotoProfile"
