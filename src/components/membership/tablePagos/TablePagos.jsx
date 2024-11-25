@@ -13,6 +13,7 @@ import TablePagination from "@mui/material/TablePagination";
 
 import { LoadingSkeleton } from "../../ui/skeleton/LoadingSkeleton";
 import { useEffect } from "react";
+import dayjs from "dayjs";
 
 export const TablePagos = ({
   arreglo,
@@ -97,13 +98,16 @@ export const TablePagos = ({
                     }}
                   >
                     <TableCell sx={{ fontSize: "16px" }} align="left">
-                      {element.membresia}
+                      {element.membresia.nombre}
+                    </TableCell>
+                   
+                    <TableCell sx={{ fontSize: "16px" }} align="left">
+                      {dayjs(
+                        element.historialSolicitudDePagos[1].fechaCambioEstado
+                      ).format("DD/MM/YYYY")}
                     </TableCell>
                     <TableCell sx={{ fontSize: "16px" }} align="left">
-                      {element.fecha}
-                    </TableCell>
-                    <TableCell sx={{ fontSize: "16px" }} align="left">
-                      {element.precio}
+                      $ {element.membresia.precio}
                     </TableCell>
                   </TableRow>
                 ))

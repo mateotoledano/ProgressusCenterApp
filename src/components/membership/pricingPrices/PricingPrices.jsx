@@ -7,7 +7,10 @@ import { useGetMemberships } from "../../../service/membership/useGetMembership"
 import { useCreateRequestPayment } from "../../../service/membership/useCreateRequestPayment";
 import { LoadingSkeleton } from "../../ui/skeleton/LoadingSkeleton";
 import { ModalAceptPayment } from "../modalAceptPaymen/ModalAceptPayment";
-import { IoIosInformationCircleOutline, IoMdCheckmarkCircleOutline } from "react-icons/io";
+import {
+  IoIosInformationCircleOutline,
+  IoMdCheckmarkCircleOutline,
+} from "react-icons/io";
 import { useSpinnerStore, useStoreUserData } from "../../../store";
 
 import { useGetRequestPaymentSocio } from "../../../service/membership/useGetRequestPaymentSocio";
@@ -21,6 +24,7 @@ import { ButtonSpinner } from "../../ui/buttons/ButtonSpinner";
 import { TablePagos } from "../tablePagos/TablePagos";
 import { Title } from "../../ui/title/Title";
 import { useRegisterComoMp } from "../../../service/membership/useRegisterComoMp";
+import { useGetAllMembershipForSocio } from "../../../service/membership/useGetAllMembershipForSocio";
 const arregloColumns = ["Membresia", "Fecha", "Precio"];
 const arregloRows = [
   {
@@ -73,8 +77,9 @@ export const PricingPrices = ({
   const userData = useStoreUserData((state) => state.userData);
 
   const [dataPedido, setDataPedido] = useState(null);
+  // ARREGLO QUE VA EN LA TABLA
+  const [arregloRows, setArregloRows] = useState([]);
   // ROL DE USER
-
   const roleUser = userData.roles[0];
   //PLANES QUE AGREGAR EL DE LA VENTANILLA
   const [planElegido, setPlanElegido] = useState(null);
@@ -120,28 +125,36 @@ export const PricingPrices = ({
         setLoading(false);
       }
     };
+
     traerMembresias();
     traerTodosLosUsers();
   }, []);
 
   // useEffect para traer dataPedido cuando cambia dataUserBuscado
+  // useEffect para traer dataPedido cuando cambia dataUserBuscado
   useEffect(() => {
     const traerDataPedido = async () => {
       setLoadingTable(true);
-      if (!dataUserBuscado || !dataUserBuscado.identityUserId) return;
 
       try {
-        const requestPayment = await useGetRequestPaymentSocio(
+        const requestPayment = await useGetAllMembershipForSocio(
           dataUserBuscado.identityUserId
         );
+        console.log(requestPayment.data.value, "request Payment");
 
-        if (requestPayment?.data?.value?.value) {
-          setDataPedido(
-            requestPayment.data.value.value.historialSolicitudDePagos
+        if (requestPayment) {
+          // Filtrar los pagos que tienen al menos un historial con estado "Confirmado"
+          const pagosConfirmados = requestPayment.data.value.filter((pago) =>
+            pago.historialSolicitudDePagos.some(
+              (historial) => historial.estadoSolicitud.nombre === "Confirmado"
+            )
           );
-        } else {
-          setDataPedido(null);
+        
+          console.log(pagosConfirmados, "pagos confirmados");
+        
+          setArregloRows(pagosConfirmados);
         }
+        
       } catch (e) {
         console.log(e, "Error al traer dataPedido");
         setDataPedido(null);
@@ -151,7 +164,10 @@ export const PricingPrices = ({
     };
 
     traerDataPedido();
-  }, [dataUserBuscado]); // Se ejecuta cada vez que cambia dataUserBuscado
+  }, [dataUserBuscado]);
+  console.log(arregloRows, "arreglo rows");
+
+  // Se ejecuta cada vez que cambia dataUserBuscado
 
   // ENVIAR SOLICITUD DE PAGO
   const handleBuy = async (membresiaId, tipoDePagoId, idUser) => {
@@ -226,8 +242,6 @@ export const PricingPrices = ({
         idSolicitudMercadoPago
       );
 
-
-
       // REDIRECCIÓN AL INIT POINT
       const initPoint = registerComoMercadoPago?.data?.value?.initPoint;
       if (initPoint) {
@@ -279,10 +293,15 @@ export const PricingPrices = ({
                   <div className="text-4xl font-bold text-gray-900">
                     ${card.precio}
                     <span className="text-lg font-normal text-gray-600"></span>
-                  </div> 
+                  </div>
                   <div className="flex w-full items-start justify-start gap-3 ">
-                  <IoMdCheckmarkCircleOutline className=" text-3xl  font-semibold text-customTextBlue"></IoMdCheckmarkCircleOutline>
-                    <span className="w-5/6 font-semibold text-gray-700" style={{ lineHeight: '1.2' }}>{card.descripcion}</span>
+                    <IoMdCheckmarkCircleOutline className=" text-3xl  font-semibold text-customTextBlue"></IoMdCheckmarkCircleOutline>
+                    <span
+                      className="w-5/6 font-semibold text-gray-700"
+                      style={{ lineHeight: "1.2" }}
+                    >
+                      {card.descripcion}
+                    </span>
                   </div>
 
                   {roleUser === "ADMIN" || roleUser === "ENTRENADOR" ? (
