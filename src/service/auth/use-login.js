@@ -2,7 +2,7 @@ import { api } from "../api";
 // Login usuario
 export const loginUser = async (email, password) => {
   try {
-    const response = await api.post(
+   const response = await api.post(
       `/login`,
       {
         email: email,
@@ -12,6 +12,7 @@ export const loginUser = async (email, password) => {
         headers: {
           "Content-Type": "application/json",
         },
+        timeout: 5000, // Tiempo límite de espera en milisegundos (10 segundos)
       }
     );
 

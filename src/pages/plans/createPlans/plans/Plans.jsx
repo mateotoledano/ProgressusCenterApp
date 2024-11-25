@@ -16,6 +16,7 @@ import { useStoreUserData } from "../../../../store";
 import { CreatePlans } from "../createPlans/CreatePlans";
 
 import { MyPlans } from "../myPlans/MyPlans";
+import { AllPlanes } from "../todosLosPlanes/AllPlanes";
 const ejercicios = [
   {
     grupoMuscular: "Pecho",
@@ -322,7 +323,7 @@ const columnsTrainer = [
   "Agregar",
 ];
 export const Plans = () => {
-  const [selectNav, setSelectNav] = useState("Crear Plan");
+  const [selectNav, setSelectNav] = useState("Todos los planes");
   const dataUser = useStoreUserData((state) => state.userData);
   const [alertPlanVacio, setAlertPlanVacio] = useState(false);
   const [alertCreate, setAlertCreate] = useState(false);
@@ -352,13 +353,13 @@ export const Plans = () => {
         {/* BUSCAR EJERCICIO */}
         <div className="p-3 mb-3 w-full flex justify-between md:justify-center items-center gap-0 md:gap-12  ">
           <span
-            onClick={() => setSelectNav("Crear Plan")}
+            onClick={() => setSelectNav("Todos los planes")}
             className={`transition-all font-bold cursor-pointer p-1  ${
-              selectNav === "Crear Plan" &&
-              "border-b-2 border-customTextGreen text-customTextGreen md:text-lg"
+              selectNav === "Todos los planes" &&
+              "border-b-2 border-customTextBlue text-customTextBlue md:text-lg"
             }`}
           >
-            Crear Plan
+            Todos los planes
           </span>
           {/* <span
             onClick={() => setSelectNav("Editar Planes")}
@@ -373,17 +374,13 @@ export const Plans = () => {
             onClick={() => setSelectNav("Mis Planes")}
             className={`transition-all font-bold cursor-pointer p-1 ${
               selectNav === "Mis Planes" &&
-              "border-b-2 border-customTextGreen text-customTextGreen md:text-lg"
+              "border-b-2 border-customTextBlue text-customTextBlue md:text-lg"
             }`}
           >
             Mis Planes
           </span>
         </div>
-        {selectNav == "Crear Plan" && (
-          <CreatePlans
-            setAlertExerciseAdded={setAlertExerciseAdded}
-          ></CreatePlans>
-        )}
+        {selectNav == "Todos los planes" && <AllPlanes></AllPlanes>}
         {/* {selectNav == "Editar Planes" && <EditPlans></EditPlans>} */}
         {selectNav == "Mis Planes" && (
           <MyPlans

@@ -1,11 +1,12 @@
+import axios from "axios";
 import { api } from "../api"; // Asegúrate de que la ruta sea correcta
 
 export const useSendAsist = async (userId) => {
   console.log(userId, "user id");
 
   try {
-    const response = await api.post(
-      `/api/ReservasTurnos/registrarAsistencia/${userId}`,
+    const response = await axios.post(
+      `https://localhost:7140/api/ReservasTurnos/registrarAsistencia/${userId}`,
 
       {
         headers: {

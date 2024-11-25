@@ -13,8 +13,9 @@ import { useGetAllUsers } from "../../service/auth/use-getAllUsers";
 import { CiSearch } from "react-icons/ci";
 
 import { useSendAsist } from "../../service/users/useSendAsist";
+import { useSpinnerStore } from "../../store";
 export const Users = () => {
-  const columnsTable = ["Nombre", "Apellido", "Email", "Rol","Modificar"];
+  const columnsTable = ["Nombre", "Apellido", "Email", "Rol", "Modificar"];
   // CONFIRMAR ASISTENCIA
   const [confirmAsist, setConfirmAsist] = useState(false);
   const [cancelAsist, setCacnelAsist] = useState(false);
@@ -28,6 +29,8 @@ export const Users = () => {
   // ALERTA AL ELIMINAR
   const [alertDeleteUser, setAlertDeleteUser] = useState(false);
   const [errorDeleteUser, seterrorDeleteUser] = useState(false);
+  const showSpinner = useSpinnerStore(state =>state.showSpinner)
+  const hideSpinner = useSpinnerStore(state =>state.hideSpinner)
 
   //  USERS DEL BACK
   const [users, setUsers] = useState([]);
@@ -42,15 +45,17 @@ export const Users = () => {
       item.nombre.toLowerCase().includes(findElement.toLowerCase())
   );
   useEffect(() => {
+    showSpinner()
     const fetchUsers = async () => {
       try {
         const response = await useGetAllUsers();
-
+            
         setUsers(response.data);
       } catch (e) {
         console.log(e, "error");
       } finally {
-        setLoading(false);
+        setLoading(false)
+        hideSpinner()
       }
     };
     fetchUsers();
@@ -80,8 +85,7 @@ export const Users = () => {
       if (responseSendAsist && responseSendAsist.status == 200) {
         setAlertSuccess(true);
         setTimeout(() => {
-          setUserAsistencia(""); 
-         
+          setUserAsistencia("");
         }, 500);
       } else {
         setAlertError(true);

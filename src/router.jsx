@@ -44,7 +44,7 @@ export const router = createBrowserRouter([
     path: "/plans",
     element: (
       <ProtectedRoute allowedRoles={["ENTRENADOR" , "SOCIO"]}>
-        <HomePlans />
+        <Plans />
       </ProtectedRoute>
     ),
   },

@@ -39,3 +39,6 @@ export * from "./login/ModalOlvidarContraseña"
 
 // PROFILE
 export * from "./profile/ModalPhotoProfile"
+
+// PLANS
+export * from "./plans/TableAllPlans"
