@@ -466,7 +466,7 @@ export const PricingPrices = ({
                   loading={loadingTable}
                   arregloColumns={arregloColumns}
                   arreglo={arregloRows}
-                  textSinEjercicios={"No hay user seleccionado"}
+                  textSinEjercicios={"El usuario seleccionado no posee un historial de membresias "}
                 ></TablePagos>
               </div>
             </>
