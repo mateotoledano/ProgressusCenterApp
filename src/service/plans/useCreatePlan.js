@@ -32,8 +32,8 @@ export const useAddExercises = async (idPlan, planCreado) => {
   const ejerciciosFormateados = planCreado.map((ejercicio, index) => ({
     ejercicioId: ejercicio.id,
     numeroDiaDelPlan: Number(ejercicio.numeroDiaDelPlan),
-    ordenDelEjercicio: Number(index + 1), 
-    repeticiones: Number(ejercicio.repeticiones), 
+    ordenDelEjercicio: Number(index + 1),
+    repeticiones: Number(ejercicio.repeticiones),
     series: Number(ejercicio.series),
   }));
   console.log(ejerciciosFormateados, "ejerciciosFormateadas");

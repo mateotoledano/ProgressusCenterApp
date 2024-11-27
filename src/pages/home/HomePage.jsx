@@ -68,6 +68,12 @@ export const HomePage = () => {
         } else {
           setMembership(null);
         }
+
+        //  TRAER USUARIOS
+
+        // const responseUsers = await useGetAllUsers();
+
+        // setUsers(response.data);
       } catch (error) {
         console.error("Error al cargar datos:", error);
       } finally {
@@ -81,7 +87,7 @@ export const HomePage = () => {
 
   // OBTENER ULTIMO TURNO
   useEffect(() => {
-    if (turnosReservados.length > 0) {
+    if (turnosReservados && turnosReservados.length > 0) {
       const now = dayjs();
 
       const filteredTurns = turnosReservados.filter((turno) => {

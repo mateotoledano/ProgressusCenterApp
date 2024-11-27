@@ -11,11 +11,12 @@ import {
   Stats,
   Notifications,
   MyPlans,
-  CreateallExercise
+  CreateallExercise,
 } from "./pages";
 import { HomePlans } from "./pages/plans/HomePlans";
 import { Users } from "./pages/usuarios/Users";
-
+import { AddExercises } from "./pages/plans/createPlans/addExercises/AddExercises";
+import { ViewPlan } from "./pages/plans/createPlans/viewPlan/ViewPlan";
 //RUTAS PROTEGIDAS
 export const router = createBrowserRouter([
   {
@@ -26,7 +27,7 @@ export const router = createBrowserRouter([
     path: "/home",
 
     element: (
-      <ProtectedRoute allowedRoles={["ADMIN" , "ENTRENADOR" , "SOCIO"]}>
+      <ProtectedRoute allowedRoles={["ADMIN", "ENTRENADOR", "SOCIO"]}>
         <HomePage />
       </ProtectedRoute>
     ),
@@ -35,23 +36,43 @@ export const router = createBrowserRouter([
     path: "/account",
 
     element: (
-      <ProtectedRoute allowedRoles={["ADMIN" , "ENTRENADOR" , "SOCIO"]}>
+      <ProtectedRoute allowedRoles={["ADMIN", "ENTRENADOR", "SOCIO"]}>
         <Profile />
       </ProtectedRoute>
     ),
   },
+  // ROUTES PLANS
   {
     path: "/plans",
     element: (
-      <ProtectedRoute allowedRoles={["ENTRENADOR" , "SOCIO"]}>
+      <ProtectedRoute allowedRoles={["ENTRENADOR", "SOCIO"]}>
         <Plans />
       </ProtectedRoute>
     ),
   },
+
+  {
+    path: "/plans/viewPlan",
+    element: (
+      <ProtectedRoute allowedRoles={["ENTRENADOR", "SOCIO"]}>
+        <ViewPlan />
+      </ProtectedRoute>
+    ),
+  },
+
+  {
+    path: "/plans/addExercices",
+    element: (
+      <ProtectedRoute allowedRoles={["ENTRENADOR"]}>
+        <AddExercises />
+      </ProtectedRoute>
+    ),
+  },
+
   {
     path: "/plans/createPlans/",
     element: (
-      <ProtectedRoute allowedRoles={["ENTRENADOR" ]}>
+      <ProtectedRoute allowedRoles={["ENTRENADOR"]}>
         <Plans />
       </ProtectedRoute>
     ),
@@ -59,7 +80,7 @@ export const router = createBrowserRouter([
   {
     path: "/plans/createPlans/myPlans",
     element: (
-      <ProtectedRoute allowedRoles={["ENTRENADOR", "SOCIO" ]}>
+      <ProtectedRoute allowedRoles={["ENTRENADOR", "SOCIO"]}>
         <MyPlans />
       </ProtectedRoute>
     ),
@@ -67,15 +88,16 @@ export const router = createBrowserRouter([
   {
     path: "/plans/createallExercise",
     element: (
-      <ProtectedRoute allowedRoles={["ENTRENADOR" ]}>
+      <ProtectedRoute allowedRoles={["ENTRENADOR"]}>
         <CreateallExercise />
       </ProtectedRoute>
     ),
   },
+  ////////////////////////////////////////////////////
   {
     path: "/membership",
     element: (
-      <ProtectedRoute allowedRoles={["ADMIN" , "SOCIO"]}>
+      <ProtectedRoute allowedRoles={["ADMIN", "SOCIO"]}>
         <MemberShip />
       </ProtectedRoute>
     ),
@@ -91,7 +113,7 @@ export const router = createBrowserRouter([
   {
     path: "/inventary",
     element: (
-      <ProtectedRoute allowedRoles={["ADMIN" ]}>
+      <ProtectedRoute allowedRoles={["ADMIN"]}>
         <Inventary />
       </ProtectedRoute>
     ),
@@ -99,7 +121,7 @@ export const router = createBrowserRouter([
   {
     path: "/stats",
     element: (
-      <ProtectedRoute allowedRoles={["ADMIN" , "ENTRENADOR" ]}>
+      <ProtectedRoute allowedRoles={["ADMIN", "ENTRENADOR"]}>
         <Stats />
       </ProtectedRoute>
     ),
@@ -107,15 +129,15 @@ export const router = createBrowserRouter([
   {
     path: "/users",
     element: (
-      <ProtectedRoute allowedRoles={["ADMIN" ]}>
-        <Users/>
+      <ProtectedRoute allowedRoles={["ADMIN"]}>
+        <Users />
       </ProtectedRoute>
     ),
   },
   {
     path: "/notifications",
     element: (
-      <ProtectedRoute allowedRoles={["ADMIN" , "SOCIO" , "ENTRENADOR"]}>
+      <ProtectedRoute allowedRoles={["ADMIN", "SOCIO", "ENTRENADOR"]}>
         <Notifications />
       </ProtectedRoute>
     ),

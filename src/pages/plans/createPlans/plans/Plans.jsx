@@ -380,15 +380,8 @@ export const Plans = () => {
             Mis Planes
           </span>
         </div>
-        {selectNav == "Todos los planes" && <AllPlanes></AllPlanes>}
+        <AllPlanes selectNav={selectNav}></AllPlanes>
         {/* {selectNav == "Editar Planes" && <EditPlans></EditPlans>} */}
-        {selectNav == "Mis Planes" && (
-          <MyPlans
-            setErrorServer={setErrorServer}
-            setAlertCreate={setAlertCreate}
-            setAlertPlanVacio={setAlertPlanVacio}
-          ></MyPlans>
-        )}
       </section>
       <SnackbarDefault
         open={alertPlanVacio}

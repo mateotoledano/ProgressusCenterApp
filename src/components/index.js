@@ -42,3 +42,5 @@ export * from "./profile/ModalPhotoProfile"
 
 // PLANS
 export * from "./plans/TableAllPlans"
+export * from "./plans/ModalAsignPlan"
+export * from "./plans/TableDay"
