@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -8,19 +8,33 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import TablePagination from "@mui/material/TablePagination";
 import { LoadingSkeleton } from "../ui/skeleton/LoadingSkeleton";
+import { ModalDeletePlan } from "./ModalDeletePlan";
 import usePlanParaVer from "../../store/planParaVer";
 import { ModalAsignPlan } from "./ModalAsignPlan";
 import { useNavigate } from "react-router-dom";
+import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
+import { useStoreUserData } from "../../store";
+import { usePlansSocio } from "../../service/plans/usePlansSocio";
+import { useGetPlanById } from "../../service/plans/useGetPlanById";
 export const TableAllPlans = ({
-  arreglo,
+  setPlanes,
+  arreglo = [],
   arregloColumns,
   loading,
   textSinEjercicios,
   myPlans,
+  setAlertAsignedPlan,
 }) => {
+  console.log(arreglo, "arreglo all plans");
+
+  const dataUser = useStoreUserData((state) => state.userData);
+  const roleUser = dataUser.roles[0];
+  const [planSocio, setPlanSocio] = useState();
   // plan Para poder verlo en otra ruta
   const setPlanParaVer = usePlanParaVer((state) => state.setPlanParaVer);
-
+  const setIsEditable = usePlanParaVer((state) => state.setIsEditable);
+  // MODAL DELETE PLAN
+  const [modalDeletePlan, setModalDeletePlan] = useState(false);
   const navigate = useNavigate();
   const [planToAsignar, setPlanToAsignar] = useState();
   const [page, setPage] = useState(0);
@@ -43,14 +57,44 @@ export const TableAllPlans = ({
   );
   // ASIGNAR PLAN
   const openAsignar = (plan) => {
-    setPlanToAsignar(plan);
-    setModalAsignarPlan(true);
+    if (roleUser === "ENTRENADOR") {
+      setPlanToAsignar(plan);
+      setModalAsignarPlan(true);
+    }
   };
   // VER PLANES
   const viewPlan = (plan) => {
+    setIsEditable(false);
     setPlanParaVer(plan);
     navigate("/plans/viewPlan");
   };
+  // ELIMINAR PLAN
+  const deletePlan = (plan) => {
+    setModalDeletePlan(true);
+    setPlanToAsignar(plan);
+  };
+  // EDITAR PLAN
+  const editPlan = (plan) => {
+    setIsEditable(true);
+    setPlanParaVer(plan);
+    navigate("/plans/viewPlan");
+  };
+  // useEffect(() => {
+  //   if(arreglo.length){
+
+  //   }
+  //   const traerPlanSocio = async () => {
+  //     const responsePlansSocio = await usePlansSocio(dataUser.identityUserId);
+
+  //     if (responsePlansSocio?.status == 200) {
+  //       const traerPlanAsignado = await useGetPlanById(
+  //         responsePlansSocio.data.planDeEntrenamientoId
+  //       );
+  //       setPlanSocio(traerPlanAsignado.data.value.value);
+  //     }
+  //   };
+  //   traerPlanSocio();
+  // }, []);
   return (
     <div>
       <Paper>
@@ -84,11 +128,7 @@ export const TableAllPlans = ({
               {loading ? (
                 <TableRow>
                   <TableCell colSpan={5} align="center">
-                    <LoadingSkeleton
-                      width={"100%"}
-                      height={40}
-                      count={5}
-                    ></LoadingSkeleton>
+                    <LoadingSkeleton width={"100%"} height={40} count={5} />
                   </TableCell>
                 </TableRow>
               ) : arreglo.length === 0 ? (
@@ -124,7 +164,6 @@ export const TableAllPlans = ({
                     <TableCell sx={{ fontSize: "16px" }} align="center">
                       {exercise.diasPorSemana}
                     </TableCell>
-
                     <TableCell
                       sx={{
                         fontSize: "16px",
@@ -132,7 +171,7 @@ export const TableAllPlans = ({
                         justifyContent: "center",
                         gap: "20px",
                       }}
-                      align={`${myPlans ? "rigth" : "center"}`}
+                      align={myPlans ? "right" : "center"}
                     >
                       <div
                         onClick={() => viewPlan(exercise)}
@@ -140,21 +179,37 @@ export const TableAllPlans = ({
                       >
                         Ver
                       </div>
-                      <div
-                        onClick={() => openAsignar(exercise)}
-                        className="text-customTextBlue underline cursor-pointer"
-                      >
-                        Asignar
-                      </div>
-                      {myPlans && (
-                        <div className="text-customTextBlue underline cursor-pointer">
-                          Modificar
+                      {roleUser === "ENTRENADOR" && (
+                        <div
+                          onClick={() => openAsignar(exercise)}
+                          className="text-customTextBlue underline cursor-pointer"
+                        >
+                          Asignar
                         </div>
                       )}
-                      {myPlans && (
-                        <div className="text-red-600 underline cursor-pointer">
-                          Eliminar
+                      {!myPlans && roleUser === "SOCIO" && (
+                        <div
+                          onClick={() => openAsignar(exercise)}
+                          className="text-customTextBlue underline cursor-pointer"
+                        >
+                          Asignar
                         </div>
+                      )}
+                      {myPlans && roleUser === "ENTRENADOR" && (
+                        <>
+                          <div
+                            onClick={() => editPlan(exercise)}
+                            className="p-[2px] bg-customButtonGreen hover:bg-green-700 rounded cursor-pointer"
+                          >
+                            <MdOutlineEdit className="text-white text-xl" />
+                          </div>
+                          <div
+                            onClick={() => deletePlan(exercise)}
+                            className="p-[2px] bg-red-600 hover:bg-red-800 rounded cursor-pointer"
+                          >
+                            <MdDeleteOutline className="text-white text-xl" />
+                          </div>
+                        </>
                       )}
                     </TableCell>
                   </TableRow>
@@ -177,10 +232,18 @@ export const TableAllPlans = ({
       </Paper>
       {/* MODAL PARA ASIGNAR PLAN */}
       <ModalAsignPlan
+        setAlertAsignedPlan={setAlertAsignedPlan}
         planToAsignar={planToAsignar}
         open={modalAsignarPlan}
         setOpen={setModalAsignarPlan}
       ></ModalAsignPlan>
+      {/* MODAL PARA ELIMINAR PLAN */}
+      <ModalDeletePlan
+        setPlanes={setPlanes}
+        open={modalDeletePlan}
+        plan={planToAsignar}
+        setOpen={setModalDeletePlan}
+      ></ModalDeletePlan>
     </div>
   );
 };

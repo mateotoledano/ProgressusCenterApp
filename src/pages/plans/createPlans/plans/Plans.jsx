@@ -326,7 +326,7 @@ export const Plans = () => {
   const [selectNav, setSelectNav] = useState("Todos los planes");
   const dataUser = useStoreUserData((state) => state.userData);
   const [alertPlanVacio, setAlertPlanVacio] = useState(false);
-  const [alertCreate, setAlertCreate] = useState(false);
+  const [alertAsignedPlan, setAlertAsignedPlan] = useState(false);
   const [alertExerciseAdded, setAlertExerciseAdded] = useState(false);
 
   const [errorServer, setErrorServer] = useState(false);
@@ -380,14 +380,18 @@ export const Plans = () => {
             Mis Planes
           </span>
         </div>
-        <AllPlanes selectNav={selectNav}></AllPlanes>
+        <AllPlanes
+          setAlertAsignedPlan={setAlertAsignedPlan}
+          selectNav={selectNav}
+        ></AllPlanes>
         {/* {selectNav == "Editar Planes" && <EditPlans></EditPlans>} */}
       </section>
+      {/* ASIGNAR PLAN A UN USER */}
       <SnackbarDefault
-        open={alertPlanVacio}
-        setOpen={setAlertPlanVacio}
-        severity={"warning"}
-        message={"Debe agregar ejercicios al Plan"}
+        open={alertAsignedPlan}
+        setOpen={setAlertAsignedPlan}
+        severity={"success"}
+        message={"¡El plan se asignó correctamente!"}
         position={{ vertical: "bottom", horizontal: "left" }}
       ></SnackbarDefault>
       {/* ALERT ERROR 500(SERVIDOr) */}
@@ -409,13 +413,13 @@ export const Plans = () => {
         position={{ vertical: "bottom", horizontal: "left" }}
       ></SnackbarDefault>
 
-      <SnackbarDefault
+      {/* <SnackbarDefault
         open={alertCreate}
         setOpen={setAlertCreate}
         severity={"success"}
         message={"El plan se creo correctamente."}
         position={{ vertical: "bottom", horizontal: "left" }}
-      ></SnackbarDefault>
+      ></SnackbarDefault> */}
     </MainLayout>
   );
 };

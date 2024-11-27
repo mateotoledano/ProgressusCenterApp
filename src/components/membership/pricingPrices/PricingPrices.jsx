@@ -412,7 +412,7 @@ export const PricingPrices = ({
                 <label htmlFor="" className="md:text-xl font-semibold">
                   Nombre del cliente :{" "}
                 </label>
-                <div className="flex item gap-2">
+                <div className="flex w-[300px] item gap-2">
                   <SelectNavegable
                     label={"Seleccione un cliente"}
                     options={allUsers}

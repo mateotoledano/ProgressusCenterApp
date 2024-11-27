@@ -19,7 +19,7 @@ export const SelectNavegable = ({ options, label, onSelect , wd}) => {
         option.nombre === value.nombre && option.apellido === value.apellido
       }
 
-      sx={{ width: isSmallScreen ? 250 : wd ? wd : 340 }} // Ancho según pantalla
+      sx={{ width: isSmallScreen ? "100%" : wd ? wd : 340 }} // Ancho según pantalla
       renderInput={(params) => (
         <TextField {...params} label={label || "Seleccione un usuario"} />
       )}

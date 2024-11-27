@@ -86,7 +86,7 @@ export const Acordion = ({
   const isHoraReservada = (hora) => {
     const horaFormateada = formatHora(hora); // Formatear la hora para compararla
     // Verificar si alguno de los turnos reservados tiene la misma hora
-    return turnosReservados.some(
+    return turnosReservados && turnosReservados.some(
       (turno) => formatHora(turno.horaInicio) === horaFormateada
     );
   };
@@ -95,7 +95,7 @@ export const Acordion = ({
     if (reservasPorHora[cont] > 40) {
       setAlertMaxTurns(true);
     } else {
-      if (turnosReservados.length === 1) {
+      if (turnosReservados && turnosReservados.length === 1) {
         setUnTurnoPorDia(true);
         return;
       } else {

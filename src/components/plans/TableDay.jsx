@@ -6,6 +6,8 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import { RiAddCircleLine } from "react-icons/ri";
+import { MdDeleteOutline } from "react-icons/md";
 import TablePagination from "@mui/material/TablePagination";
 import { LoadingSkeleton } from "../ui/skeleton/LoadingSkeleton";
 import { IoInformationCircleOutline } from "react-icons/io5";
@@ -13,13 +15,17 @@ import { Dialog } from "@mui/material";
 import { CgGym } from "react-icons/cg";
 import { useGetExerciseById } from "../../service/plans/useGetExerciseById";
 import { useSpinnerStore } from "../../store";
-
+import { ModalExercise } from "./ModalExercise";
 export const TableDay = ({
+  day,
   arreglo,
   arregloColumns,
   textSinEjercicios,
   editar,
+  isEditable,
 }) => {
+  console.log(arreglo, "arreglo");
+  const [modalExercise, setModalExercise] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const showSpinner = useSpinnerStore((state) => state.showSpinner);
@@ -62,8 +68,13 @@ export const TableDay = ({
     setOpenVideo(false);
     setVideoUrl("");
   };
-  console.log(exercise, "arreglo en table day");
-
+  console.log(arreglo, "arreglo en table day");
+  const deleteExercise = (exercise) => {
+    console.log("aaaaa");
+  };
+  const openModalAddExercise = () => {
+    setModalExercise(true);
+  };
   return (
     <div>
       <Paper>
@@ -98,7 +109,7 @@ export const TableDay = ({
                 <TableRow>
                   <TableCell
                     sx={{ fontSize: "18px" }}
-                    colSpan={4}
+                    colSpan={isEditable ? 6 : 5}
                     align="center"
                   >
                     {textSinEjercicios}
@@ -120,16 +131,16 @@ export const TableDay = ({
                       component="th"
                       scope="row"
                     >
-                      {exercise.ordenDeEjercicio}
+                      {exercise?.ordenDeEjercicio}
                     </TableCell>
                     <TableCell sx={{ fontSize: "16px" }} align="left">
-                      {exercise.ejercicio.nombre}
+                      {exercise?.ejercicio?.nombre}
                     </TableCell>
                     <TableCell sx={{ fontSize: "16px" }} align="center">
-                      {exercise.series}
+                      {exercise?.series}
                     </TableCell>
                     <TableCell sx={{ fontSize: "16px" }} align="center">
-                      {exercise.repeticiones}
+                      {exercise?.repeticiones}
                     </TableCell>
                     <TableCell sx={{ fontSize: "16px" }} align="right">
                       <div
@@ -144,9 +155,14 @@ export const TableDay = ({
                         <IoInformationCircleOutline className="text-lg md:text-3xl text-customTextBlue font-semibold"></IoInformationCircleOutline>
                       </div>
                     </TableCell>
-                    {editar && (
+                    {isEditable && (
                       <TableCell sx={{ fontSize: "16px" }} align="left">
-                        {exercise.repeticiones}
+                        <div
+                          onClick={() => deleteExercise(exercise)}
+                          className="p-[2px] bg-red-600  hover:bg-red-800 rounded  cursor-pointer"
+                        >
+                          <MdDeleteOutline className="text-white text-xl"></MdDeleteOutline>
+                        </div>
                       </TableCell>
                     )}
                   </TableRow>
@@ -167,7 +183,20 @@ export const TableDay = ({
           labelDisplayedRows={() => ""}
         />
       </Paper>
-
+      {isEditable && (
+        <div className="flex items-center mt-3 gap-2 mb-3 w-full pb-3 p-3 ">
+          <span className="text-xl font-semibold">Agregar Ejercicio</span>
+          <RiAddCircleLine
+            onClick={() => openModalAddExercise()}
+            className="cursor-pointer text-3xl text-customTextGreen"
+          ></RiAddCircleLine>
+          <ModalExercise
+            day={day}
+            open={modalExercise}
+            setOpen={setModalExercise}
+          ></ModalExercise>
+        </div>
+      )}
       {/* Modal para mostrar el video */}
       <Dialog open={openVideo} onClose={handleClose} fullWidth maxWidth="md">
         <div className="bg-customGreenLigth">
@@ -211,17 +240,15 @@ export const TableDay = ({
                     <li>-Pectorales</li>
                     <li>-Dorsales</li>
                     <li>-Trapecios</li>
-                    
                   </>
                 )}
               </ul>
-              <div className="flex w-1/2 justify-center">  
-
-              <img
-                className="w-2/3 object-contain"
-                src="/progressus.png"
-                alt="Progressus logo"
-              />
+              <div className="flex w-1/2 justify-center">
+                <img
+                  className="w-2/3 object-contain"
+                  src="/progressus.png"
+                  alt="Progressus logo"
+                />
               </div>
             </div>
           </div>

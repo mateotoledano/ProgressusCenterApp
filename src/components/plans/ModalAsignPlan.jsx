@@ -6,15 +6,20 @@ import { useSpinnerStore } from "../../store";
 import { useGetAllUsers } from "../../service/auth/use-getAllUsers";
 import { ButtonSpinner } from "../ui/buttons/ButtonSpinner";
 import { useAsignarPlan } from "../../service/plans/useAsignarPlan";
-export const ModalAsignPlan = ({ open, setOpen, planToAsignar }) => {
-
+import { ErrorAuth } from "../ui/errorAuth/ErrorAuth";
+export const ModalAsignPlan = ({
+  open,
+  setOpen,
+  planToAsignar,
+  setAlertAsignedPlan,
+}) => {
   const [loadingSendPlan, setLoadingSendPlan] = useState(false);
   const showSpinner = useSpinnerStore((state) => state.showSpinner);
   const hideSpinner = useSpinnerStore((state) => state.hideSpinner);
   const [users, setUsers] = useState([]);
   const [userSeleccionado, setUserSeleccionado] = useState(null);
-
-  
+  // ERROR AL ASIGNAR
+  const [errorToAsign, setErrorToAsign] = useState(false);
   useEffect(() => {
     showSpinner();
     const fetchUsers = async () => {
@@ -30,7 +35,10 @@ export const ModalAsignPlan = ({ open, setOpen, planToAsignar }) => {
     };
     fetchUsers();
   }, []);
-
+  useEffect(() => {
+    setErrorToAsign(false)
+    setUserSeleccionado(null)
+  }, [open]);
   const asignPlan = async () => {
     setLoadingSendPlan(true);
     try {
@@ -38,8 +46,13 @@ export const ModalAsignPlan = ({ open, setOpen, planToAsignar }) => {
         userSeleccionado.identityUserId,
         planToAsignar.id
       );
-      console.log(responseAsignPlan , "response asign plan  ");
-      
+      if (responseAsignPlan && responseAsignPlan.status == 200) {
+        setUserSeleccionado(null);
+        setOpen(false);
+        setAlertAsignedPlan(true);
+      } else {
+        setErrorToAsign(true);
+      }
     } catch (e) {
       console.log(e, "errores");
     } finally {
@@ -75,7 +88,17 @@ export const ModalAsignPlan = ({ open, setOpen, planToAsignar }) => {
             </span>
           </div>
         )}
-        <ButtonSpinner loading={loadingSendPlan} onClick={asignPlan} label="Asignar plan"></ButtonSpinner>
+        {errorToAsign && (
+          <ErrorAuth
+            className="flex justify-center"
+            messageError={"Este usuario ya posee un plan asignado"}
+          ></ErrorAuth>
+        )}
+        <ButtonSpinner
+          loading={loadingSendPlan}
+          onClick={asignPlan}
+          label="Asignar plan"
+        ></ButtonSpinner>
       </div>
     </ModalLayout>
   );

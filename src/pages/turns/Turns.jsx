@@ -68,7 +68,8 @@ export const Turns = () => {
     const traerTurnos = async () => {
       try {
         const response = await useGetTurns(dataUser.identityUserId);
-
+        console.log(response , "response de response");
+        
         // // Obtener fecha y hora actual
         // const ahora = dayjs();
 
@@ -97,8 +98,9 @@ export const Turns = () => {
         //   // Filtrar turnos después de la hora actual
         //   return fechaHoraTurno.isAfter(ahora);
         // });
-
-        setTurnosReservados(response.data.value);
+        if (response) {
+          setTurnosReservados(response?.data);
+        }
       } catch (error) {
         console.error("Error al traer los turnos:", error);
       } finally {
@@ -207,7 +209,7 @@ export const Turns = () => {
                     height={50}
                   />
                 </div>
-              ) : turnosReservados.length > 0 ? (
+              ) : turnosReservados && turnosReservados.length > 0 ? (
                 turnosReservados.map((turn) => {
                   const fechaReserva = turn.fechaReserva.split("T")[0];
                   const [year, month, day] = fechaReserva.split("-");
@@ -254,20 +256,22 @@ export const Turns = () => {
                 ></Stack>
               )}
 
-              {turnosReservados.length > 0 && !skeletonTurn && (
-                <div className="w-full flex justify-end">
-                  <Button
-                    onClick={handleDeleteTurn}
-                    Icon={MdDeleteOutline}
-                    className="px-[6px] py-[3px] flex items-center gap-1 bg-red-600 hover:bg-red-700 text-sm md:text-base"
-                    label={`${
-                      turnosReservados.length == 1
-                        ? `Eliminar turno`
-                        : `Eliminar Turnos`
-                    }`}
-                  ></Button>
-                </div>
-              )}
+              {turnosReservados &&
+                turnosReservados.length > 0 &&
+                !skeletonTurn && (
+                  <div className="w-full flex justify-end">
+                    <Button
+                      onClick={handleDeleteTurn}
+                      Icon={MdDeleteOutline}
+                      className="px-[6px] py-[3px] flex items-center gap-1 bg-red-600 hover:bg-red-700 text-sm md:text-base"
+                      label={`${
+                        turnosReservados.length == 1
+                          ? `Eliminar turno`
+                          : `Eliminar Turnos`
+                      }`}
+                    ></Button>
+                  </div>
+                )}
             </div>
 
             {/* <div className="md:mt-0 mt-3 flex w-full gap-5 flex-col justify-center items-center">

@@ -88,7 +88,7 @@ export const ModalTurns = ({
 }) => {
   let encontrado = false;
   let horaFormat = `${horaInicio}:00`;
-  for (let index = 0; index < turnosReservados.length; index++) {
+  for (let index = 0; index <  turnosReservados?.length; index++) {
     const element = turnosReservados[index];
     if (element.horaInicio == horaFormat && !encontrado) {
       encontrado = true;
@@ -142,11 +142,12 @@ export const ModalTurns = ({
 
   const handleTurn = async (e) => {
     e.preventDefault();
+console.log(turnoDisponible);
 
     if (!turnoDisponible) {
       setAlertHoraError(true); // Mostrar alerta de error
     } else {
-      if (!encontrado && turnosReservados.length === 0) {
+      if (!encontrado &&  turnosReservados?.length === 0) {
         setButtonLoader(true);
         try {
           setOpenAlert(false);
@@ -161,7 +162,7 @@ export const ModalTurns = ({
 
           if (responseTurn && responseTurn.status == "200") {
             const upadateTurns = await useGetTurns(userData.identityUserId);
-            setTurnosReservados(upadateTurns.data.value);
+            setTurnosReservados(upadateTurns.data);
             setOpen(false);
             setOpenAlert(true);
           } else {

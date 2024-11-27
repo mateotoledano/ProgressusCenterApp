@@ -9,10 +9,13 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "../ui/buttons/Button";
 import { Select } from "../ui/select/Select";
 import { useGetObjetives } from "../../service/plans/useGetObjetives";
+import usePlanParaVer from "../../store/planParaVer";
 import { Checkbox } from "../ui/input/Checkbox";
 import { useCreatePlan } from "../../service/plans/useCreatePlan";
 import { useCreatePlantilla } from "../../service/plans/useCreatePlantilla";
 export const ModalCreatePlans = ({ open, setOpen, setErrorServer }) => {
+  const setPlanParaVer = usePlanParaVer((state) => state.setPlanParaVer);
+  const setIsEditable = usePlanParaVer((state) => state.setIsEditable);
   // ID DEL PLAN CREADO
   const [idPlanCreado, setIdPlanCreado] = useState();
   const [checkboxPlantilla, setCheckboxPlantilla] = useState(false);
@@ -53,13 +56,17 @@ export const ModalCreatePlans = ({ open, setOpen, setErrorServer }) => {
       // CREAR PLAN PRIMERAMENTE
 
       const responseSendPlan = await useCreatePlan(form);
+      console.log(responseSendPlan, "response send plan anashei");
+
       if (responseSendPlan && responseSendPlan.status == 200) {
-        setIdPlanCreado(responseSendPlan.data.id);
-        navigate("/plans/addExercices");
+        setPlanParaVer(responseSendPlan.data);
+        setIsEditable(true);
+        navigate("/plans/viewPlan");
       } else {
         setErrorServer(true);
         setOpen(false);
       }
+      // checkear si es plantilla
       if (checkboxPlantilla) {
         const responseCrearPlantilla = await useCreatePlantilla(
           responseSendPlan.data.id
