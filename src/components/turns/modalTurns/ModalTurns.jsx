@@ -84,20 +84,19 @@ export const ModalTurns = ({
   setTurnosReservados,
   setAlertHoraError,
   turnosReservados,
-
 }) => {
   let encontrado = false;
   let horaFormat = `${horaInicio}:00`;
-  for (let index = 0; index <  turnosReservados?.length; index++) {
+  for (let index = 0; index < turnosReservados?.length; index++) {
     const element = turnosReservados[index];
     if (element.horaInicio == horaFormat && !encontrado) {
       encontrado = true;
     }
   }
+ 
+
   const [buttonLoader, setButtonLoader] = useState(false);
   const userData = useStoreUserData((state) => state.userData);
-
- 
 
   dayjs.extend(utc);
   dayjs.extend(timezone);
@@ -108,6 +107,7 @@ export const ModalTurns = ({
     .minute(parseInt(horaInicio.split(":")[1], 10));
 
   const turnoDisponible = horaActual.isBefore(horaInicioTurno);
+  console.log(horaActual, "hora actual");
 
   const fechaArgentina = dayjs()
     .tz("America/Argentina/Buenos_Aires")
@@ -138,16 +138,18 @@ export const ModalTurns = ({
   const handleClose = () => {
     setOpen(false);
   };
-
+console.log(turnosReservados , "turnos reservadoss");
 
   const handleTurn = async (e) => {
     e.preventDefault();
-console.log(turnoDisponible);
 
+    
     if (!turnoDisponible) {
+     
+      
       setAlertHoraError(true); // Mostrar alerta de error
     } else {
-      if (!encontrado &&  turnosReservados?.length === 0) {
+      if (!encontrado && turnosReservados?.length === 0 ) {
         setButtonLoader(true);
         try {
           setOpenAlert(false);
@@ -174,7 +176,10 @@ console.log(turnoDisponible);
         } finally {
           setButtonLoader(false);
         }
-      } 
+      }else{
+        console.log("entra aquiiiii en el else");
+        console.log(encontrado , "encontrado");
+      }
     }
   };
 
@@ -217,7 +222,6 @@ console.log(turnoDisponible);
                 className=""
               ></ButtonSpinner>
             </form>
-         
           </Box>
         </Fade>
       </Modal>

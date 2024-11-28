@@ -63,13 +63,14 @@ export const Turns = () => {
   const [alertHoraError, setAlertHoraError] = useState(false);
   //ALERT PARA NO RESERVAR DOS VECES EL MISMO HORARIO
   const [skeletonTurn, setSkeletonTurn] = useState(true);
-
+  const [unTurnoPorDia, setUnTurnoPorDia] = React.useState(false);
+  const [alertMaxTurns, setAlertMaxTurns] = React.useState(false);
   useEffect(() => {
     const traerTurnos = async () => {
       try {
         const response = await useGetTurns(dataUser.identityUserId);
-        console.log(response , "response de response");
-        
+        console.log(response, "response de response");
+
         // // Obtener fecha y hora actual
         // const ahora = dayjs();
 
@@ -151,7 +152,7 @@ export const Turns = () => {
         //   return fechaHoraTurno.isAfter(ahora);
         // });
 
-        setTurnosReservados(response.data.value);
+        setTurnosReservados(response?.data);
       }
     } catch (e) {
       console.log(e);
@@ -178,6 +179,8 @@ export const Turns = () => {
             </div>
             {turnos.map((turno, index) => (
               <Acordion
+                setUnTurnoPorDia={setUnTurnoPorDia}
+                setAlertMaxTurns={setAlertMaxTurns}
                 setAlertHoraError={setAlertHoraError}
                 openAlert={openAlert}
                 openAlertError={openAlertError}
@@ -369,6 +372,10 @@ export const Turns = () => {
       {/* ALERTAS AL GUARDAR , ELIMINAR , TURNO NO DISPONIBLE Y TURNO DUPLICADO */}
 
       <GridAlertsTurns
+        alertMaxTurns={alertMaxTurns}
+        setAlertMaxTurns={setAlertMaxTurns}
+        unTurnoPorDia={unTurnoPorDia}
+        setUnTurnoPorDia={setUnTurnoPorDia}
         setAlertDelete={setAlertDelete}
         alertDelete={alertDelete}
         openAlert={openAlert}
