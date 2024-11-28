@@ -14,7 +14,7 @@ export const Button = ({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`py-[7px] my-2 px-5 bg-customButtonGreen text-white rounded-sm  font-medium ${className}`}
+      className={`px-2 py-1   md:py-[7px] my-2  md:px-5  bg-customButtonGreen text-white rounded-sm  font-medium ${className}`}
     >
       {label}
       {Icon && <Icon className={`text-base md:text-lg ${classNameIcon}`}></Icon>}

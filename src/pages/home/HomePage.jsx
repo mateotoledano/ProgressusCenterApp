@@ -41,10 +41,10 @@ export const HomePage = () => {
   const nameUser = dataUser?.nombre || "Usuario";
   const openSpinner = useSpinnerStore((state) => state.showSpinner);
   const closeSpinner = useSpinnerStore((state) => state.hideSpinner);
-
   // Carga inicial de datos
   useEffect(() => {
     openSpinner();
+
     const fetchData = async () => {
       try {
         const userResponse = await useDataUser(email);
@@ -54,7 +54,7 @@ export const HomePage = () => {
           const turnsResponse = await useGetTurns(
             userResponse.data.identityUserId
           );
-          setTurnosReservados(turnsResponse.data.value || []); // Validación segura
+          setTurnosReservados(turnsResponse.data || []); // Validación segura
         }
 
         // Traer membresía

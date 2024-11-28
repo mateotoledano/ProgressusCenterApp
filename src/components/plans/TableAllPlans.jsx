@@ -168,12 +168,31 @@ export const TableAllPlans = ({
                       sx={{
                         fontSize: "16px",
                         display: "flex",
+                        flexDirection:"row-reverse",
+           
                         justifyContent: "center",
                         gap: "20px",
                       }}
                       align={myPlans ? "right" : "center"}
                     >
-                      <div
+                     
+                      {myPlans && roleUser === "ENTRENADOR" && (
+                        <>
+                          <div
+                            onClick={() => editPlan(exercise)}
+                            className="p-[2px] bg-customButtonGreen hover:bg-green-700 rounded cursor-pointer"
+                          >
+                            <MdOutlineEdit className="text-white text-xl" />
+                          </div>
+                          <div
+                            onClick={() => deletePlan(exercise)}
+                            className="p-[2px] bg-red-600 hover:bg-red-800 rounded cursor-pointer"
+                          >
+                            <MdDeleteOutline className="text-white text-xl" />
+                          </div>
+                        </>
+                      )}
+                       <div
                         onClick={() => viewPlan(exercise)}
                         className="text-customTextBlue underline cursor-pointer mb-1"
                       >
@@ -192,24 +211,8 @@ export const TableAllPlans = ({
                           onClick={() => openAsignar(exercise)}
                           className="text-customTextBlue underline cursor-pointer"
                         >
-                          Asignar
+                          Elegir
                         </div>
-                      )}
-                      {myPlans && roleUser === "ENTRENADOR" && (
-                        <>
-                          <div
-                            onClick={() => editPlan(exercise)}
-                            className="p-[2px] bg-customButtonGreen hover:bg-green-700 rounded cursor-pointer"
-                          >
-                            <MdOutlineEdit className="text-white text-xl" />
-                          </div>
-                          <div
-                            onClick={() => deletePlan(exercise)}
-                            className="p-[2px] bg-red-600 hover:bg-red-800 rounded cursor-pointer"
-                          >
-                            <MdDeleteOutline className="text-white text-xl" />
-                          </div>
-                        </>
                       )}
                     </TableCell>
                   </TableRow>

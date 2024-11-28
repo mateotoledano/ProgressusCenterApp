@@ -325,7 +325,9 @@ const columnsTrainer = [
 export const Plans = () => {
   const [selectNav, setSelectNav] = useState("Todos los planes");
   const dataUser = useStoreUserData((state) => state.userData);
-  const [alertPlanVacio, setAlertPlanVacio] = useState(false);
+
+  // ROL DE USER
+  const roleUser = dataUser.roles[0];
   const [alertAsignedPlan, setAlertAsignedPlan] = useState(false);
   const [alertExerciseAdded, setAlertExerciseAdded] = useState(false);
 
@@ -351,7 +353,7 @@ export const Plans = () => {
         {/* DIVISION GRAY */}
         <div className="w-full h-2 md:h-4 bg-customGray"></div>
         {/* BUSCAR EJERCICIO */}
-        <div className="p-3 mb-3 w-full flex justify-between md:justify-center items-center gap-0 md:gap-12  ">
+        <div className="p-3 mb-3 w-full flex justify-center md:justify-center items-center gap-5 md:gap-12  ">
           <span
             onClick={() => setSelectNav("Todos los planes")}
             className={`transition-all font-bold cursor-pointer p-1  ${
@@ -359,17 +361,9 @@ export const Plans = () => {
               "border-b-2 border-customTextBlue text-customTextBlue md:text-lg"
             }`}
           >
-            Todos los planes
+            {roleUser === "SOCIO" ? "Planes plantillas" : "Todos los planes"}
           </span>
-          {/* <span
-            onClick={() => setSelectNav("Editar Planes")}
-            className={`transition-all font-bold cursor-pointer p-1 ${
-              selectNav === "Editar Planes" &&
-              "border-b-2 border-customTextGreen text-customTextGreen md:text-lg"
-            }`}
-          >
-            Editar Planes
-          </span> */}
+
           <span
             onClick={() => setSelectNav("Mis Planes")}
             className={`transition-all font-bold cursor-pointer p-1 ${
@@ -377,7 +371,7 @@ export const Plans = () => {
               "border-b-2 border-customTextBlue text-customTextBlue md:text-lg"
             }`}
           >
-            Mis Planes
+              {roleUser === "SOCIO" ? "Mis planes asignados" : "Mis planes"}
           </span>
         </div>
         <AllPlanes

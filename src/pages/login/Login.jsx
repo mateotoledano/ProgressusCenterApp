@@ -97,7 +97,7 @@ export const Login = () => {
 
       const enviarUser = await loginUser(formLogin.email, formLogin.password);
 
-      if (enviarUser && enviarUser.status == 200) {
+      if (enviarUser?.status === 200 && enviarUser?.data?.accessToken) {
         if (enviarUser?.data?.accessToken) {
           storeLocalToken(enviarUser?.data);
         }

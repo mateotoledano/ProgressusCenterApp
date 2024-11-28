@@ -25,7 +25,7 @@ export const AllPlanes = ({ selectNav, setAlertAsignedPlan }) => {
   console.log(selectNav, "sleectnav");
 
   const userData = useStoreUserData((state) => state.userData);
-  const nameUser = userData.nombre
+  const nameUser = userData.nombre;
   // ROL DE USER
   const roleUser = userData.roles[0];
   // ERROR SERVER
@@ -64,7 +64,7 @@ export const AllPlanes = ({ selectNav, setAlertAsignedPlan }) => {
   return (
     <div className="w-full">
       {roleUser === "ENTRENADOR" ? (
-        <div className="px-3 flex flex-row-reverse justify-between  w-full">
+        <div className="px-3 flex flex-wrap flex-row-reverse justify-between items-end  md:items-center w-full ">
           {/* NUEVO PLAN */}
           <Button
             className="flex justify-start items-center gap-1 "
@@ -72,30 +72,39 @@ export const AllPlanes = ({ selectNav, setAlertAsignedPlan }) => {
             onClick={() => setOpenCreatePlan(true)}
             label={"Nuevo plan"}
           ></Button>
-          <div className="px-3 mt-0  flex flex-col md:flex-row md:justify-between mb-0 md:items-center">
+          <div className="   mt-0  flex flex-col justify-start md:flex-row  md:justify-between mb-0 md:items-center">
             {selectNav === "Mis Planes" && (
-              <div className="flex justify-start items-center gap-2 mb-4">
-                <h2 className="md:text-2xl">{`Planes de ${nameUser}`}</h2>
+              <div className="w-full  flex justify-start  font-semibold items-center gap-2 mb-4">
+                <h2 className="text-lg md:text-2xl ">{`Planes de ${nameUser}`}</h2>
                 <GrPlan className="text-customNavBar text-sm md:text-2xl" />
               </div>
             )}
           </div>
         </div>
+      ) : roleUser === "SOCIO" && selectNav === "Todos los planes" ? (
+        <div className="flex justify-start items-center">
+          <Title
+            className={
+              " p-3 underline flex justify-start mb-1 text-customTextGreen w-full text-start "
+            }
+            title={"Elegir planes plantillas"}
+          >
+            {" "}
+          </Title>
+          <GiClick className="text-2xl"></GiClick>
+        </div>
       ) : (
-        roleUser === "SOCIO" &&
-        selectNav === "Todos los planes" && (
-          <div className="flex justify-start items-center">
-            <Title
-              className={
-                " p-3 underline flex justify-start mb-1 text-customTextGreen w-full text-start "
-              }
-              title={"Elegir planes plantillas"}
-            >
-              {" "}
-            </Title>
-            <GiClick className="text-2xl"></GiClick>
-          </div>
-        )
+        <div className="flex justify-start items-center">
+          <Title
+            className={
+              " p-3 underline flex justify-start mb-1 text-customTextGreen w-full text-start "
+            }
+            title={"Mis planes"}
+          >
+            {" "}
+          </Title>
+          <GiClick className="text-2xl"></GiClick>
+        </div>
       )}
       {selectNav == "Todos los planes" ? (
         <TableAllPlans
