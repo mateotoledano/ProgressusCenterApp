@@ -4,11 +4,18 @@ import { Title } from "../ui/title/Title";
 import { SelectNavegable } from "../membership/selectNavegable/SelectNavegable";
 import { useGetAllExercises } from "../../service/plans/useGetExercises";
 import { CustomInput } from "../ui/input/CustomInput";
-import { Button } from "../ui/buttons/Button";
-import { useStorePlanCreado } from "../../store/useStorePlanCreado";
 
-export const ModalExercise = ({ open, setOpen, day }) => {
-  const setPlanCreado = useStorePlanCreado((state) => state.setPlanCreado);
+import { ButtonSpinner } from "../ui/buttons/ButtonSpinner";
+import usePlanParaVer from "../../store/planParaVer";
+import { useAddExercise } from "../../service/plans/useAddExercise";
+import { useGetPlanById } from "../../service/plans/useGetPlanById";
+import { ErrorAuth } from "../ui/errorAuth/ErrorAuth";
+
+export const ModalExercise = ({ open, setOpen, day, setDiasDelPlan ,setAlertAddExercise}) => {
+  const [errorCreateEx , setErrorCreateEx] = useState(false)
+  const planParaVer = usePlanParaVer((state) => state.planParaVer);
+ 
+  const [loadButton, setLoadButton] = useState(false);
   const [exercices, setExercices] = useState([]);
   const [ejercicioSelected, setEjercicioSelected] = useState(null); // Valor inicial nulo
   const [form, setForm] = useState({
@@ -26,7 +33,9 @@ export const ModalExercise = ({ open, setOpen, day }) => {
       ejercicioId: ejercicioSelected?.id || null, // Asignar el ID seleccionado
     }));
   }, [ejercicioSelected]);
-
+useEffect(()=>{
+setErrorCreateEx(false)
+},[open])
   // Obtener la lista de ejercicios
   useEffect(() => {
     const traerEjercicios = async () => {
@@ -48,15 +57,32 @@ export const ModalExercise = ({ open, setOpen, day }) => {
     }));
   };
 
-  const handleExercise = (e) => {
+  const handleExercise = async (e) => {
     e.preventDefault(); // Evitar recargar la página
-    if (!form.ejercicioId) {
-      alert("Seleccione un ejercicio antes de agregarlo.");
-      return;
+
+    setLoadButton(true);
+    try {
+      console.log("entra");
+
+      const responseAddExercise = await useAddExercise(
+        form,
+        planParaVer.id,
+        day
+      );
+      if (responseAddExercise && responseAddExercise.status == 200) {
+        setOpen(false);
+        setAlertAddExercise(true);
+        const responseDataPlan = await useGetPlanById(planParaVer.id);
+        setDiasDelPlan(responseDataPlan.data.value.value);
+      }else{
+        setErrorCreateEx(true)
+      }
+    } catch (e) {
+    } finally {
+      setLoadButton(false);
     }
-    setPlanCreado(form);
-    setOpen(false); // Cerrar el modal
   };
+
 
   return (
     <ModalLayout open={open} setOpen={setOpen}>
@@ -74,7 +100,9 @@ export const ModalExercise = ({ open, setOpen, day }) => {
             options={exercices}
             onSelect={setEjercicioSelected}
           />
-          <label className="font-semibold">Orden en el que va el ejercicio</label>
+          <label className="font-semibold">
+            Orden en el que va el ejercicio
+          </label>
           <CustomInput
             required
             name="ordenDelEjercicio"
@@ -103,9 +131,16 @@ export const ModalExercise = ({ open, setOpen, day }) => {
           />
         </div>
         <div className="flex justify-center w-full">
-          <Button type="submit" label={"Agregar"} />
+          <ButtonSpinner loading={loadButton} type="submit" label={"Agregar"} />
         </div>
+        {errorCreateEx && (
+        <ErrorAuth
+          messageError={"Ha ocurrido un error intentelo nuevamente"}
+          className="flex justify-center items-center"
+        ></ErrorAuth>
+      )}
       </form>
+      
     </ModalLayout>
   );
 };

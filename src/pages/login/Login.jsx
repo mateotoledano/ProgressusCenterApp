@@ -87,13 +87,12 @@ export const Login = () => {
       formErrors.password = "El campo contraseña es obligatorio.";
     }
 
-    if ( Object.keys(formErrors).length > 0) {
+    if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
       return;
     }
     try {
       showSpinner();
-      
 
       const enviarUser = await loginUser(formLogin.email, formLogin.password);
 

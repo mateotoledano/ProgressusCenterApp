@@ -16,6 +16,7 @@ import { CgGym } from "react-icons/cg";
 import { useGetExerciseById } from "../../service/plans/useGetExerciseById";
 import { useSpinnerStore } from "../../store";
 import { ModalExercise } from "./ModalExercise";
+import { ModalDeleteExercise } from "./ModalDeleteExercise";
 export const TableDay = ({
   day,
   arreglo,
@@ -23,11 +24,16 @@ export const TableDay = ({
   textSinEjercicios,
   editar,
   isEditable,
+  setDiasDelPlan,
+  setAlertAddExercise,
+  setOpenAlertDelete
 }) => {
   console.log(arreglo, "arreglo");
   const [modalExercise, setModalExercise] = useState(false);
+  const [modalDeleteExercise, setModalDeleteExercise] = useState(false);
+  const [exerciseDelete, setExerciseDelete] = useState();
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const showSpinner = useSpinnerStore((state) => state.showSpinner);
   const hideSpinner = useSpinnerStore((state) => state.hideSpinner);
   // DIALOG DE INFO
@@ -70,11 +76,17 @@ export const TableDay = ({
   };
   console.log(arreglo, "arreglo en table day");
   const deleteExercise = (exercise) => {
-    console.log("aaaaa");
+    setExerciseDelete(exercise);
+    setModalDeleteExercise(true);
   };
   const openModalAddExercise = () => {
     setModalExercise(true);
   };
+  // ORDENAR LOS EJERCICIOS SEGUN EL ORDEN EN EL QUE VA
+  const sortedPaginatedData = paginatedData.sort(
+    (a, b) => a.ordenDeEjercicio - b.ordenDeEjercicio
+  );
+
   return (
     <div>
       <Paper>
@@ -116,7 +128,7 @@ export const TableDay = ({
                   </TableCell>
                 </TableRow>
               ) : (
-                paginatedData.map((exercise, index) => (
+                sortedPaginatedData.map((exercise, index) => (
                   <TableRow
                     key={index}
                     sx={{
@@ -142,29 +154,38 @@ export const TableDay = ({
                     <TableCell sx={{ fontSize: "16px" }} align="center">
                       {exercise?.repeticiones}
                     </TableCell>
-                    <TableCell sx={{ fontSize: "16px" }} align="right">
-                      <div
-                        onClick={() => {
-                          handleOpen(
-                            "https://www.youtube.com/watch?v=rT7DgCr-3pg",
-                            exercise
-                          );
-                        }}
-                        className="flex justify-center cursor-pointer"
-                      >
-                        <IoInformationCircleOutline className="text-lg md:text-3xl text-customTextBlue font-semibold"></IoInformationCircleOutline>
+                    <TableCell
+                      sx={{
+                        fontSize: "16px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        gap: "15px",
+                      }}
+                      align="right"
+                    >
+                      <div className="flex flex-col gap-8 md:gap-2">
+                        <div
+                          onClick={() => {
+                            handleOpen(
+                              "https://www.youtube.com/watch?v=rT7DgCr-3pg",
+                              exercise
+                            );
+                          }}
+                        className="p-[2px] flex justify-center items-center bg-gray-700  hover:bg-gray-800 rounded  cursor-pointer"
+                        >
+                          <IoInformationCircleOutline className="text-2xl text-white font-semibold"></IoInformationCircleOutline>
+                        </div>
+                        {isEditable && (
+                          <div
+                            onClick={() => deleteExercise(exercise)}
+                            className="p-[2px] flex justify-center items-center bg-red-600  hover:bg-red-800 rounded  cursor-pointer"
+                          >
+                            <MdDeleteOutline className="text-white text-2xl"></MdDeleteOutline>
+                          </div>
+                        )}
                       </div>
                     </TableCell>
-                    {isEditable && (
-                      <TableCell sx={{ fontSize: "16px" }} align="left">
-                        <div
-                          onClick={() => deleteExercise(exercise)}
-                          className="p-[2px] bg-red-600  hover:bg-red-800 rounded  cursor-pointer"
-                        >
-                          <MdDeleteOutline className="text-white text-xl"></MdDeleteOutline>
-                        </div>
-                      </TableCell>
-                    )}
                   </TableRow>
                 ))
               )}
@@ -185,16 +206,29 @@ export const TableDay = ({
       </Paper>
       {isEditable && (
         <div className="flex items-center mt-3 gap-2 mb-3 w-full pb-3 p-3 ">
-          <span className="text-xl font-semibold">Agregar Ejercicio</span>
+          <span className="text-xl font-semibold">
+            Agregar ejercicio al dia {day}
+          </span>
           <RiAddCircleLine
             onClick={() => openModalAddExercise()}
             className="cursor-pointer text-3xl text-customTextGreen"
           ></RiAddCircleLine>
           <ModalExercise
+            setAlertAddExercise={setAlertAddExercise}
+            setDiasDelPlan={setDiasDelPlan}
             day={day}
             open={modalExercise}
             setOpen={setModalExercise}
           ></ModalExercise>
+          {/* MODAL PARA ELIMINAR EJERCICIO */}
+          <ModalDeleteExercise
+          setOpenAlertDelete={setOpenAlertDelete}
+          day={day}
+            setPlanes={setDiasDelPlan}
+            exercise={exerciseDelete}
+            open={modalDeleteExercise}
+            setOpen={setModalDeleteExercise}
+          ></ModalDeleteExercise>
         </div>
       )}
       {/* Modal para mostrar el video */}

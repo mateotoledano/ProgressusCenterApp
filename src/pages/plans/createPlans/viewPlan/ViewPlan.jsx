@@ -4,6 +4,7 @@ import {
   ButtonSpinner,
   LoadingSkeleton,
   Location,
+  SnackbarDefault,
   Title,
 } from "../../../../components";
 import { MainLayout } from "../../../../layout/MainLayout";
@@ -31,6 +32,8 @@ export const ViewPlan = () => {
   const planParaVer = usePlanParaVer((state) => state.planParaVer);
   const showSpinner = useSpinnerStore((state) => state.showSpinner);
   const hideSpinner = useSpinnerStore((state) => state.hideSpinner);
+  const [alertAddExercise, setAlertAddExercise] = useState(false);
+  const [alertDelete ,  setOpenAlertDelete] = useState(false)
   const [diasDelPlan, setDiasDelPlan] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -114,6 +117,9 @@ export const ViewPlan = () => {
                     <LuCalendarDays className="text-customTextBlue text-lg md:text-3xl"></LuCalendarDays>
                   </div>
                   <TableDay
+                  setOpenAlertDelete = {setOpenAlertDelete}
+                    setAlertAddExercise={setAlertAddExercise}
+                    setDiasDelPlan={setDiasDelPlan}
                     day={dia.numeroDeDia}
                     isEditable={isEditable}
                     textSinEjercicios={"No hay ejercicios en este dia..."}
@@ -132,6 +138,21 @@ export const ViewPlan = () => {
           </div>
         )}
       </section>
+        <SnackbarDefault
+          message={"Ejercicio añadido correctamente"}
+          severity={"success"}
+          position={{ vertical: "bottom", horizontal: "left" }}
+          open={alertAddExercise}
+          setOpen={setAlertAddExercise}
+        ></SnackbarDefault>
+         <SnackbarDefault
+          message={"Ejercicio eliminado correctamente"}
+          severity={"info"}
+          position={{ vertical: "bottom", horizontal: "left" }}
+          open={alertDelete }
+          setOpen={setOpenAlertDelete}
+        ></SnackbarDefault>
+      
     </MainLayout>
   );
 };

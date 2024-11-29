@@ -16,6 +16,7 @@ import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
 import { useStoreUserData } from "../../store";
 import { usePlansSocio } from "../../service/plans/usePlansSocio";
 import { useGetPlanById } from "../../service/plans/useGetPlanById";
+import { ModalElegirPlan } from "./ModalElegirPlan";
 export const TableAllPlans = ({
   setPlanes,
   arreglo = [],
@@ -37,11 +38,13 @@ export const TableAllPlans = ({
   const [modalDeletePlan, setModalDeletePlan] = useState(false);
   const navigate = useNavigate();
   const [planToAsignar, setPlanToAsignar] = useState();
+  const [planElegir, setPlanElegir] = useState();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
   //  MODAL PARA ASIGNAR A UN USER
   const [modalAsignarPlan, setModalAsignarPlan] = useState(false);
+  //  MODAL PARA ELEGIR PLAN EN PÁRTE DE UN SOCIO
+  const [modalPlanElegir, setModalPlanElegir] = useState(false);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -60,6 +63,10 @@ export const TableAllPlans = ({
     if (roleUser === "ENTRENADOR") {
       setPlanToAsignar(plan);
       setModalAsignarPlan(true);
+    } else {
+      // ELEGIR PLAN (SOLO PARTE DEL USER)
+      setPlanElegir(plan);
+      setModalPlanElegir(true);
     }
   };
   // VER PLANES
@@ -79,6 +86,7 @@ export const TableAllPlans = ({
     setPlanParaVer(plan);
     navigate("/plans/viewPlan");
   };
+
   // useEffect(() => {
   //   if(arreglo.length){
 
@@ -168,14 +176,13 @@ export const TableAllPlans = ({
                       sx={{
                         fontSize: "16px",
                         display: "flex",
-                        flexDirection:"row-reverse",
-           
+                        flexDirection: "row-reverse",
+
                         justifyContent: "center",
                         gap: "20px",
                       }}
                       align={myPlans ? "right" : "center"}
                     >
-                     
                       {myPlans && roleUser === "ENTRENADOR" && (
                         <>
                           <div
@@ -192,7 +199,7 @@ export const TableAllPlans = ({
                           </div>
                         </>
                       )}
-                       <div
+                      <div
                         onClick={() => viewPlan(exercise)}
                         className="text-customTextBlue underline cursor-pointer mb-1"
                       >
@@ -247,6 +254,14 @@ export const TableAllPlans = ({
         plan={planToAsignar}
         setOpen={setModalDeletePlan}
       ></ModalDeletePlan>
+
+      {/* MODAL PARA ELEGIR PLAN (PARTE DE SOCI0) */}
+      <ModalElegirPlan
+        setAlertAsignedPlan={  setAlertAsignedPlan}
+        open={modalPlanElegir}
+        plan={planElegir}
+        setOpen={setModalPlanElegir}
+      ></ModalElegirPlan>
     </div>
   );
 };
