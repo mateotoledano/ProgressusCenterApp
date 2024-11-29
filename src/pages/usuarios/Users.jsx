@@ -127,6 +127,7 @@ export const Users = () => {
             </div>
           </div>
         </section>
+        {/* TABLA DE USUARIOS */}
         <TableInventary
           setAlertDeleteUser={setAlertDeleteUser}
           seterrorDeleteUser={seterrorDeleteUser}
@@ -142,7 +143,7 @@ export const Users = () => {
       </section>
 
       {/* REGISTRAR ASISTENCIA */}
-      <section className="animate-fade-in-down md:mx-auto bg-white  rounded shadow-xl w-full md:w-11/12 overflow-hidden mb-20">
+      {/* <section className="animate-fade-in-down md:mx-auto bg-white  rounded shadow-xl w-full md:w-11/12 overflow-hidden mb-20">
         <div className="b p-3">
           <Location
             route={`Asistencia`}
@@ -194,7 +195,7 @@ export const Users = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* ALERT EDITAR CORRECTAMENTE EL USER*/}
       <SnackbarDefault
@@ -231,23 +232,7 @@ export const Users = () => {
         position={{ vertical: "bottom", horizontal: "left" }}
       ></SnackbarDefault>
 
-      {/* ALERT ERRORR!! CONFIRMAR ASISTENCIA */}
-      <SnackbarDefault
-        message={
-          "No se encontró ninguna reserva válida para este usuario en el horario actual."
-        }
-        open={alertError}
-        setOpen={setAlertError}
-        severity={"warning"}
-      ></SnackbarDefault>
-
-      {/* ALERT success  CONFIRMAR ASISTENCIA */}
-      <SnackbarDefault
-        message={"Asistencia confirmada correctamente !"}
-        open={alertSuccess}
-        setOpen={setAlertSuccess}
-        severity={"success"}
-      ></SnackbarDefault>
+  
     </MainLayout>
   );
 };

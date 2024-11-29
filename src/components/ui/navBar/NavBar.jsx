@@ -5,6 +5,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { GoHome } from "react-icons/go";
 import { HiOutlineUsers } from "react-icons/hi2";
 import { CgProfile } from "react-icons/cg";
+import { TbUserCheck } from "react-icons/tb";
 import { FaRegAddressCard } from "react-icons/fa";
 import { BsMenuButtonWide } from "react-icons/bs";
 import { MdOutlineInventory } from "react-icons/md";
@@ -70,6 +71,11 @@ export const NavBar = () => {
       title: "Inventario",
       icon: <MdOutlineInventory />,
       link: "/inventary",
+    },
+    {
+      title: "Ingreso",
+      icon: <TbUserCheck />,
+      link: "/attendance",
     },
     {
       title: "Usuarios",

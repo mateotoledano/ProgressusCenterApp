@@ -6,11 +6,15 @@ import { useUserProfile } from "../../store";
 import { useStoreUserData } from "../../store";
 import { useGetRequestPaymentSocio } from "../../service/membership/useGetRequestPaymentSocio";
 import { useSpinnerStore } from "../../store";
+import { MdDeleteOutline } from "react-icons/md";
 import { BiEditAlt } from "react-icons/bi";
 export const Profile = () => {
   const dataUser = useStoreUserData((state) => state.userData);
   const [dataMembership, setDataMembership] = useState(null);
+  const showSpinner = useSpinnerStore((state) => state.showSpinner);
+  const closeSpinner = useSpinnerStore((state) => state.hideSpinner);
   const [allMembership, setAllMembership] = useState(null);
+  const setAvatar = useUserProfile((state) => state.setUserImage);
   const [loadingSkeleton, setLoadingSkeleton] = useState(false);
   //  IMAGEN DE FOTO DE PERFIL
   const [isHovered, setIsHovered] = useState(false); // Estado para hover
@@ -73,6 +77,13 @@ export const Profile = () => {
   const selectAvatar = () => {
     setOpenModal(true);
   };
+  const deleteAvatar = () => {
+    showSpinner();
+    setTimeout(() => {
+      setAvatar("/avatars/defAvatar.jpg");
+      closeSpinner();
+    }, 2000);
+  };
   return (
     <MainLayout>
       <div className="animate-fade-in-down bg-white md:mx-auto rounded shadow-xl w-full md:w-11/12 overflow-hidden mb-4">
@@ -97,8 +108,17 @@ export const Profile = () => {
             />
             {isHovered && (
               <div className="absolute inset-0 cursor-pointer bg-black bg-opacity-75 flex items-center justify-center transition-opacity duration-300 ease-in-out">
-                <button onClick={selectAvatar} className="text-white">
-                  <BiEditAlt size={30} />
+                <button
+                  onClick={deleteAvatar}
+                  className="text-white mx-1 md:mx-2 p-1 hover:bg-gray-500 rounded-full"
+                >
+                  <MdDeleteOutline className="text-xl md:text-2xl" />
+                </button>
+                <button
+                  onClick={selectAvatar}
+                  className="text-white mx-1 md:mx-2 p-1 hover:bg-gray-500 rounded-full"
+                >
+                  <BiEditAlt className="text-xl md:text-2xl" />
                 </button>
               </div>
             )}

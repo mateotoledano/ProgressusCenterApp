@@ -25,8 +25,14 @@ export const ModalAsignPlan = ({
     const fetchUsers = async () => {
       try {
         const response = await useGetAllUsers();
-
-        setUsers(response.data);
+        console.log(response.data, "response de usuarios");
+  
+        // Filtrar usuarios con rol "SOCIO"
+        const socios = response.data.filter((user) =>
+          user.roles.includes("SOCIO")
+        );
+  
+        setUsers(socios); // Actualizar el estado con los usuarios filtrados
       } catch (e) {
         console.log(e, "error");
       } finally {
@@ -35,6 +41,7 @@ export const ModalAsignPlan = ({
     };
     fetchUsers();
   }, []);
+  
   useEffect(() => {
     setErrorToAsign(false)
     setUserSeleccionado(null)

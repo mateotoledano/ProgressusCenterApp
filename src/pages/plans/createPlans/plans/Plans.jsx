@@ -371,7 +371,7 @@ export const Plans = () => {
               "border-b-2 border-customTextBlue text-customTextBlue md:text-lg"
             }`}
           >
-              {roleUser === "SOCIO" ? "Mis planes asignados" : "Mis planes"}
+              {roleUser === "SOCIO" ? "Mis planes" : "Mis planes"}
           </span>
         </div>
         <AllPlanes

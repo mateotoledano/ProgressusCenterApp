@@ -13,6 +13,7 @@ import {
   MyPlans,
   CreateallExercise,
 } from "./pages";
+import { Attendance } from "./pages/attendance/Attendance";
 import { HomePlans } from "./pages/plans/HomePlans";
 import { Users } from "./pages/usuarios/Users";
 import { AddExercises } from "./pages/plans/createPlans/addExercises/AddExercises";
@@ -94,6 +95,14 @@ export const router = createBrowserRouter([
     ),
   },
   ////////////////////////////////////////////////////
+  {
+    path: "/attendance",
+    element: (
+      <ProtectedRoute allowedRoles={["ADMIN"]}>
+        <Attendance />
+      </ProtectedRoute>
+    ),
+  },
   {
     path: "/membership",
     element: (
