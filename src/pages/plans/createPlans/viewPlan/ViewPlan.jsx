@@ -33,7 +33,7 @@ export const ViewPlan = () => {
   const showSpinner = useSpinnerStore((state) => state.showSpinner);
   const hideSpinner = useSpinnerStore((state) => state.hideSpinner);
   const [alertAddExercise, setAlertAddExercise] = useState(false);
-  const [alertDelete ,  setOpenAlertDelete] = useState(false)
+  const [alertDelete, setOpenAlertDelete] = useState(false);
   const [diasDelPlan, setDiasDelPlan] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -88,7 +88,7 @@ export const ViewPlan = () => {
             </span>
           </span>
         </section>
-        <div className="mt-3">
+        <div className="mt-3 pb-7">
           {loading ? (
             <div>
               <LoadingSkeleton
@@ -106,10 +106,10 @@ export const ViewPlan = () => {
               return (
                 <div
                   className={`${
-                    isEditable ? " " : "border-gray-300  border-b-2"
+                    isEditable ? " " : "border-gray-300 mt-14   border-b-2"
                   }`}
                 >
-                  <div className="p-3 flex justify-center items-center gap-2 mb-2">
+                  <div className={`p-0 flex ${dia.numeroDeDia !== 1  && "mt-12"}  underline justify-center items-center gap-2 mb-0`}>
                     <Title
                       title={`Dia ${dia.numeroDeDia}`}
                       className={""}
@@ -117,7 +117,7 @@ export const ViewPlan = () => {
                     <LuCalendarDays className="text-customTextBlue text-lg md:text-3xl"></LuCalendarDays>
                   </div>
                   <TableDay
-                  setOpenAlertDelete = {setOpenAlertDelete}
+                    setOpenAlertDelete={setOpenAlertDelete}
                     setAlertAddExercise={setAlertAddExercise}
                     setDiasDelPlan={setDiasDelPlan}
                     day={dia.numeroDeDia}
@@ -131,28 +131,27 @@ export const ViewPlan = () => {
             })
           )}
         </div>
-        {isEditable && (
+        {/* {isEditable && (
           <div className="p-3 flex w-full justify-end gap-4">
             <ButtonSpinner label="Guardar"></ButtonSpinner>
             <Button className="bg-red-600" label={"Cancelar"}></Button>
           </div>
-        )}
+        )} */}
       </section>
-        <SnackbarDefault
-          message={"Ejercicio añadido correctamente"}
-          severity={"success"}
-          position={{ vertical: "bottom", horizontal: "left" }}
-          open={alertAddExercise}
-          setOpen={setAlertAddExercise}
-        ></SnackbarDefault>
-         <SnackbarDefault
-          message={"Ejercicio eliminado correctamente"}
-          severity={"info"}
-          position={{ vertical: "bottom", horizontal: "left" }}
-          open={alertDelete }
-          setOpen={setOpenAlertDelete}
-        ></SnackbarDefault>
-      
+      <SnackbarDefault
+        message={"Ejercicio añadido correctamente"}
+        severity={"success"}
+        position={{ vertical: "bottom", horizontal: "left" }}
+        open={alertAddExercise}
+        setOpen={setAlertAddExercise}
+      ></SnackbarDefault>
+      <SnackbarDefault
+        message={"Ejercicio eliminado correctamente"}
+        severity={"info"}
+        position={{ vertical: "bottom", horizontal: "left" }}
+        open={alertDelete}
+        setOpen={setOpenAlertDelete}
+      ></SnackbarDefault>
     </MainLayout>
   );
 };

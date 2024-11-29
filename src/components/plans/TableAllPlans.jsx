@@ -107,7 +107,15 @@ export const TableAllPlans = ({
     <div>
       <Paper>
         <TableContainer>
-          <Table>
+          <Table
+            sx={{
+              tableLayout: {
+                xs: "auto",
+                md: "fixed",
+              },
+              width: "100%", // Asegúrate de que la tabla ocupe todo el ancho
+            }}
+          >
             <TableHead>
               <TableRow>
                 {arregloColumns.map((column, index) => (
@@ -175,52 +183,49 @@ export const TableAllPlans = ({
                     <TableCell
                       sx={{
                         fontSize: "16px",
-                        display: "flex",
-                        flexDirection: "row-reverse",
-
-                        justifyContent: "center",
-                        gap: "20px",
                       }}
                       align={myPlans ? "right" : "center"}
                     >
-                      {myPlans && roleUser === "ENTRENADOR" && (
-                        <>
-                          <div
-                            onClick={() => editPlan(exercise)}
-                            className="p-[2px] bg-customButtonGreen hover:bg-green-700 rounded cursor-pointer"
-                          >
-                            <MdOutlineEdit className="text-white text-xl" />
+                      <div className="flex justify-center gap-3">
+                        {myPlans && roleUser === "ENTRENADOR" && (
+                          <div className="flex justify-end gap-3">
+                            <div
+                              onClick={() => editPlan(exercise)}
+                              className="p-[2px] bg-customButtonGreen hover:bg-green-700 rounded cursor-pointer"
+                            >
+                              <MdOutlineEdit className="text-white text-xl" />
+                            </div>
+                            <div
+                              onClick={() => deletePlan(exercise)}
+                              className="p-[2px] bg-red-600 hover:bg-red-800 rounded cursor-pointer"
+                            >
+                              <MdDeleteOutline className="text-white text-xl" />
+                            </div>
                           </div>
+                        )}
+                        <div
+                          onClick={() => viewPlan(exercise)}
+                          className="text-customTextBlue underline cursor-pointer mb-1"
+                        >
+                          Ver
+                        </div>
+                        {roleUser === "ENTRENADOR" && (
                           <div
-                            onClick={() => deletePlan(exercise)}
-                            className="p-[2px] bg-red-600 hover:bg-red-800 rounded cursor-pointer"
+                            onClick={() => openAsignar(exercise)}
+                            className="text-customTextBlue underline cursor-pointer"
                           >
-                            <MdDeleteOutline className="text-white text-xl" />
+                            Asignar
                           </div>
-                        </>
-                      )}
-                      <div
-                        onClick={() => viewPlan(exercise)}
-                        className="text-customTextBlue underline cursor-pointer mb-1"
-                      >
-                        Ver
+                        )}
+                        {!myPlans && roleUser === "SOCIO" && (
+                          <div
+                            onClick={() => openAsignar(exercise)}
+                            className="text-customTextBlue underline cursor-pointer"
+                          >
+                            Elegir
+                          </div>
+                        )}
                       </div>
-                      {roleUser === "ENTRENADOR" && (
-                        <div
-                          onClick={() => openAsignar(exercise)}
-                          className="text-customTextBlue underline cursor-pointer"
-                        >
-                          Asignar
-                        </div>
-                      )}
-                      {!myPlans && roleUser === "SOCIO" && (
-                        <div
-                          onClick={() => openAsignar(exercise)}
-                          className="text-customTextBlue underline cursor-pointer"
-                        >
-                          Elegir
-                        </div>
-                      )}
                     </TableCell>
                   </TableRow>
                 ))
@@ -257,7 +262,7 @@ export const TableAllPlans = ({
 
       {/* MODAL PARA ELEGIR PLAN (PARTE DE SOCI0) */}
       <ModalElegirPlan
-        setAlertAsignedPlan={  setAlertAsignedPlan}
+        setAlertAsignedPlan={setAlertAsignedPlan}
         open={modalPlanElegir}
         plan={planElegir}
         setOpen={setModalPlanElegir}

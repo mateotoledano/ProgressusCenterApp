@@ -12,6 +12,7 @@ import TablePagination from "@mui/material/TablePagination";
 import { LoadingSkeleton } from "../ui/skeleton/LoadingSkeleton";
 import { IoInformationCircleOutline } from "react-icons/io5";
 import { Dialog } from "@mui/material";
+import Tooltip from "@mui/material/Tooltip";
 import { CgGym } from "react-icons/cg";
 import { useGetExerciseById } from "../../service/plans/useGetExerciseById";
 import { useSpinnerStore } from "../../store";
@@ -26,7 +27,7 @@ export const TableDay = ({
   isEditable,
   setDiasDelPlan,
   setAlertAddExercise,
-  setOpenAlertDelete
+  setOpenAlertDelete,
 }) => {
   console.log(arreglo, "arreglo");
   const [modalExercise, setModalExercise] = useState(false);
@@ -89,9 +90,51 @@ export const TableDay = ({
 
   return (
     <div>
+      {isEditable && (
+        <div className="flex items-center mt-3 gap-2 mb-3 w-full pb-3 p-3 ">
+          {/* <span className="text-xl font-semibold">
+            Agregar ejercicio al dia {day}
+          </span> */}
+          <div className="flex w-full justify-end">
+            <Tooltip title={`Añadir ejercicio al dia ${day}`}>
+              <span className="bg-customButtonGreen hover:bg-green-800 rounded p-1">
+                <RiAddCircleLine
+                  onClick={() => openModalAddExercise()}
+                  className="cursor-pointer text-3xl text-white"
+                />
+              </span>
+            </Tooltip>
+          </div>
+
+          <ModalExercise
+            setAlertAddExercise={setAlertAddExercise}
+            setDiasDelPlan={setDiasDelPlan}
+            day={day}
+            open={modalExercise}
+            setOpen={setModalExercise}
+          ></ModalExercise>
+          {/* MODAL PARA ELIMINAR EJERCICIO */}
+          <ModalDeleteExercise
+            setOpenAlertDelete={setOpenAlertDelete}
+            day={day}
+            setPlanes={setDiasDelPlan}
+            exercise={exerciseDelete}
+            open={modalDeleteExercise}
+            setOpen={setModalDeleteExercise}
+          ></ModalDeleteExercise>
+        </div>
+      )}
       <Paper>
         <TableContainer>
-          <Table>
+          <Table
+            sx={{
+              tableLayout: {
+                xs: "auto",
+                md: "fixed",
+              },
+              width: "100%", // Asegúrate de que la tabla ocupe todo el ancho
+            }}
+          >
             <TableHead>
               <TableRow>
                 {arregloColumns.map((column, index) => (
@@ -157,14 +200,14 @@ export const TableDay = ({
                     <TableCell
                       sx={{
                         fontSize: "16px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        gap: "15px",
+
+                        alignItems: "stretch",
+
+                        height: "100%",
                       }}
                       align="right"
                     >
-                      <div className="flex flex-col gap-8 md:gap-2">
+                      <div className="flex h-full items-center justify-center flex-col gap-8 md:gap-2">
                         <div
                           onClick={() => {
                             handleOpen(
@@ -172,14 +215,14 @@ export const TableDay = ({
                               exercise
                             );
                           }}
-                        className="p-[2px] flex justify-center items-center bg-gray-700  hover:bg-gray-800 rounded  cursor-pointer"
+                          className={`p-[2px] w-full md:w-1/6 h-full flex justify-center items-center bg-gray-700  hover:bg-gray-800 rounded  cursor-pointer `}
                         >
                           <IoInformationCircleOutline className="text-2xl text-white font-semibold"></IoInformationCircleOutline>
                         </div>
                         {isEditable && (
                           <div
                             onClick={() => deleteExercise(exercise)}
-                            className="p-[2px] flex justify-center items-center bg-red-600  hover:bg-red-800 rounded  cursor-pointer"
+                            className="p-[2px] w-full md:w-1/6 h-full flex justify-center items-center bg-red-600  hover:bg-red-800 rounded  cursor-pointer"
                           >
                             <MdDeleteOutline className="text-white text-2xl"></MdDeleteOutline>
                           </div>
@@ -204,33 +247,7 @@ export const TableDay = ({
           labelDisplayedRows={() => ""}
         />
       </Paper>
-      {isEditable && (
-        <div className="flex items-center mt-3 gap-2 mb-3 w-full pb-3 p-3 ">
-          <span className="text-xl font-semibold">
-            Agregar ejercicio al dia {day}
-          </span>
-          <RiAddCircleLine
-            onClick={() => openModalAddExercise()}
-            className="cursor-pointer text-3xl text-customTextGreen"
-          ></RiAddCircleLine>
-          <ModalExercise
-            setAlertAddExercise={setAlertAddExercise}
-            setDiasDelPlan={setDiasDelPlan}
-            day={day}
-            open={modalExercise}
-            setOpen={setModalExercise}
-          ></ModalExercise>
-          {/* MODAL PARA ELIMINAR EJERCICIO */}
-          <ModalDeleteExercise
-          setOpenAlertDelete={setOpenAlertDelete}
-          day={day}
-            setPlanes={setDiasDelPlan}
-            exercise={exerciseDelete}
-            open={modalDeleteExercise}
-            setOpen={setModalDeleteExercise}
-          ></ModalDeleteExercise>
-        </div>
-      )}
+
       {/* Modal para mostrar el video */}
       <Dialog open={openVideo} onClose={handleClose} fullWidth maxWidth="md">
         <div className="bg-customGreenLigth">
