@@ -96,7 +96,7 @@ import { HiOutlineUsers } from "react-icons/hi2";
       link: "/account",
     },
     {
-      title: "Membresias",
+      title: "Membresías",
       icon: <FaRegAddressCard />,
       link: "/membership",
     },
