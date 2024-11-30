@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 
 import { useDataUser } from "../../service/auth/use-dataUser";
 import gif from "/Progressus_G5.gif";
+import videoProgressus from "/videoProgressus.mp4";
 import {
   Button,
   Title,
@@ -135,24 +136,28 @@ export const HomePage = () => {
     <MainLayout>
       <div className="animate-fade-in-down w-full flex flex-col justify-start gap-1">
         <div className="bg-white mx-3 mt-4 md:mt-0 md:m-0 md:mx-8 p-2 rounded shadow-sm">
+          {/* Video en bucle */}
           <Title
             title={`Hola, ${nameUser}!`}
             className="p-4 text-center w-full justify-center md:justify-start"
           />
         </div>
-
-        <div className="mx-3 md:m-0 md:mx-8 md:p-2 rounded shadow-sm flex justify-center items-center">
-          <img
-            src={gif}
-            className={`md:py-2 ${
+  
+        <div className="flex-grow flex justify-center items-center w-full">
+          <video
+            src={videoProgressus}
+            autoPlay
+            loop
+            muted
+            className={`w-full h-full object-cover ${
               roleUser === "ADMIN" || roleUser === "ENTRENADOR"
-                ? "md:w-4/5"
-                : "md:w-3/5"
+                ? "md:w-full"
+                : "md:w-full"
             }`}
             alt="Progressus"
           />
         </div>
-
+  
         {isLoading ? (
           <LoadingSkeleton
             className={"w-full"}
@@ -163,7 +168,7 @@ export const HomePage = () => {
         ) : turnoMasCercano &&
           roleUser !== "ENTRENADOR" &&
           roleUser !== "ADMIN" ? (
-          <div className="bg-white mx-3 md:m-0 md:mx-8 p-2 rounded shadow-sm gap-1 flex flex-col md:flex-col justify-center items-center">
+          <div className="bg-white mx-3 md:m-0 md:mx-8 p-2 rounded shadow-sm gap-1 flex flex-col md:flex-col justify-center items-center md:w-full">
             <div className="flex flex-col items-center md:flex-row gap-1">
               <Title title={"Tu próximo turno es el día: "} />
               <Title
@@ -189,7 +194,7 @@ export const HomePage = () => {
             </Link>
           </div>
         ) : roleUser !== "ADMIN" && roleUser !== "ENTRENADOR" ? (
-          <div className="bg-white mx-3 md:m-0 md:mx-8 p-2 rounded shadow-sm gap-1 flex md:flex-col justify-center items-center">
+          <div className="bg-white mx-3 md:m-0 md:mx-8 p-2 rounded shadow-sm gap-1 flex md:flex-col justify-center items-center md:w-full">
             <Title
               title={"No tienes turnos reservados"}
               className="text-base"
@@ -202,6 +207,7 @@ export const HomePage = () => {
           </div>
         ) : null}
       </div>
+    
 
       <SnackbarDefault
         position={{ vertical: "left", horizontal: "center" }}
