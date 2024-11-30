@@ -20,11 +20,14 @@ export const Acordion = ({
   turnosReservados,
   setTurnosReservados,
   setAlertHoraError,
+ 
+  setUnTurnoPorDia,
+
+  setAlertMaxTurns
 }) => {
   const [reservasPorHora, setReservasPorHora] = React.useState({});
   const [open, setOpen] = React.useState(false);
-  const [unTurnoPorDia, setUnTurnoPorDia] = React.useState(false);
-  const [alertMaxTurns, setAlertMaxTurns] = React.useState(false);
+
   // MANEJO DE HORARIOS
   const [horaInicio, setHorario] = React.useState("");
   const [horaFinal, setHoraFinal] = React.useState("");
@@ -76,6 +79,8 @@ export const Acordion = ({
       setHoraFinal(content[index + 1]);
     }
   };
+  console.log(reservasPorHora , "reservas por hora");
+  
 
   // Función para comparar la hora en formato HH:mm
   const formatHora = (hora) => {
@@ -86,7 +91,7 @@ export const Acordion = ({
   const isHoraReservada = (hora) => {
     const horaFormateada = formatHora(hora); // Formatear la hora para compararla
     // Verificar si alguno de los turnos reservados tiene la misma hora
-    return turnosReservados.some(
+    return turnosReservados && turnosReservados.some(
       (turno) => formatHora(turno.horaInicio) === horaFormateada
     );
   };
@@ -95,7 +100,7 @@ export const Acordion = ({
     if (reservasPorHora[cont] > 40) {
       setAlertMaxTurns(true);
     } else {
-      if (turnosReservados.length === 1) {
+      if (turnosReservados && turnosReservados.length === 1) {
         setUnTurnoPorDia(true);
         return;
       } else {
@@ -159,22 +164,23 @@ export const Acordion = ({
         horaFinal={horaFinal}
         setAlertHoraError={setAlertHoraError}
       />
-      <SnackbarDefault
+      {/* <SnackbarDefault
         open={unTurnoPorDia}
         setOpen={setUnTurnoPorDia}
         severity={"warning"}
         duration={7000}
+        // position={{vertical : "center" , horizontal : "center"}}
         message={"Solo puedes reservar un turno por dia !"}
-      ></SnackbarDefault>
+      ></SnackbarDefault> */}
 
       {/* ALERT MAXIMO DE TURNOS POR ESA HORA */}
-      <SnackbarDefault
+      {/* <SnackbarDefault
         open={alertMaxTurns}
         setOpen={setAlertMaxTurns}
         severity={"warning"}
         duration={7000}
         message={"Se alcanzo el maximo de cupos en este horario!"}
-      ></SnackbarDefault>
+      ></SnackbarDefault> */}
     </div>
   );
 };

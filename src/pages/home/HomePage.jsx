@@ -16,57 +16,66 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { useMembershipStore } from "../../store/useStoreMembership";
 import { useGetRequestPaymentSocio } from "../../service/membership/useGetRequestPaymentSocio";
+
 export const HomePage = () => {
   const navigate = useNavigate();
 
   const email = useStoreUserData((state) => state.email);
   const dataUser = useStoreUserData((state) => state.userData);
-  const roleUser = dataUser.roles[0];
+
+  // Validación segura para roles
+  const roleUser = dataUser?.roles?.[0] || "GUEST"; // Valor por defecto
+
   const setAllDataUser = useStoreUserData((state) => state.setUserData);
   const [turnosReservados, setTurnosReservados] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  // MEMBRESIAS
+
+  // Gestión de membresías
   const setMembership = useMembershipStore((state) => state.setMembershipData);
   const membership = useMembershipStore((state) => state.membershipData);
   const [turnoMasCercano, setTurnoMasCercano] = useState(null);
   const [allMembership, setAllMembership] = useState(null);
-  // ERROR SI NO TIENE MEMBRESIAS ACTIVAS
-  const [openErrorTurns, setOpenErrorTurns] = useState(false);
-  const nameUser = dataUser.nombre;
-  const openSppiner = useSpinnerStore((state) => state.showSpinner);
-  const closeSpinner = useSpinnerStore((state) => state.hideSpinner);
 
+  // Error si no tiene membresías activas
+  const [openErrorTurns, setOpenErrorTurns] = useState(false);
+  const nameUser = dataUser?.nombre || "Usuario";
+  const openSpinner = useSpinnerStore((state) => state.showSpinner);
+  const closeSpinner = useSpinnerStore((state) => state.hideSpinner);
+  // Carga inicial de datos
   useEffect(() => {
-    openSppiner();
+    openSpinner();
+
     const fetchData = async () => {
       try {
         const userResponse = await useDataUser(email);
         setAllDataUser(userResponse.data);
 
-        if (userResponse.data.identityUserId) {
+        if (userResponse?.data?.identityUserId) {
           const turnsResponse = await useGetTurns(
             userResponse.data.identityUserId
           );
-          setTurnosReservados(turnsResponse.data.value);
+          setTurnosReservados(turnsResponse.data || []); // Validación segura
         }
 
-        // TRAER MEMBRESIA
-        const response = await useGetRequestPaymentSocio(
-          dataUser.identityUserId
-        );
+        // Traer membresía
+        if (dataUser?.identityUserId) {
+          const response = await useGetRequestPaymentSocio(
+            dataUser.identityUserId
+          );
 
-        if (response?.data?.value?.value) {
-          const allMembership =
-            response.data.value.value.historialSolicitudDePagos || [];
-          setAllMembership(allMembership);
+          if (response?.data?.value?.value) {
+            const allMembership =
+              response.data.value.value.historialSolicitudDePagos || [];
+            setAllMembership(allMembership);
 
-          // Solo actualizamos el store si hay nuevas membresías
-          if (Array.isArray(allMembership) && allMembership.length > 0) {
-            const lastMembership = allMembership[allMembership.length - 1];
-            setMembership(lastMembership); // Actualiza el store
+            // Solo actualizamos el store si hay membresías
+            if (Array.isArray(allMembership) && allMembership.length > 0) {
+              const lastMembership = allMembership[allMembership.length - 1];
+              setMembership(lastMembership); // Actualiza el store
+            }
+          } else {
+            setMembership(null);
           }
-        } else {
-          setMembership(null);
         }
       } catch (error) {
         console.error("Error al cargar datos:", error);
@@ -77,20 +86,18 @@ export const HomePage = () => {
     };
 
     fetchData();
-  }, [email, dataUser.identityUserId, setAllDataUser, setMembership]);
+  }, [email, dataUser?.identityUserId, setAllDataUser, setMembership]);
 
-  // OBTENER ULTIMO TURNO
+  // Obtener el próximo turno más cercano
   useEffect(() => {
-    if (turnosReservados.length > 0) {
+    if (Array.isArray(turnosReservados) && turnosReservados.length > 0) {
       const now = dayjs();
 
       const filteredTurns = turnosReservados.filter((turno) => {
-        // Crear una cadena con la combinación de fecha y hora
         const fechaHora = `${turno.fechaReserva.split("T")[0]}T${
           turno.horaInicio
         }`;
         const turnoDateTime = dayjs(fechaHora);
-
         return turnoDateTime.isAfter(now);
       });
 
@@ -115,8 +122,9 @@ export const HomePage = () => {
     }
   }, [turnosReservados]);
 
+  // Manejo del click para navegar a los turnos
   const handleLinkClick = () => {
-    if (!membership || membership.estadoSolicitud.nombre !== "Confirmado") {
+    if (!membership || membership?.estadoSolicitud?.nombre !== "Confirmado") {
       setOpenErrorTurns(true);
       return;
     }
@@ -128,7 +136,7 @@ export const HomePage = () => {
       <div className="animate-fade-in-down w-full flex flex-col justify-start gap-1">
         <div className="bg-white mx-3 mt-4 md:mt-0 md:m-0 md:mx-8 p-2 rounded shadow-sm">
           <Title
-            title={`Hola, ${nameUser || "Usuario"} !`}
+            title={`Hola, ${nameUser}!`}
             className="p-4 text-center w-full justify-center md:justify-start"
           />
         </div>
@@ -137,7 +145,7 @@ export const HomePage = () => {
           <img
             src={gif}
             className={`md:py-2 ${
-              (dataUser && roleUser === "ADMIN") || roleUser === "ENTRENADOR"
+              roleUser === "ADMIN" || roleUser === "ENTRENADOR"
                 ? "md:w-4/5"
                 : "md:w-3/5"
             }`}
@@ -186,7 +194,6 @@ export const HomePage = () => {
               title={"No tienes turnos reservados"}
               className="text-base"
             />
-
             <Button
               onClick={handleLinkClick}
               label={"Reservar"}
@@ -195,14 +202,14 @@ export const HomePage = () => {
           </div>
         ) : null}
       </div>
-      {/* // ERROR SI NO TIENE MEMBRESIAS ACTIVAS */}
+
       <SnackbarDefault
         position={{ vertical: "left", horizontal: "center" }}
         severity={"warning"}
-        message={"Usted no posee membresias activas"}
+        message={"Usted no posee membresías activas"}
         open={openErrorTurns}
         setOpen={setOpenErrorTurns}
-      ></SnackbarDefault>
+      />
     </MainLayout>
   );
 };

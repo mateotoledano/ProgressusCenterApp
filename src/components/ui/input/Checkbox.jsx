@@ -8,7 +8,7 @@ export const Checkbox = ({ onChange, check }) => {
           type="checkbox"
           checked={check}
           onChange={onChange}
-          className="peer  h-4 w-4 cursor-pointer transition-all appearance-none rounded shadow hover:shadow-md border border-slate-400 checked:bg-customTextGreen checked:border-slate-400"
+          className="peer  h-4 w-4 cursor-pointer transition-all appearance-none rounded shadow hover:shadow-md border border-slate-600 checked:bg-customTextGreen checked:border-slate-400"
        
         />
         <span className="absolute text-white opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none">

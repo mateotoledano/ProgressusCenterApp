@@ -1,132 +1,85 @@
-import * as React from "react";
-import { useState } from "react";
-import PropTypes from "prop-types";
-import Backdrop from "@mui/material/Backdrop";
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import { Button } from "../ui/buttons/Button";
-import Typography from "@mui/material/Typography";
-import { useSpring, animated } from "@react-spring/web";
-import { IoIosTimer } from "react-icons/io";
-import { CustomInput } from "../ui/input/CustomInput";
+import { useEffect, useState } from "react";
+import { ModalLayout } from "../../layout/ModalLayout";
 import { useStoreUserData } from "../../store";
 import { useStorePlanCreado } from "../../store/useStorePlanCreado";
-import { useCreatePlan } from "../../service/plans/useCreatePlan";
-import { useAddExercises } from "../../service/plans/useCreatePlan";
+import { CustomInput } from "../ui/input/CustomInput";
 import { ButtonSpinner } from "../ui/buttons/ButtonSpinner";
-const Fade = React.forwardRef(function Fade(props, ref) {
-  const {
-    children,
-    in: open,
-    onClick,
-    onEnter,
-    onExited,
-    ownerState,
-    ...other
-  } = props;
-  const style = useSpring({
-    from: { opacity: 0 },
-    to: { opacity: open ? 1 : 0 },
-    onStart: () => {
-      if (open && onEnter) {
-        onEnter(null, true);
-      }
-    },
-    onRest: () => {
-      if (!open && onExited) {
-        onExited(null, true);
-      }
-    },
-  });
-
-  return (
-    <animated.div ref={ref} style={style} {...other}>
-      {React.cloneElement(children, { onClick })}
-    </animated.div>
-  );
-});
-
-Fade.propTypes = {
-  children: PropTypes.element.isRequired,
-  in: PropTypes.bool,
-  onClick: PropTypes.any,
-  onEnter: PropTypes.func,
-  onExited: PropTypes.func,
-  ownerState: PropTypes.any,
-};
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: window.innerWidth < 700 ? "76%" : 800,
-  maxWidth: 400,
-  bgcolor: "#E6F7FF",
-  border: "1px solid #1890FF",
-  borderRadius: "8px",
-  boxShadow: 24,
-  p: 2,
-};
-
-export const ModalCreatePlans = ({
-  open,
-  setOpen,
-  setAlertCreate,
-  setErrorServer,
-}) => {
+import { Title } from "../ui/title/Title";
+import { useNavigate, useLocation } from "react-router-dom";
+import { Button } from "../ui/buttons/Button";
+import { Select } from "../ui/select/Select";
+import { useGetObjetives } from "../../service/plans/useGetObjetives";
+import usePlanParaVer from "../../store/planParaVer";
+import { Checkbox } from "../ui/input/Checkbox";
+import { useCreatePlan } from "../../service/plans/useCreatePlan";
+import { useCreatePlantilla } from "../../service/plans/useCreatePlantilla";
+export const ModalCreatePlans = ({ open, setOpen, setErrorServer }) => {
+  const setPlanParaVer = usePlanParaVer((state) => state.setPlanParaVer);
+  const setIsEditable = usePlanParaVer((state) => state.setIsEditable);
+  // ID DEL PLAN CREADO
+  const [idPlanCreado, setIdPlanCreado] = useState();
+  const [checkboxPlantilla, setCheckboxPlantilla] = useState(false);
+  const [objetives, setObjetives] = useState([]);
   const dataUser = useStoreUserData((state) => state.userData);
-  const planCreado = useStorePlanCreado((state) => state.planCreado);
-  const clearPlanActual = useStorePlanCreado((state) => state.clearPlan);
+
+  const navigate = useNavigate();
   // loading del button
   const [loading, setLoading] = useState(false);
+
   const nameUser = dataUser.nombre;
   const [form, setForm] = useState({
     nombre: "",
     descripcion: "",
     objetivoDelPlanId: 1,
-    diasPorSemana: null,
+    diasPorSemana: 1,
     dueñoId: dataUser.identityUserId,
   });
-  const handleClose = () => setOpen(false);
+
+  useEffect(() => {
+    const traerObjetivos = async () => {
+      try {
+        const response = await useGetObjetives();
+        if (response) {
+          setObjetives(response.data);
+        }
+      } catch (e) {
+        console.log(e, "errores");
+      }
+    };
+    traerObjetivos();
+  }, []);
+
   const onSubmitSendPlan = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
       // CREAR PLAN PRIMERAMENTE
+
       const responseSendPlan = await useCreatePlan(form);
-      let idPlan;
-      let responseAddExercices;
+      console.log(responseSendPlan, "response send plan anashei");
 
-      // SI ES STATUS 200 AGREGA LOS EJERCICIOS QUE AGREGO EL USUARIO
-      if (responseSendPlan.status == "200") {
-        idPlan = responseSendPlan.data.id;
-        responseAddExercices = await useAddExercises(idPlan, planCreado);
-       
-      }
-
-      // SI ES CORRECTO EL AGREGAR EJERCICIOS CIERRA EL MODAL Y MANDA LOS DATOS AL BACKEND
-      if (
-        responseAddExercices &&
-        responseAddExercices.status == "200" &&
-        responseSendPlan &&
-        responseSendPlan.status == "200"
-      ) {
-        setAlertCreate(true);
-        setOpen(false);
-        clearPlanActual();
+      if (responseSendPlan && responseSendPlan.status == 200) {
+        setPlanParaVer(responseSendPlan.data);
+        setIsEditable(true);
+        navigate("/plans/viewPlan");
       } else {
-        
         setErrorServer(true);
+        setOpen(false);
+      }
+      // checkear si es plantilla
+      if (checkboxPlantilla) {
+        const responseCrearPlantilla = await useCreatePlantilla(
+          responseSendPlan.data.id
+        );
+        console.log(responseCrearPlantilla, "response al crear plantilla");
       }
     } catch (error) {
       console.error("Error al crear el plan o agregar ejercicios:", error);
-      setErrorServer(true);
+      // setErrorServer(true);
     } finally {
       setLoading(false);
       // Este bloque se ejecuta siempre, haya o no error
       // Aquí puedes poner tareas como resetear el estado de carga, cerrar el spinner, etc.
-      
     }
   };
 
@@ -138,68 +91,112 @@ export const ModalCreatePlans = ({
       return; // Ignora valores fuera del rango
     }
 
+    // Si el campo es objetivoDelPlanId, convierte el valor a un número
+    const processedValue =
+      name === "objetivoDelPlanId" ? parseInt(value, 10) : value;
+
     setForm((prevForm) => ({
       ...prevForm,
-      [name]: value,
+      [name]: processedValue,
     }));
   };
 
+  const handleCheck = (e) => {
+    const isChecked = e.target.checked;
+    setCheckboxPlantilla(isChecked);
+  };
+
   return (
-    <div>
-      <Modal
-        aria-labelledby="spring-modal-title"
-        aria-describedby="spring-modal-description"
-        open={open}
-        onClose={handleClose}
-        closeAfterTransition
-        slots={{ backdrop: Backdrop }}
-        slotProps={{
-          backdrop: {
-            TransitionComponent: Fade,
-          },
-        }}
+    <ModalLayout open={open} setOpen={setOpen}>
+      <form
+        onSubmit={onSubmitSendPlan}
+        className="flex flex-col justify-center items-center text-center gap-2"
       >
-        <Fade in={open}>
-          <Box sx={style}>
-            <form
-              onSubmit={onSubmitSendPlan}
-              className="flex flex-col justify-center items-center text-center gap-3"
-            >
-              {/* <div className="w-full p-[2px] absolute top-0 justify-start">
+        {/* <div className="w-full p-[2px] absolute top-0 justify-start">
                 <IoIosTimer size={28}></IoIosTimer>
               </div> */}
-              <CustomInput
-                required={true}
-                name={"nombre"}
-                value={form.nombre}
-                placeholder={"Nombre del Plan"}
-                onChange={handleChange}
-              ></CustomInput>
-              <CustomInput
-                required={true}
-                name={"descripcion"}
-                value={form.descripcion}
-                placeholder={"Descripcion"}
-                onChange={handleChange}
-              ></CustomInput>
-              <CustomInput
-                required={true}
-                type="number"
-                placeholder={"Dias por semana"}
-                name={"diasPorSemana"}
-                value={form.diasPorSemana}
-                onChange={handleChange}
-              ></CustomInput>
-              <ButtonSpinner
-                label="Crear Plan"
-                type="submit"
-                loading={loading}
-                className=""
-              ></ButtonSpinner>
-            </form>
-          </Box>
-        </Fade>
-      </Modal>
-    </div>
+        <div className="md:mr-3">
+          <Title
+            className={"md:text-xl text-customTextGreen font-bold"}
+            title={"Nuevo plan"}
+          ></Title>
+        </div>
+        <label htmlFor="" className="text-start font-medium w-full">
+          Nombre
+        </label>
+        <CustomInput
+          required={true}
+          name={"nombre"}
+          value={form.nombre}
+          placeholder={"Nombre del Plan"}
+          onChange={handleChange}
+        ></CustomInput>
+        <label htmlFor="" className="text-start font-medium w-full">
+          Objetivo del plan
+        </label>
+        <select
+          name="objetivoDelPlanId"
+          value={form.objetivoDelPlanId}
+          onChange={handleChange}
+          className="w-full md:w-full border border-gray-200 outline-none text-gray-900 text-sm rounded-sm focus:ring-customButtonGreen focus:border-customButtonGreen block p-2.5 md:p-2.5"
+        >
+          {/* Opción por defecto */}
+          <option value="" disabled>
+            Selecciona un objetivo
+          </option>
+          {/* Iterar sobre los objetivos */}
+          {objetives.map((objetivo) => (
+            <option key={objetivo.id} value={objetivo.id}>
+              {objetivo.nombre}
+            </option>
+          ))}
+        </select>
+        <label htmlFor="" className="text-start font-medium w-full">
+          Cantidad de dias
+        </label>
+        <CustomInput
+          required={true}
+          type="number"
+          placeholder={"Dias por semana"}
+          name={"diasPorSemana"}
+          value={form.diasPorSemana}
+          onChange={handleChange}
+        ></CustomInput>
+
+        <label htmlFor="" className="text-start font-medium w-full">
+          Descripcion
+        </label>
+        <div
+          className={`flex  bg-white items-center border border-gray-300 rounded-sm w-full `}
+        >
+          <textarea
+            required={true}
+            name="descripcion"
+            className="outline-none  border-gray-500 w-full flex-1 p-1.5 md:p-2 focus:outline-none font-medium"
+            value={form.descripcion}
+            placeholder="Descripcion"
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="w-full flex justify-start items-center gap-2">
+          <Checkbox check={checkboxPlantilla} onChange={handleCheck}></Checkbox>
+          <span className="text-sm font-medium">Convertir en plantilla</span>
+        </div>
+
+        <div className="flex gap-8">
+          <ButtonSpinner
+            label="Crear Plan"
+            type="submit"
+            loading={loading}
+          ></ButtonSpinner>
+          <Button
+            label={"Cancelar"}
+            className="bg-red-600 hover:bg-red-800"
+            onClick={() => setOpen(false)}
+          ></Button>
+        </div>
+      </form>
+    </ModalLayout>
   );
 };

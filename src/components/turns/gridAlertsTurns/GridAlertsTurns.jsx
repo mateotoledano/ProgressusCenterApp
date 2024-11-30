@@ -10,6 +10,10 @@ export const GridAlertsTurns = ({
   alertHoraError,
   setAlertHoraError,
   setOpenAlertError,
+  unTurnoPorDia, 
+  setUnTurnoPorDia,
+  alertMaxTurns ,
+  setAlertMaxTurns
 }) => {
   return (
     <>
@@ -49,6 +53,25 @@ export const GridAlertsTurns = ({
           severity="error"
         ></SnackbarDefault>
       )}
+
+      {/* ALERT SOLO PUEDE RESERVAR UN TURNO POR DIA */}
+      <SnackbarDefault
+        open={unTurnoPorDia}
+        setOpen={setUnTurnoPorDia}
+        severity={"warning"}
+        duration={7000}
+        // position={{vertical : "center" , horizontal : "center"}}
+        message={"Solo puedes reservar un turno por dia !"}
+      ></SnackbarDefault>
+
+      {/* ALERT MAXIMO DE TURNOS POR ESA HORA */}
+      <SnackbarDefault
+        open={alertMaxTurns}
+        setOpen={setAlertMaxTurns}
+        severity={"warning"}
+        duration={7000}
+        message={"Se alcanzo el maximo de cupos en este horario!"}
+      ></SnackbarDefault>
       {/* ALERT SI INTENTA SELECCIONAR DOS TURNOS AL MISMO HORARIO*/}
       {/* {alertDuplicatedTurn && (
         <SnackbarDefault

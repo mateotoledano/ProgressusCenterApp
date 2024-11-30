@@ -325,8 +325,10 @@ const columnsTrainer = [
 export const Plans = () => {
   const [selectNav, setSelectNav] = useState("Todos los planes");
   const dataUser = useStoreUserData((state) => state.userData);
-  const [alertPlanVacio, setAlertPlanVacio] = useState(false);
-  const [alertCreate, setAlertCreate] = useState(false);
+
+  // ROL DE USER
+  const roleUser = dataUser.roles[0];
+  const [alertAsignedPlan, setAlertAsignedPlan] = useState(false);
   const [alertExerciseAdded, setAlertExerciseAdded] = useState(false);
 
   const [errorServer, setErrorServer] = useState(false);
@@ -351,7 +353,7 @@ export const Plans = () => {
         {/* DIVISION GRAY */}
         <div className="w-full h-2 md:h-4 bg-customGray"></div>
         {/* BUSCAR EJERCICIO */}
-        <div className="p-3 mb-3 w-full flex justify-between md:justify-center items-center gap-0 md:gap-12  ">
+        <div className="p-3 mb-3 w-full flex justify-center md:justify-center items-center gap-5 md:gap-12  ">
           <span
             onClick={() => setSelectNav("Todos los planes")}
             className={`transition-all font-bold cursor-pointer p-1  ${
@@ -359,17 +361,9 @@ export const Plans = () => {
               "border-b-2 border-customTextBlue text-customTextBlue md:text-lg"
             }`}
           >
-            Todos los planes
+            {roleUser === "SOCIO" ? "Planes plantillas" : "Todos los planes"}
           </span>
-          {/* <span
-            onClick={() => setSelectNav("Editar Planes")}
-            className={`transition-all font-bold cursor-pointer p-1 ${
-              selectNav === "Editar Planes" &&
-              "border-b-2 border-customTextGreen text-customTextGreen md:text-lg"
-            }`}
-          >
-            Editar Planes
-          </span> */}
+
           <span
             onClick={() => setSelectNav("Mis Planes")}
             className={`transition-all font-bold cursor-pointer p-1 ${
@@ -377,24 +371,21 @@ export const Plans = () => {
               "border-b-2 border-customTextBlue text-customTextBlue md:text-lg"
             }`}
           >
-            Mis Planes
+              {roleUser === "SOCIO" ? "Mis planes" : "Mis planes"}
           </span>
         </div>
-        {selectNav == "Todos los planes" && <AllPlanes></AllPlanes>}
+        <AllPlanes
+          setAlertAsignedPlan={setAlertAsignedPlan}
+          selectNav={selectNav}
+        ></AllPlanes>
         {/* {selectNav == "Editar Planes" && <EditPlans></EditPlans>} */}
-        {selectNav == "Mis Planes" && (
-          <MyPlans
-            setErrorServer={setErrorServer}
-            setAlertCreate={setAlertCreate}
-            setAlertPlanVacio={setAlertPlanVacio}
-          ></MyPlans>
-        )}
       </section>
+      {/* ASIGNAR PLAN A UN USER */}
       <SnackbarDefault
-        open={alertPlanVacio}
-        setOpen={setAlertPlanVacio}
-        severity={"warning"}
-        message={"Debe agregar ejercicios al Plan"}
+        open={alertAsignedPlan}
+        setOpen={setAlertAsignedPlan}
+        severity={"success"}
+        message={"¡El plan se asignó correctamente!"}
         position={{ vertical: "bottom", horizontal: "left" }}
       ></SnackbarDefault>
       {/* ALERT ERROR 500(SERVIDOr) */}
@@ -416,13 +407,13 @@ export const Plans = () => {
         position={{ vertical: "bottom", horizontal: "left" }}
       ></SnackbarDefault>
 
-      <SnackbarDefault
+      {/* <SnackbarDefault
         open={alertCreate}
         setOpen={setAlertCreate}
         severity={"success"}
         message={"El plan se creo correctamente."}
         position={{ vertical: "bottom", horizontal: "left" }}
-      ></SnackbarDefault>
+      ></SnackbarDefault> */}
     </MainLayout>
   );
 };

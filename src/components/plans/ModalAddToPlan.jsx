@@ -88,7 +88,7 @@ export const ModalAddToPlan = ({
     series: null,
     repeticiones: null,
   });
-
+ 
   const handleClose = () => setOpen(false);
   const onSubmitSendPlan = async (e) => {
     e.preventDefault();

@@ -16,6 +16,7 @@ import { useStoreUserData } from "../../../store";
 import { useMembershipStore } from "../../../store/useStoreMembership";
 import { SnackbarDefault } from "../snackbar/Snackbar";
 import { HiOutlineUsers } from "react-icons/hi2";
+import { TbUserCheck } from "react-icons/tb";
   // NAVIGATION
   const routeAdminNavigation = [
     {
@@ -43,6 +44,11 @@ import { HiOutlineUsers } from "react-icons/hi2";
       title: "Usuarios",
       icon: <HiOutlineUsers />,
       link: "/users",
+    },
+    {
+      title: "Ingreso",
+      icon: <TbUserCheck />,
+      link: "/attendance",
     },
     {
       title: "Estadisticas",

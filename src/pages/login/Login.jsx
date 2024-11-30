@@ -93,11 +93,10 @@ export const Login = () => {
     }
     try {
       showSpinner();
-      console.log(formLogin.email, formLogin.password, "email and password");
 
       const enviarUser = await loginUser(formLogin.email, formLogin.password);
 
-      if (enviarUser && enviarUser.status == 200) {
+      if (enviarUser?.status === 200 && enviarUser?.data?.accessToken) {
         if (enviarUser?.data?.accessToken) {
           storeLocalToken(enviarUser?.data);
         }

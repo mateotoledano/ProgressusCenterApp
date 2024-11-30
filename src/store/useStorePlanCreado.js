@@ -14,10 +14,6 @@ export const useStorePlanCreado = create(
             ...state.planCreado,
             {
               ...exercise,
-              numeroDiaDelPlan: 0,
-              ordenDelEjercicio: 0,
-              series: 0,
-              repeticiones: 0,
             },
           ],
         })),

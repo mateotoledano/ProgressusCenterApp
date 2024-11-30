@@ -38,7 +38,7 @@ export const ModalPhotoProfile = ({ open, setOpen }) => {
       
         setAvatar(avatar)
         closeSpinner(); 
-    }, 3000);
+    }, 2000);
   };
 
   return (
