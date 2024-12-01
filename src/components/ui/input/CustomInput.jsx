@@ -13,7 +13,7 @@ export const CustomInput = ({
   iconColor,
   required,
   label,
-  classNameInput
+  classNameInput,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -30,7 +30,9 @@ export const CustomInput = ({
 
   return (
     <div
-      className={`flex  bg-white items-center border border-gray-300 rounded-sm w-full ${className}`}
+      className={`flex bg-white items-center border border-gray-300 rounded-sm w-full ${className} ${
+        type === "file" ? "overflow-hidden" : ""
+      }`}
     >
       {Icon && <span className="p-1">{<Icon className={iconColor} />}</span>}
 
@@ -38,11 +40,15 @@ export const CustomInput = ({
         required={required}
         name={name}
         type={inputType()}
-        value={value}
+        value={type === "file" ? undefined : value} // Elimina value si es file
         onChange={onChange}
-        placeholder={placeholder}
+        placeholder={type === "file" ? undefined : placeholder} // No aplica placeholder para file
         disabled={disabled}
-        className={`flex-1 p-1.5 md:p-2 focus:outline-none font-medium ${classNameInput}`}
+        className={`flex-1 p-1.5 md:p-2 focus:outline-none font-medium ${
+          type === "file"
+            ? "cursor-pointer file:mr-4 file:py-1 file:px-3 file:rounded file:border file:border-gray-300 file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
+            : ""
+        } ${classNameInput}`}
         aria-label={placeholder}
       />
       {type === "password" && (

@@ -147,7 +147,7 @@ export const Footer = () => {
     { icon: <BiLogoPinterestAlt /> },
   ];
   const handleLinkClick = (link) => {
-    if (link === "/turns") {
+    if (link === "/turns" || link === "/plans") {
       if (!membership || membership.estadoSolicitud.nombre !== "Confirmado") {
         setOpenErrorTurns(true);
         return;

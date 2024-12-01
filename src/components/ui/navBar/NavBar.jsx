@@ -8,6 +8,7 @@ import { CgProfile } from "react-icons/cg";
 import { TbUserCheck } from "react-icons/tb";
 import { FaRegAddressCard } from "react-icons/fa";
 import { BsMenuButtonWide } from "react-icons/bs";
+import { CgGym } from "react-icons/cg";
 import { MdOutlineInventory } from "react-icons/md";
 import { IoStatsChartOutline } from "react-icons/io5";
 import { GrPlan } from "react-icons/gr";
@@ -112,6 +113,11 @@ export const NavBar = () => {
       link: "/plans",
     },
     {
+      title: "Ejercicios",
+      icon: < CgGym/>,
+      link: "/exercices",
+    },
+    {
       title: "Estadisticas",
       icon: <IoStatsChartOutline />,
       link: "/stats",
@@ -156,7 +162,7 @@ export const NavBar = () => {
   ];
 
   const handleLinkClick = (link) => {
-    if (link === "/turns") {
+    if (link === "/turns" || link === "/plans") {
       if (!membership || membership.estadoSolicitud.nombre !== "Confirmado") {
         setOpenErrorTurns(true);
         return;

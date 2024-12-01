@@ -1,22 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { MainLayout } from "../../../../layout/MainLayout";
-import { IoSearchSharp } from "react-icons/io5";
-import { useGetAllExercises } from "../../../../service/plans/useGetExercises";
-
-import { GrPlan } from "react-icons/gr";
-import {
-  Title,
-  Location,
-  CustomInput,
-  BasicTable,
-  SnackbarDefault,
-} from "../../../../components";
-import { Link } from "react-router-dom";
+import { Title, Location, SnackbarDefault } from "../../../../components";
+import { useNavigate } from "react-router-dom";
 import { useStoreUserData } from "../../../../store";
-import { CreatePlans } from "../createPlans/CreatePlans";
-
-import { MyPlans } from "../myPlans/MyPlans";
 import { AllPlanes } from "../todosLosPlanes/AllPlanes";
+import { useMembershipStore } from "../../../../store/useStoreMembership";
 const ejercicios = [
   {
     grupoMuscular: "Pecho",
@@ -323,6 +311,18 @@ const columnsTrainer = [
   "Agregar",
 ];
 export const Plans = () => {
+  // VER SI TIENE MEMBRESIA ACTIVA
+  const navigate = useNavigate();
+  const membership = useMembershipStore((state) => state.membershipData); 
+
+  useEffect(() => {
+    console.log(membership, "membership");
+
+    if (!membership || membership?.estadoSolicitud.nombre !== "Confirmado") {
+      navigate("/membership");
+    }
+  }, [membership, navigate]);
+
   const [selectNav, setSelectNav] = useState("Todos los planes");
   const dataUser = useStoreUserData((state) => state.userData);
 
@@ -371,7 +371,7 @@ export const Plans = () => {
               "border-b-2 border-customTextBlue text-customTextBlue md:text-lg"
             }`}
           >
-              {roleUser === "SOCIO" ? "Mis planes" : "Mis planes"}
+            {roleUser === "SOCIO" ? "Mis planes" : "Mis planes"}
           </span>
         </div>
         <AllPlanes
