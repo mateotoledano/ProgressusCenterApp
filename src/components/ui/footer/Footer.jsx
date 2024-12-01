@@ -102,7 +102,7 @@ import { TbUserCheck } from "react-icons/tb";
       link: "/account",
     },
     {
-      title: "Membresias",
+      title: "Membresías",
       icon: <FaRegAddressCard />,
       link: "/membership",
     },

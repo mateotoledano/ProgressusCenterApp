@@ -97,7 +97,7 @@ export const Register = () => {
       }
     }
     if (!formRegister.tel) {
-      formErrors.tel = "El campo Telefono es obligatorio.";
+      formErrors.tel = "El campo Teléfono es obligatorio.";
     }
     if (!check) {
       formErrors.checkbox = "Debe aceptar los términos y servicios.";
@@ -291,13 +291,13 @@ export const Register = () => {
           className="text-start  w-full text-lg font-normal flex justify-start items-center "
           htmlFor=""
         >
-          Telefono
+          Teléfono
         </label>
         <CustomInput
           iconColor={"text-customTextGreen"}
           onChange={handleChange}
           className="my-1 "
-          placeholder="Repita su contraseña"
+          placeholder="Ingrese su teléfono"
           type="text"
           name="tel"
           Icon={BsTelephone}
@@ -310,7 +310,7 @@ export const Register = () => {
           <span className="text-sm">
             Acepto los{" "}
             <a href="" className="underline text-customTextGreen">
-              terminos y servicios
+              términos y servicios
             </a>
           </span>
         </div>
