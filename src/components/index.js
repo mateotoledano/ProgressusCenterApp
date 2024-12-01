@@ -45,3 +45,5 @@ export * from "./plans/TableAllPlans"
 export * from "./plans/ModalAsignPlan"
 export * from "./plans/TableDay"
 export * from "./plans/ModalDeletePlan"
+// EXERCICES 
+export * from "./exercices/ModalAddGroupMuscle"

@@ -12,6 +12,7 @@ import {
   Notifications,
   MyPlans,
   CreateallExercise,
+  Exercices,
 } from "./pages";
 import { Attendance } from "./pages/attendance/Attendance";
 import { HomePlans } from "./pages/plans/HomePlans";
@@ -132,6 +133,14 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute allowedRoles={["ADMIN", "ENTRENADOR"]}>
         <Stats />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/exercices",
+    element: (
+      <ProtectedRoute allowedRoles={["ENTRENADOR"]}>
+        <Exercices />
       </ProtectedRoute>
     ),
   },

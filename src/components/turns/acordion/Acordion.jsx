@@ -120,7 +120,7 @@ export const Acordion = ({
         >
           <div className="flex items-center gap-3">
             <IoSettingsOutline size={22} className="text-customTextBlue" />
-            <h2 className="text-base md:text-lg font-semibold">{title}</h2>
+            <h2 className="text-base md:text-lg font-semibold">{title}</h2>  
           </div>
         </AccordionSummary>
         <AccordionDetails>

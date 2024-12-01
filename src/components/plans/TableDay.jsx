@@ -94,17 +94,17 @@ export const TableDay = ({
         <div className="flex items-center mt-3 gap-2 mb-3 w-full pb-3 p-3 ">
           {/* <span className="text-xl font-semibold">
             Agregar ejercicio al dia {day}
-          </span> */}
-          <div className="flex w-full justify-end">
-            <Tooltip title={`Añadir ejercicio al dia ${day}`}>
-              <span className="bg-customButtonGreen hover:bg-green-800 rounded p-1">
-                <RiAddCircleLine
-                  onClick={() => openModalAddExercise()}
-                  className="cursor-pointer text-3xl text-white"
-                />
-              </span>
-            </Tooltip>
-          </div>
+            </span> */}
+            <div className="flex w-full justify-end">
+              <Tooltip title={`Añadir ejercicio al dia ${day}`}>
+                <span className="bg-customButtonGreen hover:bg-green-800 rounded p-1">
+                  <RiAddCircleLine
+                    onClick={() => openModalAddExercise()}
+                    className="cursor-pointer text-3xl text-white"
+                  />
+                </span>
+              </Tooltip>
+            </div>
 
           <ModalExercise
             setAlertAddExercise={setAlertAddExercise}

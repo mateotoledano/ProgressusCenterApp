@@ -149,7 +149,7 @@ export const TableAllPlans = ({
                 </TableRow>
               ) : arreglo.length === 0 ? (
                 <TableRow>
-                  <TableCell sx={{ fontSize: "18px" }} align="center">
+                  <TableCell sx={{ fontSize: "18px" }} colSpan={5} align="center">
                     {textSinEjercicios}
                   </TableCell>
                 </TableRow>
