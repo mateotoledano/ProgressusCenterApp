@@ -1,13 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ModalLayout } from "../../layout/ModalLayout";
 import { CustomInput } from "../ui/input/CustomInput";
 import { useCreateGruopMuscle } from "../../service/exercices/useCreateGruopMuscle";
 import { ButtonSpinner } from "../ui/buttons/ButtonSpinner";
 import { useGetAllMuscleGroups } from "../../service/exercices/useGetAllMuscleGroups";
-
-export const ModalAddGroupMuscle = ({ open, setOpen, setGroupMuscles,setOpenAlertCreateGruop }) => {
+import { ErrorAuth } from "../ui/errorAuth/ErrorAuth";
+export const ModalAddGroupMuscle = ({
+  open,
+  setOpen,
+  setGroupMuscles,
+  setOpenAlertCreateGruop,
+}) => {
   const [loading, setLoading] = useState(false);
-
+  const [errorAddGroup, setErrorAddGroup] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
@@ -17,20 +22,22 @@ export const ModalAddGroupMuscle = ({ open, setOpen, setGroupMuscles,setOpenAler
   const initialFormState = {
     name: "",
     description: "",
-    image: "", 
+    image: "",
   };
-
+  useEffect(() => {
+    setErrorAddGroup(false);
+  }, [open]);
   // Manejador de cambios en los inputs
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
     setForm((prevForm) => ({
       ...prevForm,
-      [name]: type === "file" ? files[0] : value, 
+      [name]: type === "file" ? files[0] : value,
     }));
   };
 
   const addGroup = async (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
     setLoading(true);
     try {
       const responseAddGroup = await useCreateGruopMuscle(form);
@@ -44,8 +51,10 @@ export const ModalAddGroupMuscle = ({ open, setOpen, setGroupMuscles,setOpenAler
         setForm(initialFormState);
         const responseGruposMusculares = await useGetAllMuscleGroups();
         setGroupMuscles(responseGruposMusculares?.data);
-        setOpenAlertCreateGruop(true)
+        setOpenAlertCreateGruop(true);
         setOpen(false);
+      } else {
+        setErrorAddGroup(true);
       }
     } catch (e) {
       console.error(e, "error al agregar musculo");
@@ -101,6 +110,12 @@ export const ModalAddGroupMuscle = ({ open, setOpen, setGroupMuscles,setOpenAler
           label=" Agregar grupo "
           loading={loading}
         ></ButtonSpinner>
+        {errorAddGroup && (
+          <ErrorAuth
+            messageError={"Ha ocurrido un error, intentelo nuevamente"}
+            className="flex justify-center"
+          ></ErrorAuth>
+        )}
       </form>
     </ModalLayout>
   );

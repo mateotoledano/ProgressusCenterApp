@@ -20,6 +20,8 @@ export const Exercices = () => {
   const [openAlertCreateGroup, setOpenAlertCreateGruop] = useState(false);
   // MODAL PARA AGREGAR EJERCICIO
   const [openModalAgregarPlan, setOpenModalAgregarGrupo] = useState(false);
+  // ALERTA EDITAR GRUPO
+  const [openAlertEditGroup , setOpenAlertEditGroup] = useState(false)
   useEffect(() => {
     const fetchExercices = async () => {
       setLoading(true);
@@ -73,10 +75,7 @@ export const Exercices = () => {
     <MainLayout>
       <section className="animate-fade-in-down md:mx-auto bg-white  rounded shadow-xl w-full md:w-11/12 overflow-hidden mb-20">
         <div className="b p-3">
-          <Location
-            route={`Ejercicios`}
-            subroute={"Crear ejercicios"}
-          ></Location>
+          <Location route={`Ejercicios`} subroute={selectNav}></Location>
 
           <Title title={"Ejercicios"}></Title>
         </div>
@@ -147,7 +146,8 @@ export const Exercices = () => {
         </div>
         {selectNav === "Grupo muscular" ? (
           <TableExercices
-          loading={loading}
+          setOpenAlertEditGroup={setOpenAlertEditGroup}
+            loading={loading}
             textSinEjercicios="No se encontraron grupos musculares"
             setGroupMuscles={setGruposMusculares}
             arregloColumns={arregloGropuMuscle}
@@ -156,7 +156,7 @@ export const Exercices = () => {
           ></TableExercices>
         ) : selectNav === "Musculo" ? (
           <TableExercices
-          loading={loading}
+            loading={loading}
             textSinEjercicios="No se encontraron musculos"
             arreglo={muscles}
             arregloColumns={arregloMuscles}
@@ -164,10 +164,9 @@ export const Exercices = () => {
           ></TableExercices>
         ) : (
           <TableExercices
-          loading={loading}
+            loading={loading}
             textSinEjercicios="No se encontraron grupos ejercicios"
             selectNav={selectNav}
-        
             arregloColumns={arregloColumnsExercices}
             arreglo={exercices}
           ></TableExercices>
@@ -180,11 +179,19 @@ export const Exercices = () => {
         setGroupMuscles={setGruposMusculares}
         setOpen={setOpenModalAgregarGrupo}
       ></ModalAddGroupMuscle>
+      {/* ALERTA AL CREAR GRUPO MUSCULAR */}
       <SnackbarDefault
         open={openAlertCreateGroup}
         severity={"success"}
         setOpen={setOpenAlertCreateGruop}
-        message={"grupo muscular creado correctamente"}
+        message={"Grupo muscular creado correctamente"}
+      ></SnackbarDefault>
+      {/* ALERT AL EDITAR GRUPO MUSCULAR */}
+      <SnackbarDefault
+        open={openAlertEditGroup}
+        severity={"info"}
+        setOpen={setOpenAlertEditGroup}
+        message={"Grupo muscular editado correctamente"}
       ></SnackbarDefault>
     </MainLayout>
   );

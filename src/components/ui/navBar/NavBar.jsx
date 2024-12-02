@@ -162,7 +162,7 @@ export const NavBar = () => {
   ];
 
   const handleLinkClick = (link) => {
-    if (link === "/turns" || (link === "/plans" && roleUser !== "ENTRENADOR")) {
+    if (link === "/turns" || link === "/plans" && roleUser !== "ENTRENADOR") {
       if (!membership || membership.estadoSolicitud.nombre !== "Confirmado") {
         setOpenErrorTurns(true);
         return;

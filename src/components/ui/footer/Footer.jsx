@@ -17,118 +17,117 @@ import { useMembershipStore } from "../../../store/useStoreMembership";
 import { SnackbarDefault } from "../snackbar/Snackbar";
 import { HiOutlineUsers } from "react-icons/hi2";
 import { TbUserCheck } from "react-icons/tb";
-  // NAVIGATION
-  const routeAdminNavigation = [
-    {
-      title: "Inicio",
-      icon: <GoHome />,
-      link: "/home",
-    },
-    {
-      title: "Mi cuenta",
-      icon: <CgProfile />,
-      link: "/account",
-    },
-    {
-      title: "Membresias",
-      icon: <FaRegAddressCard />,
-      link: "/membership",
-    },
+// NAVIGATION
+const routeAdminNavigation = [
+  {
+    title: "Inicio",
+    icon: <GoHome />,
+    link: "/home",
+  },
+  {
+    title: "Mi cuenta",
+    icon: <CgProfile />,
+    link: "/account",
+  },
+  {
+    title: "Membresias",
+    icon: <FaRegAddressCard />,
+    link: "/membership",
+  },
 
-    {
-      title: "Inventario",
-      icon: <MdOutlineInventory />,
-      link: "/inventary",
-    },
-    {
-      title: "Usuarios",
-      icon: <HiOutlineUsers />,
-      link: "/users",
-    },
-    {
-      title: "Ingreso",
-      icon: <TbUserCheck />,
-      link: "/attendance",
-    },
-    {
-      title: "Estadisticas",
-      icon: <IoStatsChartOutline />,
-      link: "/stats",
-    },
-    {
-      title: "Notificaciones",
-      icon: <IoMdNotificationsOutline />,
-      link: "/notifications",
-    },
-  ];
+  {
+    title: "Inventario",
+    icon: <MdOutlineInventory />,
+    link: "/inventary",
+  },
+  {
+    title: "Usuarios",
+    icon: <HiOutlineUsers />,
+    link: "/users",
+  },
+  {
+    title: "Ingreso",
+    icon: <TbUserCheck />,
+    link: "/attendance",
+  },
+  {
+    title: "Estadisticas",
+    icon: <IoStatsChartOutline />,
+    link: "/stats",
+  },
+  {
+    title: "Notificaciones",
+    icon: <IoMdNotificationsOutline />,
+    link: "/notifications",
+  },
+];
 
-  const routeTrainerNavigation = [
-    {
-      title: "Inicio",
-      icon: <GoHome />,
-      link: "/home",
-    },
-    {
-      title: "Mi cuenta",
-      icon: <CgProfile />,
-      link: "/account",
-    },
+const routeTrainerNavigation = [
+  {
+    title: "Inicio",
+    icon: <GoHome />,
+    link: "/home",
+  },
+  {
+    title: "Mi cuenta",
+    icon: <CgProfile />,
+    link: "/account",
+  },
 
-    {
-      title: "Planes",
-      icon: <GrPlan />,
-      link: "/plans",
-    },
-    {
-      title: "Estadisticas",
-      icon: <IoStatsChartOutline />,
-      link: "/stats",
-    },
-    {
-      title: "Notificaciones",
-      icon: <IoMdNotificationsOutline />,
-      link: "/notifications",
-    },
-  ];
-  const routeNavigation = [
-    {
-      title: "Inicio",
-      icon: <GoHome />,
-      link: "/home",
-    },
-    {
-      title: "Mi cuenta",
-      icon: <CgProfile />,
-      link: "/account",
-    },
-    {
-      title: "Membresías",
-      icon: <FaRegAddressCard />,
-      link: "/membership",
-    },
-    {
-      title: "Planes",
-      icon: <GrPlan />,
-      link: "/plans",
-    },
-    {
-      title: "Turnos",
-      icon: <BsMenuButtonWide />,
-      link: "/turns",
-    },
-    {
-      title: "Notificaciones",
-      icon: <IoMdNotificationsOutline />,
-      link: "/notifications",
-    },
-  ];
+  {
+    title: "Planes",
+    icon: <GrPlan />,
+    link: "/plans",
+  },
+  {
+    title: "Estadisticas",
+    icon: <IoStatsChartOutline />,
+    link: "/stats",
+  },
+  {
+    title: "Notificaciones",
+    icon: <IoMdNotificationsOutline />,
+    link: "/notifications",
+  },
+];
+const routeNavigation = [
+  {
+    title: "Inicio",
+    icon: <GoHome />,
+    link: "/home",
+  },
+  {
+    title: "Mi cuenta",
+    icon: <CgProfile />,
+    link: "/account",
+  },
+  {
+    title: "Membresías",
+    icon: <FaRegAddressCard />,
+    link: "/membership",
+  },
+  {
+    title: "Planes",
+    icon: <GrPlan />,
+    link: "/plans",
+  },
+  {
+    title: "Turnos",
+    icon: <BsMenuButtonWide />,
+    link: "/turns",
+  },
+  {
+    title: "Notificaciones",
+    icon: <IoMdNotificationsOutline />,
+    link: "/notifications",
+  },
+];
 
 const roleNavigationMap = {
   ADMIN: routeAdminNavigation,
   ENTRENADOR: routeTrainerNavigation,
   DEFAULT: routeNavigation,
 };
-
 
 export const Footer = () => {
   const userData = useStoreUserData((state) => state.userData);
@@ -147,14 +146,17 @@ export const Footer = () => {
     { icon: <BiLogoPinterestAlt /> },
   ];
   const handleLinkClick = (link) => {
-    if (link === "/turns" || link === "/plans") {
+    if (link === "/turns" || link === "/plans" && roleUser !== "ENTRENADOR") {
       if (!membership || membership.estadoSolicitud.nombre !== "Confirmado") {
         setOpenErrorTurns(true);
         return;
       }
     }
+    close();
 
-    navigate(link);
+    setTimeout(() => {
+      navigate(link);
+    }, 200);
   };
   return (
     <>

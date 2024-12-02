@@ -149,12 +149,11 @@ export const PricingPrices = ({
               (historial) => historial.estadoSolicitud.nombre === "Confirmado"
             )
           );
-        
+
           console.log(pagosConfirmados, "pagos confirmados");
-        
+
           setArregloRows(pagosConfirmados);
         }
-        
       } catch (e) {
         console.log(e, "Error al traer dataPedido");
         setDataPedido(null);
@@ -466,7 +465,9 @@ export const PricingPrices = ({
                   loading={loadingTable}
                   arregloColumns={arregloColumns}
                   arreglo={arregloRows}
-                  textSinEjercicios={"El usuario seleccionado no posee un historial de membresias "}
+                  textSinEjercicios={
+                    "El usuario seleccionado no posee un historial de membresias "
+                  }
                 ></TablePagos>
               </div>
             </>

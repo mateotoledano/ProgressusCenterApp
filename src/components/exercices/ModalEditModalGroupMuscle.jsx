@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ModalLayout } from "../../layout/ModalLayout";
 import { CustomInput } from "../ui/input/CustomInput";
 import { useCreateGruopMuscle } from "../../service/exercices/useCreateGruopMuscle";
@@ -10,24 +10,27 @@ export const ModalEditModalGroupMuscle = ({
   open,
   setOpen,
   setGroupMuscles,
-  setOpenAlertEditGruop,
+
   itemEditable,
+  setOpenAlertEditGroup,
 }) => {
   const [loading, setLoading] = useState(false);
-  console.log(itemEditable , "item editable");
-  
   const [form, setForm] = useState({
     name: "",
     description: "",
     image: "",
   });
-  const initialFormState = {
-    name: "",
-    description: "",
-    image: "",
-  };
 
-  // Manejador de cambios en los inputs
+  useEffect(() => {
+    if (itemEditable) {
+      setForm({
+        name: itemEditable?.nombre || "",
+        description: itemEditable?.descripcion || "",
+        image: itemEditable?.imagenGrupoMuscular || "",
+      });
+    }
+  }, [itemEditable]); // Se ejecuta cada vez que cambia `itemEditable`
+
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
     setForm((prevForm) => ({
@@ -40,22 +43,19 @@ export const ModalEditModalGroupMuscle = ({
     e.preventDefault();
     setLoading(true);
     try {
-      const responseEditGroup = await useEditGroup(itemEditable.id , form );
-      console.log(responseEditGroup, "grupo editado");
-
+      const responseEditGroup = await useEditGroup(itemEditable.id, form);
       if (
-        (responseEditGroup && responseEditGroup.status == 200) ||
-        responseEditGroup.status == 201
+        (responseEditGroup && responseEditGroup.status === 200) ||
+        responseEditGroup.status === 201
       ) {
-        //  TRAER GRUPOS MUSCULARES
-        setForm(initialFormState);
+        setForm({ name: "", description: "", image: "" });
         const responseGruposMusculares = await useGetAllMuscleGroups();
         setGroupMuscles(responseGruposMusculares?.data);
-        // setOpenAlertCreateGruop(true);
         setOpen(false);
+        setOpenAlertEditGroup(true);
       }
     } catch (e) {
-      console.error(e, "error al agregar musculo");
+      console.error(e, "error al editar grupo muscular");
     } finally {
       setLoading(false);
     }
@@ -63,7 +63,7 @@ export const ModalEditModalGroupMuscle = ({
 
   return (
     <ModalLayout open={open} setOpen={setOpen}>
-      <form className="flex flex-col  items-center gap-5" onSubmit={editGroup}>
+      <form className="flex flex-col items-center gap-5" onSubmit={editGroup}>
         <div className="w-full">
           <label className="font-semibold text-start w-full" htmlFor="name">
             Nombre del grupo muscular
@@ -96,6 +96,7 @@ export const ModalEditModalGroupMuscle = ({
             Imagen del grupo muscular
           </label>
           <CustomInput
+            value={form.image}
             type="text"
             placeholder="Url de la imagen..."
             name="image"
@@ -107,7 +108,7 @@ export const ModalEditModalGroupMuscle = ({
           className="w-2/3"
           label="Editar grupo muscular"
           loading={loading}
-        ></ButtonSpinner>
+        />
       </form>
     </ModalLayout>
   );

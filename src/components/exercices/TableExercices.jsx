@@ -21,6 +21,7 @@ export const TableExercices = ({
   selectNav,
   arreglo = [],
   arregloColumns = [],
+  setOpenAlertEditGroup,
   loading = false,
   textSinEjercicios = "no se encontraron ejercicios",
   setGroupMuscles,
@@ -124,6 +125,7 @@ export const TableExercices = ({
                         "Acciones",
                         "Musculos del grupo",
                         "Imagen",
+                        "Grupo muscular"
                       ].includes(column)
                         ? "center"
                         : "left"
@@ -191,7 +193,7 @@ export const TableExercices = ({
                       <TableCell sx={{ fontSize: "16px" }} align="center">
                         <div className="flex justify-center">
                           <img
-                            className="w-1/2 md:w-2/3"
+                            className="w-1/2 md:w-1/3"
                             src={exercise.imagenGrupoMuscular}
                             alt="img grupo muscular"
                           />
@@ -295,7 +297,7 @@ export const TableExercices = ({
                       <TableCell sx={{ fontSize: "16px" }} align="center">
                         <div className="flex justify-center">
                           <img
-                            className="w-1/2 md:w-1/3"
+                            className="w-1/2 md:w-1/2"
                             src={exercise.imagenMusculo}
                             alt="img musxulo"
                           />
@@ -394,6 +396,7 @@ export const TableExercices = ({
       </Dialog>
       {/* EDITAR GRUPO MUSCAULAR */}
       <ModalEditModalGroupMuscle
+      setOpenAlertEditGroup={setOpenAlertEditGroup}
         setGroupMuscles={setGroupMuscles}
         open={openEditModalGroup}
         itemEditable={itemEditable}

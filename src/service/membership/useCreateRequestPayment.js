@@ -21,7 +21,8 @@ export const useCreateRequestPayment = async (
         },
       }
     );
-
+  console.log(response , "response en la api");
+  
     return response;
   } catch (error) {
     console.log("Error al enviar la reserva:");
