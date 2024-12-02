@@ -313,13 +313,13 @@ const columnsTrainer = [
 export const Plans = () => {
   // VER SI TIENE MEMBRESIA ACTIVA
   const navigate = useNavigate();
-  const membership = useMembershipStore((state) => state.membershipData); 
+  const membership = useMembershipStore((state) => state.membershipData);
 
   useEffect(() => {
-    console.log(membership, "membership");
-
-    if (!membership || membership?.estadoSolicitud.nombre !== "Confirmado") {
-      navigate("/membership");
+    if (roleUser !== "ENTRENADOR") {
+      if (!membership || membership?.estadoSolicitud.nombre !== "Confirmado") {
+        navigate("/membership");
+      }
     }
   }, [membership, navigate]);
 

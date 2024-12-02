@@ -114,7 +114,7 @@ export const NavBar = () => {
     },
     {
       title: "Ejercicios",
-      icon: < CgGym/>,
+      icon: <CgGym />,
       link: "/exercices",
     },
     {
@@ -162,7 +162,7 @@ export const NavBar = () => {
   ];
 
   const handleLinkClick = (link) => {
-    if (link === "/turns" || link === "/plans") {
+    if (link === "/turns" || (link === "/plans" && roleUser !== "ENTRENADOR")) {
       if (!membership || membership.estadoSolicitud.nombre !== "Confirmado") {
         setOpenErrorTurns(true);
         return;

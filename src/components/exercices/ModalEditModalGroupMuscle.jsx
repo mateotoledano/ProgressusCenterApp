@@ -4,11 +4,18 @@ import { CustomInput } from "../ui/input/CustomInput";
 import { useCreateGruopMuscle } from "../../service/exercices/useCreateGruopMuscle";
 import { ButtonSpinner } from "../ui/buttons/ButtonSpinner";
 import { useGetAllMuscleGroups } from "../../service/exercices/useGetAllMuscleGroups";
-
-export const ModalAddGroupMuscle = ({ open, setOpen, setGroupMuscles,setOpenAlertCreateGruop }) => {
+import { Title } from "../ui/title/Title";
+import { useEditGroup } from "../../service/exercices/useEditGroup";
+export const ModalEditModalGroupMuscle = ({
+  open,
+  setOpen,
+  setGroupMuscles,
+  setOpenAlertEditGruop,
+  itemEditable,
+}) => {
   const [loading, setLoading] = useState(false);
-
-
+  console.log(itemEditable , "item editable");
+  
   const [form, setForm] = useState({
     name: "",
     description: "",
@@ -17,7 +24,7 @@ export const ModalAddGroupMuscle = ({ open, setOpen, setGroupMuscles,setOpenAler
   const initialFormState = {
     name: "",
     description: "",
-    image: "", 
+    image: "",
   };
 
   // Manejador de cambios en los inputs
@@ -25,26 +32,26 @@ export const ModalAddGroupMuscle = ({ open, setOpen, setGroupMuscles,setOpenAler
     const { name, value, type, files } = e.target;
     setForm((prevForm) => ({
       ...prevForm,
-      [name]: type === "file" ? files[0] : value, 
+      [name]: type === "file" ? files[0] : value,
     }));
   };
 
-  const addGroup = async (e) => {
-    e.preventDefault(); 
+  const editGroup = async (e) => {
+    e.preventDefault();
     setLoading(true);
     try {
-      const responseAddGroup = await useCreateGruopMuscle(form);
-      console.log(responseAddGroup, "grupo añadido");
+      const responseEditGroup = await useEditGroup(itemEditable.id , form );
+      console.log(responseEditGroup, "grupo editado");
 
       if (
-        (responseAddGroup && responseAddGroup.status == 200) ||
-        responseAddGroup.status == 201
+        (responseEditGroup && responseEditGroup.status == 200) ||
+        responseEditGroup.status == 201
       ) {
         //  TRAER GRUPOS MUSCULARES
         setForm(initialFormState);
         const responseGruposMusculares = await useGetAllMuscleGroups();
         setGroupMuscles(responseGruposMusculares?.data);
-        setOpenAlertCreateGruop(true)
+        // setOpenAlertCreateGruop(true);
         setOpen(false);
       }
     } catch (e) {
@@ -56,7 +63,7 @@ export const ModalAddGroupMuscle = ({ open, setOpen, setGroupMuscles,setOpenAler
 
   return (
     <ModalLayout open={open} setOpen={setOpen}>
-      <form className="flex flex-col  items-center gap-5" onSubmit={addGroup}>
+      <form className="flex flex-col  items-center gap-5" onSubmit={editGroup}>
         <div className="w-full">
           <label className="font-semibold text-start w-full" htmlFor="name">
             Nombre del grupo muscular
@@ -97,8 +104,8 @@ export const ModalAddGroupMuscle = ({ open, setOpen, setGroupMuscles,setOpenAler
         </div>
         <ButtonSpinner
           type="submit"
-          className="w-1/2"
-          label=" Agregar grupo "
+          className="w-2/3"
+          label="Editar grupo muscular"
           loading={loading}
         ></ButtonSpinner>
       </form>

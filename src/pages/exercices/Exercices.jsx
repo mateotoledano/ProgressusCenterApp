@@ -3,6 +3,7 @@ import { MainLayout } from "../../layout/MainLayout";
 import { Title, Location, Button } from "../../components";
 import { IoMdAdd } from "react-icons/io";
 import { TableExercices } from "../../components/exercices/TableExercices";
+import { SnackbarDefault } from "../../components";
 import { useGetAllMuscles } from "../../service/exercices/useGetAllMuscles";
 import { useGetAllMuscleGroups } from "../../service/exercices/useGetAllMuscleGroups";
 import { ModalAddGroupMuscle } from "../../components";
@@ -15,7 +16,8 @@ export const Exercices = () => {
   const [gruposMusculares, setGruposMusculares] = useState([]);
   const [muscles, setMuscles] = useState([]);
   const [exercices, setExercices] = useState([]);
-
+  // ALERTA AL CREAR GRUPO
+  const [openAlertCreateGroup, setOpenAlertCreateGruop] = useState(false);
   // MODAL PARA AGREGAR EJERCICIO
   const [openModalAgregarPlan, setOpenModalAgregarGrupo] = useState(false);
   useEffect(() => {
@@ -145,20 +147,27 @@ export const Exercices = () => {
         </div>
         {selectNav === "Grupo muscular" ? (
           <TableExercices
+          loading={loading}
+            textSinEjercicios="No se encontraron grupos musculares"
+            setGroupMuscles={setGruposMusculares}
             arregloColumns={arregloGropuMuscle}
             selectNav={selectNav}
             arreglo={gruposMusculares}
           ></TableExercices>
         ) : selectNav === "Musculo" ? (
           <TableExercices
+          loading={loading}
+            textSinEjercicios="No se encontraron musculos"
             arreglo={muscles}
             arregloColumns={arregloMuscles}
             selectNav={selectNav}
           ></TableExercices>
         ) : (
           <TableExercices
+          loading={loading}
+            textSinEjercicios="No se encontraron grupos ejercicios"
             selectNav={selectNav}
-            loading={loading}
+        
             arregloColumns={arregloColumnsExercices}
             arreglo={exercices}
           ></TableExercices>
@@ -166,10 +175,17 @@ export const Exercices = () => {
       </section>
       {/* MODAL PARA AGREGAR GRUPO MUSCULAR */}
       <ModalAddGroupMuscle
+        setOpenAlertCreateGruop={setOpenAlertCreateGruop}
         open={openModalAgregarPlan}
-        setGroupMuscles = {setGruposMusculares}
+        setGroupMuscles={setGruposMusculares}
         setOpen={setOpenModalAgregarGrupo}
       ></ModalAddGroupMuscle>
+      <SnackbarDefault
+        open={openAlertCreateGroup}
+        severity={"success"}
+        setOpen={setOpenAlertCreateGruop}
+        message={"grupo muscular creado correctamente"}
+      ></SnackbarDefault>
     </MainLayout>
   );
 };

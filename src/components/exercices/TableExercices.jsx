@@ -8,18 +8,22 @@ import Paper from "@mui/material/Paper";
 import TablePagination from "@mui/material/TablePagination";
 import { useState } from "react";
 import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
+import { ModalDeleteItem } from "./ModalDeleteItem";
 import { IoInformationCircleOutline } from "react-icons/io5";
 import { useGetExerciseById } from "../../service/plans/useGetExerciseById";
 import { useSpinnerStore } from "../../store";
 import { Dialog } from "@mui/material";
 import { CgGym } from "react-icons/cg";
-
+import { SiTruenas } from "react-icons/si";
+import { ModalEditModalGroupMuscle } from "./ModalEditModalGroupMuscle";
+import { LoadingSkeleton } from "../ui/skeleton/LoadingSkeleton";
 export const TableExercices = ({
   selectNav,
   arreglo = [],
   arregloColumns = [],
   loading = false,
   textSinEjercicios = "no se encontraron ejercicios",
+  setGroupMuscles,
 }) => {
   console.log(arreglo, "arrgelo en table");
   const showSpinner = useSpinnerStore((state) => state.showSpinner);
@@ -32,6 +36,12 @@ export const TableExercices = ({
   const [rowsPerPage, setRowsPerPage] = useState(5);
   console.log(arreglo, "arreglo");
 
+  const [itemEditable, setEditableItem] = useState();
+
+  const [openDeleteItem, setOpenDeleteItem] = useState(false);
+  const [openEditModalGroup, setOpenEditModalGroup] = useState(false);
+  const [openEditMuscle, setOpenEditMuscle] = useState(false);
+  const [openEditExercise, setOpenEditExercise] = useState(false);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -72,8 +82,24 @@ export const TableExercices = ({
     "Aductores",
     "Hombro posterior",
   ];
-  console.log(exercise, "exercise");
+  console.log(selectNav, "select anvvvvvv");
 
+  const edit = (item) => {
+    console.log(item, "itemmmmmmkm");
+
+    setEditableItem(item);
+    if (selectNav == "Grupo muscular") {
+      setOpenEditModalGroup(true);
+    } else if (selectNav == "Musculo") {
+      setOpenEditMuscle(true);
+    } else {
+      setOpenEditExercise(true);
+    }
+  };
+  const deleteItemm = (item) => {
+    setOpenDeleteItem(true);
+    setEditableItem(item);
+  };
   return (
     <div className="w-full">
       <Paper>
@@ -112,8 +138,12 @@ export const TableExercices = ({
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={arregloColumns.length} align="center">
-                    Cargando...
+                 <TableCell colSpan={arregloColumns.length} align="center">
+                    <LoadingSkeleton
+                      width={"100%"}
+                      height={40}
+                      count={10}
+                    ></LoadingSkeleton>
                   </TableCell>
                 </TableRow>
               ) : ejerciciosPaginados.length === 0 ? (
@@ -170,13 +200,13 @@ export const TableExercices = ({
                       <TableCell sx={{ fontSize: "16px" }} align="center">
                         <div className="flex justify-center gap-3">
                           <div
-                            onClick={() => editPlan(exercise)}
+                            onClick={() => edit(exercise)}
                             className="p-[2px] bg-customButtonGreen hover:bg-green-700 rounded cursor-pointer"
                           >
                             <MdOutlineEdit className="text-white text-xl" />
                           </div>
                           <div
-                            onClick={() => deletePlan(exercise)}
+                            onClick={() => deleteItemm(exercise)}
                             className="p-[2px] bg-red-600 hover:bg-red-800 rounded cursor-pointer"
                           >
                             <MdDeleteOutline className="text-white text-xl" />
@@ -188,14 +218,14 @@ export const TableExercices = ({
                   selectNav === "Ejercicio" ? (
                     // EJERCICIOS
                     <TableRow
-                    key={index}
-                    sx={{
-                      "&:last-child td, &:last-child th": { border: 0 },
-                      "&:hover": {
-                        backgroundColor: "#E6F7FF",
-                      },
-                    }}
-                  >
+                      key={index}
+                      sx={{
+                        "&:last-child td, &:last-child th": { border: 0 },
+                        "&:hover": {
+                          backgroundColor: "#E6F7FF",
+                        },
+                      }}
+                    >
                       <TableCell sx={{ fontSize: "16px" }} align="left">
                         {exercise.nombre}
                       </TableCell>
@@ -241,53 +271,53 @@ export const TableExercices = ({
                         </div>
                       </TableCell>
                     </TableRow>
-                  ) : ////////////////////////////////////////////
-                  (
+                  ) : (
+                    ////////////////////////////////////////////
                     // MUSCULOS
                     <TableRow
-                    key={index}
-                    sx={{
-                      "&:last-child td, &:last-child th": { border: 0 },
-                      "&:hover": {
-                        backgroundColor: "#E6F7FF",
-                      },
-                    }}
-                  >
-                    <TableCell sx={{ fontSize: "16px" }} align="left">
-                      {exercise.nombre}
-                    </TableCell>
-                    <TableCell sx={{ fontSize: "16px" }} align="left">
-                      {exercise.descripcion}
-                    </TableCell>
-                    <TableCell sx={{ fontSize: "16px" }} align="center">
-                      {exercise.grupoMuscular.nombre}
-                    </TableCell>
-                    <TableCell sx={{ fontSize: "16px" }} align="center">
-                      <div className="flex justify-center">
-                        <img
-                          className="w-1/2 md:w-1/3"
-                          src={exercise.imagenMusculo}
-                          alt="img musxulo"
-                        />
-                      </div>
-                    </TableCell>
-                    <TableCell sx={{ fontSize: "16px" }} align="center">
-                      <div className="flex justify-center gap-3">
-                        <div
-                          onClick={() => editPlan(exercise)}
-                          className="p-[2px] bg-customButtonGreen hover:bg-green-700 rounded cursor-pointer"
-                        >
-                          <MdOutlineEdit className="text-white text-xl" />
+                      key={index}
+                      sx={{
+                        "&:last-child td, &:last-child th": { border: 0 },
+                        "&:hover": {
+                          backgroundColor: "#E6F7FF",
+                        },
+                      }}
+                    >
+                      <TableCell sx={{ fontSize: "16px" }} align="left">
+                        {exercise.nombre}
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "16px" }} align="left">
+                        {exercise.descripcion}
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "16px" }} align="center">
+                        {exercise.grupoMuscular.nombre}
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "16px" }} align="center">
+                        <div className="flex justify-center">
+                          <img
+                            className="w-1/2 md:w-1/3"
+                            src={exercise.imagenMusculo}
+                            alt="img musxulo"
+                          />
                         </div>
-                        <div
-                          onClick={() => deletePlan(exercise)}
-                          className="p-[2px] bg-red-600 hover:bg-red-800 rounded cursor-pointer"
-                        >
-                          <MdDeleteOutline className="text-white text-xl" />
+                      </TableCell>
+                      <TableCell sx={{ fontSize: "16px" }} align="center">
+                        <div className="flex justify-center gap-3">
+                          <div
+                            onClick={() => edit(exercise)}
+                            className="p-[2px] bg-customButtonGreen hover:bg-green-700 rounded cursor-pointer"
+                          >
+                            <MdOutlineEdit className="text-white text-xl" />
+                          </div>
+                          <div
+                            onClick={() => deleteItemm(exercise)}
+                            className="p-[2px] bg-red-600 hover:bg-red-800 rounded cursor-pointer"
+                          >
+                            <MdDeleteOutline className="text-white text-xl" />
+                          </div>
                         </div>
-                      </div>
-                    </TableCell>
-                  </TableRow>
+                      </TableCell>
+                    </TableRow>
                   )
                 )
               )}
@@ -362,6 +392,20 @@ export const TableExercices = ({
           </div>
         </div>
       </Dialog>
+      {/* EDITAR GRUPO MUSCAULAR */}
+      <ModalEditModalGroupMuscle
+        setGroupMuscles={setGroupMuscles}
+        open={openEditModalGroup}
+        itemEditable={itemEditable}
+        setOpen={setOpenEditModalGroup}
+      ></ModalEditModalGroupMuscle>
+      {/* ELIMINAR ITEM */}
+      <ModalDeleteItem
+        setGroupMuscles={setGroupMuscles}
+        elementEditable={itemEditable}
+        open={openDeleteItem}
+        setOpen={setOpenDeleteItem}
+      ></ModalDeleteItem>
     </div>
   );
 };

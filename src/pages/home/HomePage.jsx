@@ -56,7 +56,7 @@ export const HomePage = () => {
           const turnsResponse = await useGetTurns(
             userResponse.data.identityUserId
           );
-          setTurnosReservados(turnsResponse.data || []); // Validación segura
+          setTurnosReservados(turnsResponse.data || []); 
         }
 
         // Traer membresía
@@ -139,24 +139,24 @@ export const HomePage = () => {
     isLoading,
     turnoMasCercano,
     nameUser,
-    handleLinkClick
+    handleLinkClick,
   }) => {
     const [isMobile, setIsMobile] = useState(false);
-  
+
     // Detectamos si estamos en un dispositivo móvil
     useEffect(() => {
       const checkMobile = () => {
         setIsMobile(window.innerWidth <= 768);
       };
-  
+
       checkMobile();
       window.addEventListener("resize", checkMobile);
-  
+
       return () => {
         window.removeEventListener("resize", checkMobile);
       };
     }, []);
-  
+
     return (
       <MainLayout>
         <div className="animate-fade-in-down w-full flex flex-col justify-start gap-1">
@@ -166,7 +166,7 @@ export const HomePage = () => {
               className="p-4 text-center w-full justify-center md:justify-start"
             />
           </div>
-  
+
           <div className="flex-grow flex justify-center items-center w-full">
             <video
               src={videoProgressus}
@@ -177,14 +177,12 @@ export const HomePage = () => {
               disablePictureInPicture
               controlsList="nodownload noplaybackrate"
               className={`w-full h-full object-cover ${
-                isMobile 
-                  ? "max-h-[300px] md:h-auto md:w-auto" 
-                  : "md:w-full"
+                isMobile ? "max-h-[300px] md:h-auto md:w-auto" : "md:w-full"
               }`}
               alt="Progressus"
             />
           </div>
-  
+
           {isLoading ? (
             <LoadingSkeleton
               className={"w-full"}
@@ -192,7 +190,9 @@ export const HomePage = () => {
               width={800}
               height={50}
             />
-          ) : turnoMasCercano && roleUser !== "ENTRENADOR" && roleUser !== "ADMIN" ? (
+          ) : turnoMasCercano &&
+            roleUser !== "ENTRENADOR" &&
+            roleUser !== "ADMIN" ? (
             <div className="bg-white mx-3 md:m-0 md:mx-8 p-2 rounded shadow-sm gap-1 flex flex-col md:flex-col justify-center items-center md:w-full">
               <div className="flex flex-col items-center md:flex-row gap-1">
                 <Title title={"Tu próximo turno es el día: "} />
@@ -232,7 +232,7 @@ export const HomePage = () => {
             </div>
           ) : null}
         </div>
-  
+
         <SnackbarDefault
           position={{ vertical: "left", horizontal: "center" }}
           severity={"warning"}
