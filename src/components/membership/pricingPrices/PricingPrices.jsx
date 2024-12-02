@@ -231,6 +231,8 @@ export const PricingPrices = ({
 
   const hanleCreateSolicitud = async (card) => {
     if (membership && membership.estadoSolicitud.nombre == "Confirmado") {
+      console.log(membership , "membershipppp");
+      
       setOpenErrorMemb(true);
     } else {
       openSppiner();
