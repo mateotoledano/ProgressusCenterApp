@@ -36,7 +36,7 @@ export const PricingPrices = ({
   setAlertError,
   setAlertPlanElegido,
   setOpenErrorMemb,
-  setTextAlert
+  setTextAlert,
 }) => {
   // VER SI EL USUARIO TIENE MEMBRESIAS ACTIVAS DEL LADO DEL SOCIO
   const membership = useMembershipStore((state) => state.membershipData);
@@ -146,9 +146,11 @@ export const PricingPrices = ({
   const handleBuy = async (membresiaId, tipoDePagoId, idUser) => {
     try {
       setLoadingRequest(true);
-      // VER SI EL USUARIO TIENE MEMBRESIAS ACTIVAS
+
+      // Verificar membresías activas
       const responseMembershipUser = await useGetRequestPaymentSocio(idUser);
       let lastMembership;
+
       if (responseMembershipUser?.data) {
         const allMembership =
           responseMembershipUser.data.historialSolicitudDePagos || [];
@@ -156,18 +158,16 @@ export const PricingPrices = ({
         if (Array.isArray(allMembership) && allMembership.length > 0) {
           lastMembership = allMembership[allMembership.length - 1];
         }
-        console.log(lastMembership, "last membershipppp");
       }
+
       if (
         lastMembership &&
-        lastMembership.estadoSolicitud.nombre == "Confirmado"
+        lastMembership.estadoSolicitud.nombre === "Confirmado"
       ) {
-        setTextAlert(dataUserBuscado.nombre)
-    
+        setTextAlert(dataUserBuscado.nombre);
         setOpenErrorMemb(true);
       } else {
-       
-        // EN CASO DE QUE NO , CREAMOS LA SOLICITUD
+        // Crear nueva solicitud
         const response = await useCreateRequestPayment(
           membresiaId,
           tipoDePagoId,
@@ -175,13 +175,24 @@ export const PricingPrices = ({
         );
 
         if (response && response.status === 200) {
+          // Actualizar datos de membresía después de una solicitud exitosa
+          const updatedMembershipResponse = await useGetRequestPaymentSocio(
+            idUser
+          );
+          if (updatedMembershipResponse?.data) {
+            const updatedAllMembership =
+              updatedMembershipResponse.data.historialSolicitudDePagos || [];
+            lastMembership =
+              updatedAllMembership[updatedAllMembership.length - 1];
+          }
+
           setOpenModal(true);
         } else {
           setAlertError(true);
         }
       }
     } catch (error) {
-      console.error("Error en lenviar la solicitud de pago", error);
+      console.error("Error al enviar la solicitud de pago", error);
     } finally {
       setLoadingRequest(false);
     }
