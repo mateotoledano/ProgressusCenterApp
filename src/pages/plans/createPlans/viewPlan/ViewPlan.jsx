@@ -82,7 +82,7 @@ export const ViewPlan = () => {
             </span>
           </span>
           <span className="font-semibold">
-            Cantidad de dias :{" "}
+            Cantidad de días :{" "}
             <span className="text-customTextGreen">
               {diasDelPlan?.diasPorSemana}
             </span>

@@ -152,12 +152,12 @@ export const ModalCreatePlans = ({ open, setOpen, setErrorServer }) => {
           ))}
         </select>
         <label htmlFor="" className="text-start font-medium w-full">
-          Cantidad de dias
+          Cantidad de días
         </label>
         <CustomInput
           required={true}
           type="number"
-          placeholder={"Dias por semana"}
+          placeholder={"Días por semana"}
           name={"diasPorSemana"}
           value={form.diasPorSemana}
           onChange={handleChange}

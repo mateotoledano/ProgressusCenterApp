@@ -18,7 +18,7 @@ const arregloColumns = [
   "Nombre",
   "Objetivo",
   "Descripción",
-  "Cantidad de dias",
+  "Cantidad de días",
   "Acciones",
 ];
 export const AllPlanes = ({ selectNav, setAlertAsignedPlan }) => {

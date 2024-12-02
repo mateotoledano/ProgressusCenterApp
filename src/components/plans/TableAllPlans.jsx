@@ -127,7 +127,7 @@ export const TableAllPlans = ({
                         "Ver",
                         "Imagen",
                         "Acciones",
-                        "Cantidad de dias",
+                        "Cantidad de días",
                         "Acciones",
                       ].includes(column)
                         ? "center"
