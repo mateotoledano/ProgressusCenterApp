@@ -163,11 +163,7 @@ export const HomePage = () => {
             className="p-4 text-center w-full justify-center md:justify-start"
           />
         </div>
-        {isLoading ? (
-          <LoadingSkeleton height={500} width={"100%"}>
-            {" "}
-          </LoadingSkeleton>
-        ) : (
+   
           <div className="flex-grow flex justify-center items-center w-full">
             <video
               src={videoProgressus}
@@ -183,7 +179,7 @@ export const HomePage = () => {
               alt="Progressus"
             />
           </div>
-        )}
+       
 
         {isLoading ? (
           <LoadingSkeleton
