@@ -61,7 +61,7 @@ export const GridAlertsTurns = ({
         severity={"warning"}
         duration={7000}
         // position={{vertical : "center" , horizontal : "center"}}
-        message={"Solo puedes reservar un turno por día !"}
+        message={"Solo puedes reservar un turno por día!"}
       ></SnackbarDefault>
 
       {/* ALERT MAXIMO DE TURNOS POR ESA HORA */}
