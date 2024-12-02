@@ -12,7 +12,7 @@ import {
   IoMdCheckmarkCircleOutline,
 } from "react-icons/io";
 import { useSpinnerStore, useStoreUserData } from "../../../store";
-
+import { useMembershipStore } from "../../../store/useStoreMembership";
 import { useGetRequestPaymentSocio } from "../../../service/membership/useGetRequestPaymentSocio";
 // MERCADO PAGO
 // import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
@@ -22,47 +22,12 @@ import { SelectNavegable } from "../selectNavegable/SelectNavegable";
 
 import { ButtonSpinner } from "../../ui/buttons/ButtonSpinner";
 import { TablePagos } from "../tablePagos/TablePagos";
+
 import { Title } from "../../ui/title/Title";
 import { useRegisterComoMp } from "../../../service/membership/useRegisterComoMp";
 import { useGetAllMembershipForSocio } from "../../../service/membership/useGetAllMembershipForSocio";
+import { SnackbarDefault } from "../../ui/snackbar/Snackbar";
 const arregloColumns = ["Membresia", "Fecha", "Precio"];
-const arregloRows = [
-  {
-    membresia: "Anual",
-    fecha: "2024-01-01",
-    precio: "$12000",
-  },
-  {
-    membresia: "Semestral",
-    fecha: "2024-01-01",
-    precio: "$7000",
-  },
-  {
-    membresia: "Mensual",
-    fecha: "2024-01-01",
-    precio: "$1500",
-  },
-  {
-    membresia: "Trimestral",
-    fecha: "2024-01-01",
-    precio: "$4000",
-  },
-];
-const buttonStyles = {
-  backgroundColor: "#009EE3", // Azul característico de Mercado Pago
-  color: "white", // Texto blanco
-  padding: "10px 20px", // Espaciado interno
-  borderRadius: "5px", // Bordes redondeados
-  fontWeight: "bold", // Texto negrita
-  fontSize: "16px", // Tamaño de fuente
-  border: "none", // Sin borde
-  cursor: "pointer", // Manito al pasar el cursor
-  display: "flex", // Para alinear icono y texto
-  alignItems: "center", // Centrar verticalmente
-  justifyContent: "center", // Centrar horizontalmente
-  gap: "8px", // Espacio entre icono y texto (si lo hay)
-  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)", // Sombra ligera
-};
 
 export const PricingPrices = ({
   setMesaggePlanElegido,
@@ -70,7 +35,11 @@ export const PricingPrices = ({
   setAlertCancelPayment,
   setAlertError,
   setAlertPlanElegido,
+  setOpenErrorMemb,
+  setTextAlert
 }) => {
+  // VER SI EL USUARIO TIENE MEMBRESIAS ACTIVAS DEL LADO DEL SOCIO
+  const membership = useMembershipStore((state) => state.membershipData);
   // initMercadoPago("YOUR_PUBLIC_KEY");
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -100,6 +69,7 @@ export const PricingPrices = ({
   // SPINNER HASTA QUE TRAIGAN TODOS LOS USERA
   const openSppiner = useSpinnerStore((state) => state.showSpinner);
   const closeSpinner = useSpinnerStore((state) => state.hideSpinner);
+
   // TRAER MEMBRESIAS
 
   useEffect(() => {
@@ -107,7 +77,11 @@ export const PricingPrices = ({
       openSppiner();
       try {
         const response = await useGetAllUsers();
-        setAllUsers(response.data);
+        // Filtrar usuarios con rol "SOCIO"
+        const socios = response.data.filter((user) =>
+          user.roles.includes("SOCIO")
+        );
+        setAllUsers(socios);
       } catch (e) {
         console.log(e, "errores");
       } finally {
@@ -170,19 +144,41 @@ export const PricingPrices = ({
 
   // ENVIAR SOLICITUD DE PAGO
   const handleBuy = async (membresiaId, tipoDePagoId, idUser) => {
-    setLoadingRequest(true);
-
     try {
-      const response = await useCreateRequestPayment(
-        membresiaId,
-        tipoDePagoId,
-        idUser
-      );
+      setLoadingRequest(true);
+      // VER SI EL USUARIO TIENE MEMBRESIAS ACTIVAS
+      const responseMembershipUser = await useGetRequestPaymentSocio(idUser);
+      let lastMembership;
+      if (responseMembershipUser?.data) {
+        const allMembership =
+          responseMembershipUser.data.historialSolicitudDePagos || [];
 
-      if (response && response.status === 200) {
-        setOpenModal(true);
+        if (Array.isArray(allMembership) && allMembership.length > 0) {
+          lastMembership = allMembership[allMembership.length - 1];
+        }
+        console.log(lastMembership, "last membershipppp");
+      }
+      if (
+        lastMembership &&
+        lastMembership.estadoSolicitud.nombre == "Confirmado"
+      ) {
+        setTextAlert(dataUserBuscado.nombre)
+    
+        setOpenErrorMemb(true);
       } else {
-        setAlertError(true);
+       
+        // EN CASO DE QUE NO , CREAMOS LA SOLICITUD
+        const response = await useCreateRequestPayment(
+          membresiaId,
+          tipoDePagoId,
+          idUser
+        );
+
+        if (response && response.status === 200) {
+          setOpenModal(true);
+        } else {
+          setAlertError(true);
+        }
       }
     } catch (error) {
       console.error("Error en lenviar la solicitud de pago", error);
@@ -223,35 +219,39 @@ export const PricingPrices = ({
   };
 
   const hanleCreateSolicitud = async (card) => {
-    openSppiner();
-    try {
-      // CREAR SOLICITUD
-      const response = await useCreateRequestPayment(
-        card.id,
-        4,
-        userData.identityUserId
-      );
-      let idSolicitudMercadoPago;
-      if (response?.status == 200) {
-        idSolicitudMercadoPago = response.data.id;
-      }
+    if (membership && membership.estadoSolicitud.nombre == "Confirmado") {
+      setOpenErrorMemb(true);
+    } else {
+      openSppiner();
+      try {
+        // CREAR SOLICITUD
+        const response = await useCreateRequestPayment(
+          card.id,
+          4,
+          userData.identityUserId
+        );
+        let idSolicitudMercadoPago;
+        if (response?.status == 200) {
+          idSolicitudMercadoPago = response.data.id;
+        }
 
-      // REGISTRAR SOLICITUD COMO MERCADO PAGO
-      const registerComoMercadoPago = await useRegisterComoMp(
-        idSolicitudMercadoPago
-      );
+        // REGISTRAR SOLICITUD COMO MERCADO PAGO
+        const registerComoMercadoPago = await useRegisterComoMp(
+          idSolicitudMercadoPago
+        );
 
-      // REDIRECCIÓN AL INIT POINT
-      const initPoint = registerComoMercadoPago?.data?.value?.initPoint;
-      if (initPoint) {
-        window.location.href = initPoint; // Redirige al usuario
-      } else {
-        console.error("InitPoint no encontrado en la respuesta.");
+        // REDIRECCIÓN AL INIT POINT
+        const initPoint = registerComoMercadoPago?.data?.value?.initPoint;
+        if (initPoint) {
+          window.location.href = initPoint; // Redirige al usuario
+        } else {
+          console.error("InitPoint no encontrado en la respuesta.");
+        }
+      } catch (e) {
+        console.error(e, "error");
+      } finally {
+        closeSpinner();
       }
-    } catch (e) {
-      console.error(e, "error");
-    } finally {
-      closeSpinner();
     }
   };
 

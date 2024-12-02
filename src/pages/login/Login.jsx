@@ -51,6 +51,7 @@ export const Login = () => {
 
   useEffect(() => {
     // VERIFICAR SI EL USUARIO ES RECORDADO O NO
+
     if (localToken) {
       navigate("/home");
     }

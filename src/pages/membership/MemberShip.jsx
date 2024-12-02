@@ -10,8 +10,9 @@ export const MemberShip = () => {
   const [mesaggePlanElegido, setMessagePlanElegido] = useState("");
   const [alertConfirmRequest, setAlertConfirmRequest] = useState(false);
   const [alertCancelPayment, setAlertCancelPayment] = useState(false);
-
+  const [openErrorMemb, setOpenErrorMemb] = useState(false);
   const [alertError, setAlertError] = useState(false);
+  const [textAlert , setTextAlert] = useState("Usted")
   const dataUser = useStoreUserData((state) => state.userData);
   const roleUser = dataUser.roles[0];
   return (
@@ -34,6 +35,8 @@ export const MemberShip = () => {
 
         <div className=" mt-2">
           <PricingPrices
+          setTextAlert={setTextAlert}
+            setOpenErrorMemb={setOpenErrorMemb}
             setAlertError={setAlertError}
             setMesaggePlanElegido={setMessagePlanElegido}
             setAlertConfirmRequest={setAlertConfirmRequest}
@@ -73,6 +76,14 @@ export const MemberShip = () => {
         message={"ha ocurrido un error , intentelo de nuevo mas tarde "}
         severity={"warning"}
         position={{ vertical: "bottom", horizontal: "center" }}
+      ></SnackbarDefault>
+
+      <SnackbarDefault
+        position={{ vertical: "center", horizontal: "center" }}
+        severity={"warning"}
+        message={`${textAlert} ya posee membresias activas`}
+        open={openErrorMemb}
+        setOpen={setOpenErrorMemb}
       ></SnackbarDefault>
     </MainLayout>
   );
