@@ -114,7 +114,7 @@ export const PricingPrices = ({
         const requestPayment = await useGetAllMembershipForSocio(
           dataUserBuscado.identityUserId
         );
-        console.log(requestPayment.data.value, "request Payment");
+        console.log(dataUserBuscado.identityUserId , "id user");
 
         if (requestPayment) {
           // Filtrar los pagos que tienen al menos un historial con estado "Confirmado"
