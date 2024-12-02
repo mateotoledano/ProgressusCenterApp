@@ -57,7 +57,7 @@ export const ModalAddGroupMuscle = ({
         setErrorAddGroup(true);
       }
     } catch (e) {
-      console.error(e, "error al agregar musculo");
+      console.error(e, "Error al agregar músculo");
     } finally {
       setLoading(false);
     }
@@ -112,7 +112,7 @@ export const ModalAddGroupMuscle = ({
         ></ButtonSpinner>
         {errorAddGroup && (
           <ErrorAuth
-            messageError={"Ha ocurrido un error, intentelo nuevamente"}
+            messageError={"Ha ocurrido un error, inténtelo nuevamente"}
             className="flex justify-center"
           ></ErrorAuth>
         )}

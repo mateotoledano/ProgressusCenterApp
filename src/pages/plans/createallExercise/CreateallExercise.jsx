@@ -311,9 +311,9 @@ const columnsUser = [
   "Agregar",
 ];
 const columnsTrainer = [
-  "Musculos",
+  "Músculos",
   "Ejercicio",
-  "Descripcion",
+  "Descripción",
   "Imagen",
   "Ver",
   "Agregar",
@@ -370,7 +370,7 @@ export const CreateallExercise = () => {
               "border-b-2 border-customTextGreen text-customTextGreen md:text-lg"
             }`}
           >
-            Crear Musculo
+            Crear Músculo
           </span>
         </div>
         {selectNav == "Crear Musculo" && (

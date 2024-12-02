@@ -135,7 +135,7 @@ setErrorCreateEx(false)
         </div>
         {errorCreateEx && (
         <ErrorAuth
-          messageError={"Ha ocurrido un error intentelo nuevamente"}
+          messageError={"Ha ocurrido un error inténtelo nuevamente"}
           className="flex justify-center items-center"
         ></ErrorAuth>
       )}

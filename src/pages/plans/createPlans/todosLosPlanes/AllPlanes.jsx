@@ -17,7 +17,7 @@ import { GrPlan } from "react-icons/gr";
 const arregloColumns = [
   "Nombre",
   "Objetivo",
-  "Descripcion",
+  "Descripción",
   "Cantidad de dias",
   "Acciones",
 ];
@@ -127,7 +127,7 @@ export const AllPlanes = ({ selectNav, setAlertAsignedPlan }) => {
         open={errorServer}
         setOpen={setErrorServer}
         severity={"error"}
-        message={"Ocurrio un error intentelo nuevamente !"}
+        message={"Ocurrio un error inténtelo nuevamente !"}
         position={{ vertical: "bottom", horizontal: "left" }}
       ></SnackbarDefault>
     </div>

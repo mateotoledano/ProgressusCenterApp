@@ -75,7 +75,7 @@ export const HomePlans = () => {
                 </span>
                 <span className="text-base p-1 md:p-0 md:text-lg text-center font-light text-gray-900 mt-2">
                   Aqui podras gestionar los ejercicios , grupos musculares y
-                  musculos a trabajar
+                  músculos a trabajar
                 </span>
                 {/* <button className="w-full py-3 mt-3 font-bold text-white bg-customTextGreen rounded-lg">
                   Elegir plan

@@ -27,7 +27,7 @@ import { Title } from "../../ui/title/Title";
 import { useRegisterComoMp } from "../../../service/membership/useRegisterComoMp";
 import { useGetAllMembershipForSocio } from "../../../service/membership/useGetAllMembershipForSocio";
 import { SnackbarDefault } from "../../ui/snackbar/Snackbar";
-const arregloColumns = ["Membresia", "Fecha", "Precio"];
+const arregloColumns = ["Membresía", "Fecha", "Precio"];
 
 export const PricingPrices = ({
   setMesaggePlanElegido,
@@ -378,7 +378,7 @@ export const PricingPrices = ({
               htmlFor=""
               className="text-xl mb-3  text-customTextGreen font-semibold"
             >
-              Membresia seleccionada
+              Membresía seleccionada
             </label>
             <Stack
               className={"w-full   md:w-full md:m-5"}
@@ -394,7 +394,7 @@ export const PricingPrices = ({
               htmlFor=""
               className="text-xl mb-3 text-customTextGreen  font-semibold"
             >
-              Membresia seleccionada
+              Membresía seleccionada
             </label>
             <Stack
               className={"w-full   md:w-full md:m-5"}
@@ -479,7 +479,7 @@ export const PricingPrices = ({
                   arregloColumns={arregloColumns}
                   arreglo={arregloRows}
                   textSinEjercicios={
-                    "El usuario seleccionado no posee un historial de membresias "
+                    "El usuario seleccionado no posee un historial de membresías "
                   }
                 ></TablePagos>
               </div>

@@ -30,7 +30,7 @@ const routeAdminNavigation = [
     link: "/account",
   },
   {
-    title: "Membresias",
+    title: "Membresías",
     icon: <FaRegAddressCard />,
     link: "/membership",
   },
@@ -250,7 +250,7 @@ export const Footer = () => {
       <SnackbarDefault
         position={{ vertical: "left", horizontal: "center" }}
         severity={"warning"}
-        message={"Usted no posee membresias activas"}
+        message={"Usted no posee membresías activas"}
         open={openErrorTurns}
         setOpen={setOpenErrorTurns}
       ></SnackbarDefault>

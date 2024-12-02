@@ -121,9 +121,9 @@ export const TableExercices = ({
                     key={index}
                     align={
                       [
-                        "Musculos por ejercicio",
+                        "Músculos por ejercicio",
                         "Acciones",
-                        "Musculos del grupo",
+                        "Músculos del grupo",
                         "Imagen",
                         "Grupo muscular"
                       ].includes(column)

@@ -62,7 +62,7 @@ export const ModalDeletePlan = ({ open, setOpen, plan, setPlanes }) => {
       </div>
       {errorDeletePlan && (
         <ErrorAuth
-          messageError={"Ha ocurrido un error intentelo nuevamente"}
+          messageError={"Ha ocurrido un error inténtelo nuevamente"}
           className="flex justify-center items-center"
         ></ErrorAuth>
       )}
