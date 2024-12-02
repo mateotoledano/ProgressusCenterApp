@@ -17,9 +17,9 @@ const columnsUser = [
   "Agregar",
 ];
 const columnsTrainer = [
-  "Musculos",
+  "Músculos",
   "Ejercicio",
-  "Descripcion",
+  "Descripción",
   "Imagen",
   "Ver",
   "Agregar",

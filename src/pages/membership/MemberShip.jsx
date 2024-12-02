@@ -26,7 +26,7 @@ export const MemberShip = () => {
           ></Location>
 
           <Title
-            title={roleUser === "ADMIN" ? "Gestion de membresias" : `Membresia`}
+            title={roleUser === "ADMIN" ? "Gestion de membresías" : `Membresia`}
           ></Title>
           {/* ///////////////////////////// */}
         </div>
@@ -73,7 +73,7 @@ export const MemberShip = () => {
       <SnackbarDefault
         open={alertError}
         setOpen={setAlertError}
-        message={"ha ocurrido un error , intentelo de nuevo mas tarde "}
+        message={"Ha ocurrido un error , inténtelo de nuevo mas tarde "}
         severity={"warning"}
         position={{ vertical: "bottom", horizontal: "center" }}
       ></SnackbarDefault>
@@ -81,7 +81,7 @@ export const MemberShip = () => {
       <SnackbarDefault
         position={{ vertical: "center", horizontal: "center" }}
         severity={"warning"}
-        message={`${textAlert} ya posee membresias activas`}
+        message={`${textAlert} ya posee membresías activas`}
         open={openErrorMemb}
         setOpen={setOpenErrorMemb}
       ></SnackbarDefault>

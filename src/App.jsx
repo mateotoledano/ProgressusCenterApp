@@ -59,7 +59,7 @@ function App() {
       ></SnackbarDefault>
       {/* ERROR AL CAMBIAR CONTRASEÑA */}
       <SnackbarDefault
-        message={"Ocurrio un error , intentelo nuevamente ! "}
+        message={"Ocurrio un error , inténtelo nuevamente ! "}
         severity={"warnint"}
         open={alertDanger}
         setOpen={setAlertDanger}

@@ -303,9 +303,9 @@ const columnsUser = [
   "Agregar",
 ];
 const columnsTrainer = [
-  "Musculos",
+  "Músculos",
   "Ejercicio",
-  "Descripcion",
+  "Descripción",
   "Imagen",
   "Ver",
   "Agregar",
@@ -393,7 +393,7 @@ export const Plans = () => {
         open={errorServer}
         setOpen={setErrorServer}
         severity={"error"}
-        message={"Ocurrio un error intentelo nuevamente"}
+        message={"Ocurrio un error inténtelo nuevamente"}
         position={{ vertical: "bottom", horizontal: "left" }}
       ></SnackbarDefault>
 

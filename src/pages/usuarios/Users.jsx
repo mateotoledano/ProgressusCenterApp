@@ -209,7 +209,7 @@ export const Users = () => {
       <SnackbarDefault
         open={errorAlertEdiIUser}
         setOpen={setErrorAlertEditUser}
-        message={"ha ocurrido un error intentelo nuevamente! "}
+        message={"Ha ocurrido un error inténtelo nuevamente! "}
         severity={"error"}
         position={{ vertical: "bottom", horizontal: "left" }}
       ></SnackbarDefault>
@@ -218,7 +218,7 @@ export const Users = () => {
       <SnackbarDefault
         open={alertDeleteUser}
         setOpen={setAlertDeleteUser}
-        message={"User borrado correctamente ! "}
+        message={"User borrado correctamente! "}
         severity={"info"}
         position={{ vertical: "bottom", horizontal: "left" }}
       ></SnackbarDefault>
@@ -227,7 +227,7 @@ export const Users = () => {
       <SnackbarDefault
         open={errorDeleteUser}
         setOpen={seterrorDeleteUser}
-        message={"ha ocurrido un error intentelo nuevamente! "}
+        message={"Ha ocurrido un error inténtelo nuevamente! "}
         severity={"error"}
         position={{ vertical: "bottom", horizontal: "left" }}
       ></SnackbarDefault>

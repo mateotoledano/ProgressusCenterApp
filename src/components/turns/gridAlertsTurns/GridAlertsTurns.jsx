@@ -22,7 +22,7 @@ export const GridAlertsTurns = ({
         <SnackbarDefault
           open={openAlert}
           setOpen={setOpenAlert}
-          message="Turno guardado correctamente !"
+          message="Turno guardado correctamente!"
           severity="success"
         />
       )}

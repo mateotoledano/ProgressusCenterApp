@@ -162,7 +162,7 @@ export const Profile = () => {
             ) : (
               <div className="flex flex-col items-center md:text-lg gap-3 mt-5 ">
                 <h4 className="text-md font-medium leading-3 mt-6 pb-4 ">
-                  Membresías(activas)
+                  Membresías activas
                 </h4>
                 {allMembership &&
                 Array.isArray(allMembership) &&
@@ -173,7 +173,7 @@ export const Profile = () => {
                       mesesDuracionMembresia === 1 ? "mes" : "meses"
                     }`}
                     titulo={dataMembership.membresia.nombre}
-                    fechaFinalizacion={`finaliza el ${fechaFinal}`}
+                    fechaFinalizacion={`Finaliza el ${fechaFinal}`}
                   />
                 ) : (
                   <Stack titulo="No tienes membresías activas" />
