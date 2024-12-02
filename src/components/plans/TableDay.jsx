@@ -181,13 +181,13 @@ export const TableDay = ({
                       },
                     }}
                   >
-                    <TableCell
+                    {/* <TableCell
                       sx={{ fontSize: "16px" }}
                       component="th"
                       scope="row"
                     >
                       {exercise?.ordenDeEjercicio}
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell sx={{ fontSize: "16px" }} align="left">
                       {exercise?.ejercicio?.nombre}
                     </TableCell>

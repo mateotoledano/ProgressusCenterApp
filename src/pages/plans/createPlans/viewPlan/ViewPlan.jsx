@@ -19,7 +19,7 @@ import { LuCalendarDays } from "react-icons/lu";
 import { Link } from "react-router-dom";
 export const ViewPlan = () => {
   const columnsDayEdit = [
-    "Ord.",
+
     "Ejercicio",
     "Series",
     "Repeticiones",
@@ -28,7 +28,7 @@ export const ViewPlan = () => {
   // VER SI ES EDITABLE O NO
   const isEditable = usePlanParaVer((state) => state.isEditable);
   ////////////////////////
-  const columnsDay = ["Ord.", "Ejercicio", "Series", "Repeticiones", "Ver"];
+  const columnsDay = ["Ejercicio", "Series", "Repeticiones", "Ver"];
   const planParaVer = usePlanParaVer((state) => state.planParaVer);
   const showSpinner = useSpinnerStore((state) => state.showSpinner);
   const hideSpinner = useSpinnerStore((state) => state.hideSpinner);

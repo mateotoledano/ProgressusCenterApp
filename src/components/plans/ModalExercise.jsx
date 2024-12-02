@@ -21,7 +21,7 @@ export const ModalExercise = ({ open, setOpen, day, setDiasDelPlan ,setAlertAddE
   const [form, setForm] = useState({
     ejercicioId: null, // Inicializamos como null
     numeroDiaDelPlan: day,
-    ordenDelEjercicio: "",
+    ordenDelEjercicio: 1,
     series: "",
     repeticiones: "",
   });
@@ -100,7 +100,7 @@ setErrorCreateEx(false)
             options={exercices}
             onSelect={setEjercicioSelected}
           />
-          <label className="font-semibold">
+          {/* <label className="font-semibold">
             Orden en el que va el ejercicio
           </label>
           <CustomInput
@@ -110,7 +110,7 @@ setErrorCreateEx(false)
             placeholder={"Orden en el que va el ejercicio"}
             type="number"
             onChange={handleChange}
-          />
+          /> */}
           <label className="font-semibold">Series</label>
           <CustomInput
             required

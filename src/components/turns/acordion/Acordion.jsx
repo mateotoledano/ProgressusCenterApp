@@ -79,7 +79,7 @@ export const Acordion = ({
       setHoraFinal(content[index + 1]);
     }
   };
-  console.log(reservasPorHora , "reservas por hora");
+
   
 
   // Función para comparar la hora en formato HH:mm
@@ -91,9 +91,13 @@ export const Acordion = ({
   const isHoraReservada = (hora) => {
     const horaFormateada = formatHora(hora); // Formatear la hora para compararla
     // Verificar si alguno de los turnos reservados tiene la misma hora
-    return turnosReservados && turnosReservados.some(
-      (turno) => formatHora(turno.horaInicio) === horaFormateada
-    );
+    if(turnosReservados){
+
+      return turnosReservados && turnosReservados?.some(
+        (turno) => formatHora(turno.horaInicio) === horaFormateada
+      );
+    }
+
   };
 
   const handleModal = (cont, index, isDisabled) => {

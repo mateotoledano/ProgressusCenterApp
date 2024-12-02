@@ -100,7 +100,7 @@ export const Turns = () => {
         //   return fechaHoraTurno.isAfter(ahora);
         // });
         if (response) {
-          setTurnosReservados(response?.data);
+          setTurnosReservados(response?.data.value);
         }
       } catch (error) {
         console.error("Error al traer los turnos:", error);
@@ -116,7 +116,6 @@ export const Turns = () => {
     showSpinner();
     try {
       const response = await useDeleteTurns(dataUser.identityUserId);
-      console.log(response, "response anashei");
 
       if (response.status == "200") {
         setAlertDelete(true);
@@ -152,7 +151,7 @@ export const Turns = () => {
         //   return fechaHoraTurno.isAfter(ahora);
         // });
 
-        setTurnosReservados(response?.data);
+        setTurnosReservados(response?.data.value);
       }
     } catch (e) {
       console.log(e);
@@ -160,7 +159,7 @@ export const Turns = () => {
       hideSpinner();
     }
   };
-  console.log(turnosReservados, "turnos reservados");
+  console.log(turnosReservados, "turnos reservados en turns");
 
   return (
     <MainLayout>

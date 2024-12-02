@@ -56,7 +56,7 @@ export const HomePage = () => {
           const turnsResponse = await useGetTurns(
             userResponse.data.identityUserId
           );
-          setTurnosReservados(turnsResponse.data || []); 
+          setTurnosReservados(turnsResponse.data || []);
         }
 
         // Traer membresía
@@ -64,14 +64,19 @@ export const HomePage = () => {
           const response = await useGetRequestPaymentSocio(
             dataUser.identityUserId
           );
+          console.log(
+            response.data.historialSolicitudDePagos,
+            "response membresias"
+          );
 
-          if (response?.data?.value?.value) {
-            const allMembership =
-              response.data.value.value.historialSolicitudDePagos || [];
+          if (response?.data) {
+            const allMembership = response.data.historialSolicitudDePagos || [];
             setAllMembership(allMembership);
 
             // Solo actualizamos el store si hay membresías
             if (Array.isArray(allMembership) && allMembership.length > 0) {
+              console.log(allMembership, "all membershio");
+
               const lastMembership = allMembership[allMembership.length - 1];
               setMembership(lastMembership); // Actualiza el store
             }

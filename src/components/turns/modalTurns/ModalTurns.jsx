@@ -162,9 +162,13 @@ console.log(turnosReservados , "turnos reservadoss");
             confirm
           );
 
-          if (responseTurn && responseTurn.status == "200") {
+          if (responseTurn && responseTurn.status == 200) {
+         
+            
             const upadateTurns = await useGetTurns(userData.identityUserId);
-            setTurnosReservados(upadateTurns.data);
+          
+            
+            setTurnosReservados(upadateTurns?.data.value);
             setOpen(false);
             setOpenAlert(true);
           } else {

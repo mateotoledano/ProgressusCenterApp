@@ -29,10 +29,10 @@ export const Profile = () => {
         const response = await useGetRequestPaymentSocio(
           dataUser.identityUserId
         );
-        if (response.data?.value?.value) {
-          setDataMembership(response.data.value.value);
+        if (response?.data) {
+          setDataMembership(response.data);
           setAllMembership(
-            response.data.value.value.historialSolicitudDePagos || []
+            response.data.historialSolicitudDePagos || []
           );
         }
       } catch (error) {
