@@ -82,7 +82,7 @@ export const ViewPlan = () => {
             </span>
           </span>
           <span className="font-semibold">
-            Cantidad de dias :{" "}
+            Cantidad de días :{" "}
             <span className="text-customTextGreen">
               {diasDelPlan?.diasPorSemana}
             </span>
@@ -111,7 +111,7 @@ export const ViewPlan = () => {
                 >
                   <div className={`p-0 flex ${dia.numeroDeDia !== 1  && "mt-12"}  underline justify-center items-center gap-2 mb-0`}>
                     <Title
-                      title={`Dia ${dia.numeroDeDia}`}
+                      title={`Día ${dia.numeroDeDia}`}
                       className={""}
                     ></Title>
                     <LuCalendarDays className="text-customTextBlue text-lg md:text-3xl"></LuCalendarDays>
@@ -122,7 +122,7 @@ export const ViewPlan = () => {
                     setDiasDelPlan={setDiasDelPlan}
                     day={dia.numeroDeDia}
                     isEditable={isEditable}
-                    textSinEjercicios={"No hay ejercicios en este dia..."}
+                    textSinEjercicios={"No hay ejercicios en este día..."}
                     arregloColumns={isEditable ? columnsDayEdit : columnsDay}
                     arreglo={dia.ejerciciosDelDia}
                   />

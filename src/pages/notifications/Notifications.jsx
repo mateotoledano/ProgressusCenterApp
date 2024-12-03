@@ -5,7 +5,7 @@ export const Notifications = () => {
   return (
     <MainLayout>
         <div className='animate-fade-in-down'>
-            aaaa
+        Este módulo se implementará proximamente en la siguiente release!
         </div>
     </MainLayout>
   )

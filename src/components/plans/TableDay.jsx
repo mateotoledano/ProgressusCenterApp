@@ -96,7 +96,7 @@ export const TableDay = ({
             Agregar ejercicio al dia {day}
             </span> */}
             <div className="flex w-full justify-end">
-              <Tooltip title={`Añadir ejercicio al dia ${day}`}>
+              <Tooltip title={`Añadir ejercicio al día ${day}`}>
                 <span className="bg-customButtonGreen hover:bg-green-800 rounded p-1">
                   <RiAddCircleLine
                     onClick={() => openModalAddExercise()}

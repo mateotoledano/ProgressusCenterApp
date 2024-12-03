@@ -17,7 +17,7 @@ import { IoMdAdd } from "react-icons/io";
 const columnsTable = [
   "Identificador",
   "Nombre",
-  "Descripcion",
+  "Descripción",
   "Estado",
   "Modificar",
 ];
@@ -124,7 +124,7 @@ export const Inventary = () => {
       <SnackbarDefault
         open={alertAddItem}
         setOpen={setAlertAddItem}
-        message={"El item se agrego correctamente ! "}
+        message={"El ítem se agrego correctamente! "}
         severity={"success"}
         position={{ vertical: "bottom", horizontal: "left" }}
       ></SnackbarDefault>
@@ -132,7 +132,7 @@ export const Inventary = () => {
       <SnackbarDefault
         open={errorAlert}
         setOpen={setErrorAlert}
-        message={"ha ocurrido un error intentelo nuevamente! "}
+        message={"Ha ocurrido un error inténtelo nuevamente! "}
         severity={"error"}
         position={{ vertical: "bottom", horizontal: "left" }}
       ></SnackbarDefault>
@@ -148,7 +148,7 @@ export const Inventary = () => {
       <SnackbarDefault
         open={errorAlertEdiItem}
         setOpen={setErrorAlertEditItem}
-        message={"ha ocurrido un error intentelo nuevamente! "}
+        message={"Ha ocurrido un error inténtelo nuevamente! "}
         severity={"error"}
         position={{ vertical: "bottom", horizontal: "left" }}
       ></SnackbarDefault>
@@ -157,7 +157,7 @@ export const Inventary = () => {
       <SnackbarDefault
         open={alertDeleteItem}
         setOpen={setAlertDeleteItem}
-        message={"Item borrado correctamente ! "}
+        message={"Item borrado correctamente! "}
         severity={"info"}
         position={{ vertical: "bottom", horizontal: "left" }}
       ></SnackbarDefault>
@@ -166,7 +166,7 @@ export const Inventary = () => {
       <SnackbarDefault
         open={errorDeleteiItem}
         setOpen={seterrorDeleteiItem}
-        message={"ha ocurrido un error intentelo nuevamente! "}
+        message={"Ha ocurrido un error inténtelo nuevamente! "}
         severity={"error"}
         position={{ vertical: "bottom", horizontal: "left" }}
       ></SnackbarDefault>

@@ -152,19 +152,19 @@ export const ModalCreatePlans = ({ open, setOpen, setErrorServer }) => {
           ))}
         </select>
         <label htmlFor="" className="text-start font-medium w-full">
-          Cantidad de dias
+          Cantidad de días
         </label>
         <CustomInput
           required={true}
           type="number"
-          placeholder={"Dias por semana"}
+          placeholder={"Días por semana"}
           name={"diasPorSemana"}
           value={form.diasPorSemana}
           onChange={handleChange}
         ></CustomInput>
 
         <label htmlFor="" className="text-start font-medium w-full">
-          Descripcion
+          Descripción
         </label>
         <div
           className={`flex  bg-white items-center border border-gray-300 rounded-sm w-full `}
@@ -174,7 +174,7 @@ export const ModalCreatePlans = ({ open, setOpen, setErrorServer }) => {
             name="descripcion"
             className="outline-none  border-gray-500 w-full flex-1 p-1.5 md:p-2 focus:outline-none font-medium"
             value={form.descripcion}
-            placeholder="Descripcion"
+            placeholder="Descripción"
             onChange={handleChange}
           />
         </div>

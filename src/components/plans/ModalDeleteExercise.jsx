@@ -60,7 +60,7 @@ export const ModalDeleteExercise = ({
           <span className="font-bold text-xl ml-1 mr-1 text-center text-red-600">
             {exercise?.ejercicio.nombre}
           </span>
-          <span>del dia {day}?</span>
+          <span>del día {day}?</span>
         </span>
       </div>
       <div className="flex justify-center">
@@ -73,7 +73,7 @@ export const ModalDeleteExercise = ({
       </div>
       {alertError && (
         <ErrorAuth
-          messageError={"Ha ocurrido un error intentelo nuevamente"}
+          messageError={"Ha ocurrido un error inténtelo nuevamente"}
           className="flex justify-center items-center"
         ></ErrorAuth>
       )}

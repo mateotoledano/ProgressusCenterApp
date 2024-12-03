@@ -55,20 +55,20 @@ export const Exercices = () => {
   }, [selectNav]);
   const arregloColumnsExercices = [
     "Nombre",
-    "Descripcion",
-    "Musculos por ejercicio",
+    "Descripción",
+    "Músculos por ejercicio",
     "Acciones",
   ];
   const arregloGropuMuscle = [
     "Nombre",
-    "Descripcion",
-    "Musculos del grupo",
+    "Descripción",
+    "Músculos del grupo",
     "Imagen",
     "Acciones",
   ];
   const arregloMuscles = [
     "Nombre",
-    "Descripcion",
+    "Descripción",
     "Grupo muscular",
     "Imagen",
     "Acciones",
@@ -117,7 +117,7 @@ export const Exercices = () => {
                 "border-b-2 border-customTextBlue text-customTextBlue md:text-lg"
               }`}
             >
-              Musculo
+              Músculo
             </span>
             <span
               onClick={() => {
@@ -168,7 +168,7 @@ export const Exercices = () => {
           <TableExercices
             setOpenAlertEditMuscle={setOpenAlertEditMuscle}
             loading={loading}
-            textSinEjercicios="No se encontraron musculos"
+            textSinEjercicios="No se encontraron músculos"
             arreglo={muscles}
             arregloColumns={arregloMuscles}
             selectNav={selectNav}

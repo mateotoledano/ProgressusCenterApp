@@ -145,7 +145,7 @@ export const Attendance = () => {
 
       {/* ALERT success  CONFIRMAR ASISTENCIA */}
       <SnackbarDefault
-        message={"Asistencia confirmada correctamente !"}
+        message={"Asistencia confirmada correctamente!"}
         open={alertSuccess}
         setOpen={setAlertSuccess}
         severity={"success"}

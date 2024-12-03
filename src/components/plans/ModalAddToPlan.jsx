@@ -146,7 +146,7 @@ export const ModalAddToPlan = ({
                 type="number"
                 name={"numeroDiaDelPlan"}
                 value={form.numeroDiaDelPlan}
-                placeholder={"Dia al que pertenece"}
+                placeholder={"Día al que pertenece"}
                 onChange={handleChange}
               ></CustomInput>
               <CustomInput

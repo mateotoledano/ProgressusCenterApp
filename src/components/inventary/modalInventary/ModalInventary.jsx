@@ -89,7 +89,7 @@ export const ModalInventary = ({
           required={true}
           name={"descripcion"}
           value={form.descripcion}
-          placeholder={"Descripcion"}
+          placeholder={"Descripción"}
           onChange={handleChange}
         ></CustomInput>
         <label className="font-semibold  text-start w-full" htmlFor="">

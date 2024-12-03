@@ -19,8 +19,8 @@ import { useGetPlanById } from "../../../../service/plans/useGetPlanById";
 const arregloColumns = [
   "Nombre",
   "Objetivo",
-  "Descripcion",
-  "Cantidad de dias",
+  "Descripción",
+  "Cantidad de días",
   "Acciones",
 ];
 

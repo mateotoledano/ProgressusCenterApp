@@ -17,9 +17,9 @@ const columnsUser = [
   "Agregar",
 ];
 const columnsTrainer = [
-  "Musculos",
+  "Músculos",
   "Ejercicio",
-  "Descripcion",
+  "Descripción",
   "Imagen",
   "Ver",
   "Agregar",
@@ -83,7 +83,7 @@ export const CreatePlans = ({ setAlertExerciseAdded }) => {
           arreglo={filteredExercises}
           arregloColumns={columnsTrainer}
           action="add"
-          textSinEjercicios={"No se encontraron ejercicios en su busqueda"}
+          textSinEjercicios={"No se encontraron ejercicios en su búsqueda"}
           
           admin={true}
         ></BasicTable>
