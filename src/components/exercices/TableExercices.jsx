@@ -18,6 +18,7 @@ import { SiTruenas } from "react-icons/si";
 import { ModalEditModalGroupMuscle } from "./ModalEditModalGroupMuscle";
 import { LoadingSkeleton } from "../ui/skeleton/LoadingSkeleton";
 import { ModalEditMuscle } from "./ModalEditMuscle";
+import { ModalEditExercise } from "./ModalEditExercise";
 export const TableExercices = ({
   selectNav,
   arreglo = [],
@@ -29,6 +30,9 @@ export const TableExercices = ({
   setOpenAlertEditMuscle,
   setMuscles,
   gruposMusculares,
+  muscles,
+  setAlertExerciseEdit,
+  setExercices
 }) => {
   console.log(arreglo, "arrgelo en table");
   const showSpinner = useSpinnerStore((state) => state.showSpinner);
@@ -102,7 +106,6 @@ export const TableExercices = ({
     setOpenDeleteItem(true);
     setEditableItem(item);
   };
-  console.log(itemEditable, "item ediotable");
 
   return (
     <div className="w-full">
@@ -119,7 +122,7 @@ export const TableExercices = ({
           >
             <TableHead>
               <TableRow>
-                {arregloColumns.map((column, index) => (
+                {arregloColumns?.map((column, index) => (
                   <TableCell
                     key={index}
                     align={
@@ -143,18 +146,18 @@ export const TableExercices = ({
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={arregloColumns.length} align="center">
+                  <TableCell colSpan={arregloColumns?.length} align="center">
                     <LoadingSkeleton
                       width={"100%"}
-                      height={40}
-                      count={10}
+                      height={50}
+                      count={5}
                     ></LoadingSkeleton>
                   </TableCell>
                 </TableRow>
-              ) : ejerciciosPaginados.length === 0 ? (
+              ) : ejerciciosPaginados?.length === 0 ? (
                 <TableRow>
                   <TableCell
-                    colSpan={arregloColumns.length}
+                    colSpan={arregloColumns?.length}
                     align="center"
                     sx={{ fontSize: "18px" }}
                   >
@@ -162,7 +165,7 @@ export const TableExercices = ({
                   </TableCell>
                 </TableRow>
               ) : (
-                ejerciciosPaginados.map((exercise, index) =>
+                ejerciciosPaginados?.map((exercise, index) =>
                   selectNav === "Grupo muscular" ? (
                     // GRUPO MUSCULAR
                     <TableRow
@@ -182,7 +185,7 @@ export const TableExercices = ({
                       </TableCell>
                       <TableCell sx={{ fontSize: "16px" }} align="center">
                         <ul>
-                          {exercise.musculosDelGrupo.map((musculo, idx) => (
+                          {exercise?.musculosDelGrupo?.map((musculo, idx) => (
                             <li
                               className="list-none "
                               key={idx}
@@ -239,25 +242,27 @@ export const TableExercices = ({
                       </TableCell>
                       <TableCell sx={{ fontSize: "16px" }} align="center">
                         <ul>
-                          {/* {exercise.musculosDeEjercicio.map((musculo, idx) => ( */}
-                          {musclesPractique.map((musculo, idx) => (
+                          {exercise.musculosDeEjercicio.map((musculo, idx) => (
                             <li
                               className="list-none "
                               key={idx}
                               style={{ marginLeft: "16px" }}
                             >
-                              {musculo}
+                              {musculo?.musculo?.nombre}
                             </li>
                           ))}
                         </ul>
                       </TableCell>
                       <TableCell sx={{ fontSize: "16px" }} align="center">
                         <div className="flex justify-center items-center gap-3">
-                          <span className="p-[2px] w-full md:w-1/12 h-full flex justify-center items-center bg-customButtonGreen hover:bg-green-800 rounded  cursor-pointer">
+                          <span
+                            onClick={() => edit(exercise)}
+                            className="p-[2px] w-full md:w-1/12 h-full flex justify-center items-center bg-customButtonGreen hover:bg-green-800 rounded  cursor-pointer"
+                          >
                             <MdOutlineEdit className="text-white text-2xl"></MdOutlineEdit>
                           </span>
                           <span
-                            // onClick={() => deleteExercise(exercise)}
+                            onClick={() => deleteItemm(exercise)}
                             className="p-[2px] w-full md:w-1/12 h-full flex justify-center items-center bg-red-600  hover:bg-red-800 rounded  cursor-pointer"
                           >
                             <MdDeleteOutline className="text-white text-2xl"></MdDeleteOutline>
@@ -332,7 +337,7 @@ export const TableExercices = ({
         <TablePagination
           rowsPerPageOptions={[3, 5, 10]}
           component="div"
-          count={arreglo.length}
+          count={arreglo?.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
@@ -350,54 +355,70 @@ export const TableExercices = ({
             </h2>
           </div>
 
-          <iframe
-            width="100%"
-            className="md:h-[400px] h-72 px-3 md:pb-4 pb-3 md:px-4 "
-            src={exercise?.videoEjercicio.replace("watch?v=", "embed/")}
-            title="YouTube Video"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe>
-          <div className="flex flex-col justify-center gap-2 items-center mb-2 px-3 md:px-4 ">
+          {exercise?.videoEjercicio ? (
+            <div className="md:h-[400px] h-72 px-3 md:pb-4 pb-3 md:px-4">
+              <iframe
+                width="100%"
+                className="w-full h-full"
+                src={exercise?.videoEjercicio.replace("watch?v=", "embed/")}
+                title="YouTube Video"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                onError={(e) => setVideoError(true)} // Captura el error si el video falla
+              ></iframe>
+            </div>
+          ) : (
+            <div className="flex items-center justify-center h-72 md:h-[400px] bg-gray-200 text-red-600 font-bold">
+              No se pudo cargar el video. Por favor, verifica el enlace o
+              intenta más tarde.
+            </div>
+          )}
+
+          <div className="flex flex-col justify-center gap-2 items-center mb-2 px-3 md:px-4">
             <h2 className="text-lg text-start w-full md:text-xl font-semibold">
               {exercise?.descripcion}{" "}
             </h2>
 
-            <div className="flex justify-between  w-full md:mt-6">
-              <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4 mb-4  md:text-xl justify-center font-semibold text-customTextBlue w-1/2">
-                <h2 className=" text-black underline  font-semibold col-span-full">
+            <div className="flex justify-between w-full md:mt-6">
+              <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4 mb-4 md:text-xl justify-center font-semibold text-customTextBlue w-1/2">
+                <h2 className="text-black underline font-semibold col-span-full">
                   Músculos involucrados
                 </h2>
-                {exercise?.musculosDeEjercicio.length > 0 ? (
-                  exercise.musculosDeEjercicio.map((muscle, index) => (
-                    <li key={index}>-{muscle}</li>
+                {exercise?.musculosDeEjercicio?.length > 0 ? (
+                  exercise.musculosDeEjercicio?.map((muscle, index) => (
+                    <li key={index}>-{muscle.musculo.nombre}</li>
                   ))
                 ) : (
                   <>
-                    <li>-Gemelos</li>
+                    {/* <li>-Gemelos</li>
                     <li>-Cuádriceps</li>
                     <li>-Femorales</li>
                     <li>-Bíceps</li>
                     <li>-Tríceps</li>
                     <li>-Pectorales</li>
-                    <li>-Dorsales</li>
-                    <li>-Trapecios</li>
+                    <li>-Dorsales</li> */}
+                    <li>-No se encontraron musculos en el ejercicio.</li>
                   </>
                 )}
               </ul>
+
               <div className="flex w-1/2 justify-center">
                 <img
-                  className="w-2/3 object-contain"
-                  src="/progressus.png"
-                  alt="Progressus logo"
+                  className="w-2/3 object-contain rounded"
+                  src={`${
+                    exercise?.imagenMaquina?.length > 0
+                      ? exercise.imagenMaquina
+                      : "/progressus.png"
+                  }`}
+                  alt={`Maquina para ${exercise?.nombre}`}
                 />
               </div>
             </div>
           </div>
         </div>
       </Dialog>
-      {/* EDITAR GRUPO MUSCAULAR */}
+      ;{/* EDITAR GRUPO MUSCAULAR */}
       <ModalEditModalGroupMuscle
         setOpenAlertEditGroup={setOpenAlertEditGroup}
         setGroupMuscles={setGroupMuscles}
@@ -407,6 +428,7 @@ export const TableExercices = ({
       ></ModalEditModalGroupMuscle>
       {/* ELIMINAR ITEM */}
       <ModalDeleteItem
+        setExercices={setExercices}
         selectNav={selectNav}
         setGroupMuscles={setGroupMuscles}
         elementEditable={itemEditable}
@@ -423,6 +445,15 @@ export const TableExercices = ({
         setMuscles={setMuscles}
         setOpen={setOpenEditMuscle}
       ></ModalEditMuscle>
+      {/* MODAL EDIT EJERCICIOS */}
+      <ModalEditExercise
+        setAlertExerciseEdit={setAlertExerciseEdit}
+        setExercices={setExercices}
+        itemEditable={itemEditable}
+        muscles={muscles}
+        open={openEditExercise}
+        setOpen={setOpenEditExercise}
+      ></ModalEditExercise>
     </div>
   );
 };

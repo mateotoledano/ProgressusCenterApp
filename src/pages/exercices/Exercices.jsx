@@ -10,6 +10,7 @@ import { ModalAddMuscle } from "../../components/exercices/ModalAddMuscle";
 import { ModalAddGroupMuscle } from "../../components";
 import { CgGym } from "react-icons/cg";
 import { useGetAllExercises } from "../../service/plans/useGetExercises";
+import { ModalAddExercise } from "../../components/exercices/ModalAddExercise";
 export const Exercices = () => {
   const [selectNav, setSelectNav] = useState("Grupo muscular");
   const [textButton, setTextButton] = useState("grupo muscular");
@@ -30,6 +31,11 @@ export const Exercices = () => {
   const [openAlertCreateMuscle, setOpenAlertCreateMuscle] = useState(false);
   // ALERT CUANDO SE EDITA UN MUSCULO
   const [openAlertEditMuscle, setOpenAlertEditMuscle] = useState(false);
+  // MODAL PARA AGREGAR EJERCICIO
+  const [openAddExercise, setOpenAddExercise] = useState(false);
+  // ALERTA AL CREAR EJERCICIO
+  const [alertExerciseCreate, setAlertExerciseCreate] = useState(false);
+  const [alertExerciseEdit, setAlertExerciseEdit] = useState(false);
   useEffect(() => {
     const fetchExercices = async () => {
       setLoading(true);
@@ -52,7 +58,7 @@ export const Exercices = () => {
       }
     };
     fetchExercices();
-  }, [selectNav]);
+  }, []);
   const arregloColumnsExercices = [
     "Nombre",
     "Descripción",
@@ -79,6 +85,8 @@ export const Exercices = () => {
       setOpenModalAgregarGrupo(true);
     } else if (selectNav === "Musculo") {
       setOpenModalAddMuscle(true);
+    } else {
+      setOpenAddExercise(true);
     }
   };
   return (
@@ -177,11 +185,14 @@ export const Exercices = () => {
           ></TableExercices>
         ) : (
           <TableExercices
+            setAlertExerciseEdit={setAlertExerciseEdit}
+            muscles={muscles}
             loading={loading}
-            textSinEjercicios="No se encontraron grupos ejercicios"
+            textSinEjercicios="No se encontraron ejercicios"
             selectNav={selectNav}
             arregloColumns={arregloColumnsExercices}
             arreglo={exercices}
+            setExercices={setExercices}
           ></TableExercices>
         )}
       </section>
@@ -228,6 +239,29 @@ export const Exercices = () => {
         severity={"info"}
         setOpen={setOpenAlertEditMuscle}
         message={"Musculo editado correctamente"}
+      ></SnackbarDefault>
+      {/* MODAL PARA AGREGAR EJERCICIO */}
+      <ModalAddExercise
+        setAlertExerciseCreate={setAlertExerciseCreate}
+        setExercices={setExercices}
+        muscles={muscles}
+        open={openAddExercise}
+        setOpen={setOpenAddExercise}
+      ></ModalAddExercise>
+      {/* ALERT AL CREAR EJERCICIO */}
+      <SnackbarDefault
+        open={alertExerciseCreate}
+        severity={"success"}
+        setOpen={setAlertExerciseCreate}
+        message={"Ejercicio creado correctamente"}
+      ></SnackbarDefault>
+      {/* ALERT AL EDITAR EJERCICIO */}
+      
+      <SnackbarDefault
+        open={alertExerciseEdit}
+        severity={"info"}
+        setOpen={setAlertExerciseEdit}
+        message={"Ejercicio editado correctamente"}
       ></SnackbarDefault>
     </MainLayout>
   );

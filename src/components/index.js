@@ -47,3 +47,4 @@ export * from "./plans/TableDay"
 export * from "./plans/ModalDeletePlan"
 // EXERCICES 
 export * from "./exercices/ModalAddGroupMuscle"
+export * from "./ui/CheckboxesTags/CheckboxesTags"

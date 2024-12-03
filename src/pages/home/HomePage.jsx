@@ -157,7 +157,7 @@ export const HomePage = () => {
   return (
     <MainLayout>
       <div className="animate-fade-in-down w-full flex flex-col justify-start gap-1">
-        <div className="bg-white mx-3 mt-4 md:mt-0 md:m-0 md:mx-8 p-2 md:p-0 rounded shadow-sm">
+        <div className="bg-white mx-3 mt-4 md:mt-0 md:m-0 md:mx-8 pb-3 md:p-0 rounded shadow-sm">
           <Title
             title={`Hola, ${nameUser}!`}
             className="p-4 text-center w-full justify-center md:justify-start"

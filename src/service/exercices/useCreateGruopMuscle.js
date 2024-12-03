@@ -10,7 +10,6 @@ export const useCreateGruopMuscle = async (form) => {
         nombre: form.name,
         descripcion: form.description,
         imagenGrupoMuscular: form.image,
-        
       },
       {
         headers: {

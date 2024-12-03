@@ -81,7 +81,7 @@ export const ModalEditMuscle = ({
         } else {
           setErrorAddGroup(true);
         }
-        console.log(createMuscle, "create muscleee");
+        
       }
     } catch (e) {
       console.error(e, "error al agregar musculo");
@@ -98,14 +98,14 @@ export const ModalEditMuscle = ({
     <ModalLayout open={open} setOpen={setOpen}>
       <form className="flex flex-col  items-center gap-5" onSubmit={editMuscle}>
         <div className="flex flex-col justify-center items-center gap-0 mb-0">
-          <span className="font-semibold text-xl">Editar Musculo</span>
+          <span className="font-semibold text-xl">Editar Músculo</span>
           <span className="font-bold text-xl text-center text-customTextGreen">
             {itemEditable?.nombre}
           </span>
         </div>
         <div className="w-full">
           <label className="font-semibold text-start w-full" htmlFor="name">
-            Nombre del musculo
+            Nombre del músculo
           </label>
           <CustomInput
             required={true}
@@ -120,7 +120,7 @@ export const ModalEditMuscle = ({
             className="font-semibold text-start w-full"
             htmlFor="description"
           >
-            Descripción del musculo
+            Descripción del músculo
           </label>
           <CustomInput
             required={true}
@@ -140,7 +140,7 @@ export const ModalEditMuscle = ({
         </div>
         <div className="w-full">
           <label className="font-semibold text-start w-full" htmlFor="image">
-            Imagen del musculo
+            Imagen del músculo
           </label>
           <CustomInput
             value={form.image}
@@ -153,7 +153,7 @@ export const ModalEditMuscle = ({
         <ButtonSpinner
           type="submit"
           className="w-1/2"
-          label=" Editar musculo"
+          label="Editar músculo"
           loading={loading}
         ></ButtonSpinner>
         {errorAddGroup && (

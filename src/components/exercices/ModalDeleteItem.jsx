@@ -5,6 +5,9 @@ import { useDeleteGroup } from "../../service/exercices/useDeleteGroup";
 import { useGetAllMuscleGroups } from "../../service/exercices/useGetAllMuscleGroups";
 import { useDeleteMuscle } from "../../service/exercices/useDeleteMuscle";
 import { useGetAllMuscles } from "../../service/exercices/useGetAllMuscles";
+import { useDeleteOneExercise } from "../../service/exercices/useDeleteOneExercise";
+import { useGetAllExercises } from "../../service/plans/useGetExercises";
+import { ErrorAuth } from "../ui/errorAuth/ErrorAuth";
 export const ModalDeleteItem = ({
   open,
   setOpen,
@@ -12,19 +15,22 @@ export const ModalDeleteItem = ({
   setGroupMuscles,
   setMuscles,
   selectNav,
+  setExercices,
 }) => {
   const [loading, setLoading] = useState(false);
+  const [errorAddExercise, setErrorAddExercise] = useState(false);
   const deleteItem = async () => {
     setLoading(true);
     try {
       if (selectNav === "Grupo muscular") {
         const deleteRes = await useDeleteGroup(elementEditable.id);
-        console.log(deleteRes, "delet eres");
 
         if ((deleteRes && deleteRes.status == 200) || deleteRes.status == 201) {
           const responseGruposMusculares = await useGetAllMuscleGroups();
           setGroupMuscles(responseGruposMusculares?.data);
           setOpen(false);
+        } else {
+          setErrorAddExercise(true);
         }
       } else if (selectNav === "Musculo") {
         const deleteMuscle = await useDeleteMuscle(elementEditable.id);
@@ -36,6 +42,17 @@ export const ModalDeleteItem = ({
           const responseAllMuscles = await useGetAllMuscles();
           setMuscles(responseAllMuscles?.data);
           setOpen(false);
+        } else {
+          setErrorAddExercise(true);
+        }
+      } else {
+        const deleteExercise = await useDeleteOneExercise(elementEditable.id);
+        if (deleteExercise?.status == 200 || deleteExercise?.status == 201) {
+          const responseExercices = await useGetAllExercises();
+          setExercices(responseExercices?.data);
+          setOpen(false);
+        } else {
+          setErrorAddExercise(true);
         }
       }
     } catch (e) {
@@ -62,6 +79,12 @@ export const ModalDeleteItem = ({
           className="bg-red-600"
         ></ButtonSpinner>
       </div>
+      {errorAddExercise && (
+        <ErrorAuth
+          messageError={"Ha ocurrido un error, intentelo nuevamente"}
+          className="flex justify-center"
+        />
+      )}
     </ModalLayout>
   );
 };
