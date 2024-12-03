@@ -21,12 +21,12 @@ export const MemberShip = () => {
         <div className="b p-3">
           {/* HARDCODE */}
           <Location
-            route={`Membresia`}
+            route={`Membresía`}
             subroute={roleUser === "ADMIN" ? "" : `Abonar`}
           ></Location>
 
           <Title
-            title={roleUser === "ADMIN" ? "Gestion de membresías" : `Membresia`}
+            title={roleUser === "ADMIN" ? "Gestion de membresías" : `Membresía`}
           ></Title>
           {/* ///////////////////////////// */}
         </div>
@@ -50,7 +50,7 @@ export const MemberShip = () => {
         open={alertPlanElegido}
         setOpen={setAlertPlanElegido}
         severity="success"
-        message={`${mesaggePlanElegido} agregada ! `}
+        message={`${mesaggePlanElegido} agregada! `}
         position={{ vertical: "center", horizontal: "center" }}
       ></SnackbarDefault>
 
@@ -58,7 +58,7 @@ export const MemberShip = () => {
         open={alertConfirmRequest}
         setOpen={setAlertConfirmRequest}
         severity="success"
-        message="Pago confirmado ! "
+        message="Pago confirmado! "
         position={{ vertical: "center", horizontal: "center" }}
       ></SnackbarDefault>
 
@@ -66,14 +66,14 @@ export const MemberShip = () => {
         position={{ vertical: "center", horizontal: "center" }}
         open={alertCancelPayment}
         setOpen={setAlertCancelPayment}
-        message="Pago cancelado !"
+        message="Pago cancelado!"
         severity="info"
       ></SnackbarDefault>
 
       <SnackbarDefault
         open={alertError}
         setOpen={setAlertError}
-        message={"Ha ocurrido un error , inténtelo de nuevo mas tarde "}
+        message={"Ha ocurrido un error, inténtelo de nuevo más tarde "}
         severity={"warning"}
         position={{ vertical: "bottom", horizontal: "center" }}
       ></SnackbarDefault>
