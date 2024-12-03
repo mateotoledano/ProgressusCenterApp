@@ -58,7 +58,7 @@ export const Exercices = () => {
       }
     };
     fetchExercices();
-  }, []);
+  }, [selectNav]);
   const arregloColumnsExercices = [
     "Nombre",
     "Descripción",
