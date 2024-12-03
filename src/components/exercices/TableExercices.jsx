@@ -17,6 +17,7 @@ import { CgGym } from "react-icons/cg";
 import { SiTruenas } from "react-icons/si";
 import { ModalEditModalGroupMuscle } from "./ModalEditModalGroupMuscle";
 import { LoadingSkeleton } from "../ui/skeleton/LoadingSkeleton";
+import { ModalEditMuscle } from "./ModalEditMuscle";
 export const TableExercices = ({
   selectNav,
   arreglo = [],
@@ -25,6 +26,9 @@ export const TableExercices = ({
   loading = false,
   textSinEjercicios = "no se encontraron ejercicios",
   setGroupMuscles,
+  setOpenAlertEditMuscle,
+  setMuscles,
+  gruposMusculares,
 }) => {
   console.log(arreglo, "arrgelo en table");
   const showSpinner = useSpinnerStore((state) => state.showSpinner);
@@ -83,11 +87,8 @@ export const TableExercices = ({
     "Aductores",
     "Hombro posterior",
   ];
-  console.log(selectNav, "select anvvvvvv");
 
   const edit = (item) => {
-    console.log(item, "itemmmmmmkm");
-
     setEditableItem(item);
     if (selectNav == "Grupo muscular") {
       setOpenEditModalGroup(true);
@@ -101,6 +102,8 @@ export const TableExercices = ({
     setOpenDeleteItem(true);
     setEditableItem(item);
   };
+  console.log(itemEditable, "item ediotable");
+
   return (
     <div className="w-full">
       <Paper>
@@ -125,7 +128,7 @@ export const TableExercices = ({
                         "Acciones",
                         "Musculos del grupo",
                         "Imagen",
-                        "Grupo muscular"
+                        "Grupo muscular",
                       ].includes(column)
                         ? "center"
                         : "left"
@@ -140,7 +143,7 @@ export const TableExercices = ({
             <TableBody>
               {loading ? (
                 <TableRow>
-                 <TableCell colSpan={arregloColumns.length} align="center">
+                  <TableCell colSpan={arregloColumns.length} align="center">
                     <LoadingSkeleton
                       width={"100%"}
                       height={40}
@@ -396,7 +399,7 @@ export const TableExercices = ({
       </Dialog>
       {/* EDITAR GRUPO MUSCAULAR */}
       <ModalEditModalGroupMuscle
-      setOpenAlertEditGroup={setOpenAlertEditGroup}
+        setOpenAlertEditGroup={setOpenAlertEditGroup}
         setGroupMuscles={setGroupMuscles}
         open={openEditModalGroup}
         itemEditable={itemEditable}
@@ -404,11 +407,22 @@ export const TableExercices = ({
       ></ModalEditModalGroupMuscle>
       {/* ELIMINAR ITEM */}
       <ModalDeleteItem
+        selectNav={selectNav}
         setGroupMuscles={setGroupMuscles}
         elementEditable={itemEditable}
         open={openDeleteItem}
         setOpen={setOpenDeleteItem}
+        setMuscles={setMuscles}
       ></ModalDeleteItem>
+      {/* EDITAR MUSCULO */}
+      <ModalEditMuscle
+        setOpenAlertEditMuscle={setOpenAlertEditMuscle}
+        gruposMusculares={gruposMusculares}
+        itemEditable={itemEditable}
+        open={openEditMuscle}
+        setMuscles={setMuscles}
+        setOpen={setOpenEditMuscle}
+      ></ModalEditMuscle>
     </div>
   );
 };

@@ -64,6 +64,12 @@ export const ModalEditModalGroupMuscle = ({
   return (
     <ModalLayout open={open} setOpen={setOpen}>
       <form className="flex flex-col items-center gap-5" onSubmit={editGroup}>
+        <div className="flex flex-col justify-center items-center gap-0 mb-0">
+          <span className="font-semibold text-xl">Editar Grupo muscular</span>
+          <span className="font-bold text-xl text-center text-customTextGreen">
+            {itemEditable?.nombre}
+          </span>
+        </div>
         <div className="w-full">
           <label className="font-semibold text-start w-full" htmlFor="name">
             Nombre del grupo muscular

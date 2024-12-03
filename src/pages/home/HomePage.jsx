@@ -157,13 +157,11 @@ export const HomePage = () => {
   return (
     <MainLayout>
       <div className="animate-fade-in-down w-full flex flex-col justify-start gap-1">
-        <div className="bg-white mx-3 mt-4 md:mt-0 md:m-0 md:mx-8 p-2 rounded shadow-sm">
+        <div className="bg-white mx-3 mt-4 md:mt-0 md:m-0 md:mx-8 p-2 md:p-0 rounded shadow-sm">
           <Title
             title={`Hola, ${nameUser}!`}
             className="p-4 text-center w-full justify-center md:justify-start"
           />
-        </div>
-   
           <div className="flex-grow flex justify-center items-center w-full">
             <video
               src={videoProgressus}
@@ -173,13 +171,11 @@ export const HomePage = () => {
               playsInline
               disablePictureInPicture
               controlsList="nodownload noplaybackrate"
-              className={`w-full h-full object-cover ${
-                isMobile ? "max-h-[300px] md:h-auto md:w-auto" : "md:w-full"
-              }`}
+              className="rounded"
               alt="Progressus"
             />
           </div>
-       
+        </div>
 
         {isLoading ? (
           <LoadingSkeleton
@@ -217,7 +213,7 @@ export const HomePage = () => {
             </Link>
           </div>
         ) : roleUser !== "ADMIN" && roleUser !== "ENTRENADOR" ? (
-          <div className="bg-white mx-3 md:m-0 md:mx-8 p-2 rounded shadow-sm gap-1 flex md:flex-col justify-center items-center md:w-full">
+          <div className="bg-white mx-3 md:m-0 md:mx-8 p-2 rounded shadow-sm gap-1 flex md:flex-col justify-center items-center ">
             <Title
               title={"No tienes turnos reservados"}
               className="text-base"

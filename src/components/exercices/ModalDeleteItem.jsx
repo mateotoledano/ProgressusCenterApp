@@ -3,24 +3,40 @@ import { ModalLayout } from "../../layout/ModalLayout";
 import { ButtonSpinner } from "../ui/buttons/ButtonSpinner";
 import { useDeleteGroup } from "../../service/exercices/useDeleteGroup";
 import { useGetAllMuscleGroups } from "../../service/exercices/useGetAllMuscleGroups";
+import { useDeleteMuscle } from "../../service/exercices/useDeleteMuscle";
+import { useGetAllMuscles } from "../../service/exercices/useGetAllMuscles";
 export const ModalDeleteItem = ({
   open,
   setOpen,
   elementEditable,
   setGroupMuscles,
+  setMuscles,
+  selectNav,
 }) => {
-  console.log("entra quqoioiiieascac");
   const [loading, setLoading] = useState(false);
   const deleteItem = async () => {
     setLoading(true);
     try {
-      const deleteRes = await useDeleteGroup(elementEditable.id);
-      console.log(deleteRes, "delet eres");
+      if (selectNav === "Grupo muscular") {
+        const deleteRes = await useDeleteGroup(elementEditable.id);
+        console.log(deleteRes, "delet eres");
 
-      if ((deleteRes && deleteRes.status == 200) || deleteRes.status == 201) {
-        const responseGruposMusculares = await useGetAllMuscleGroups();
-        setGroupMuscles(responseGruposMusculares?.data);
-        setOpen(false);
+        if ((deleteRes && deleteRes.status == 200) || deleteRes.status == 201) {
+          const responseGruposMusculares = await useGetAllMuscleGroups();
+          setGroupMuscles(responseGruposMusculares?.data);
+          setOpen(false);
+        }
+      } else if (selectNav === "Musculo") {
+        const deleteMuscle = await useDeleteMuscle(elementEditable.id);
+        console.log(deleteMuscle, "delete muscle");
+        if (
+          (deleteMuscle && deleteMuscle.status == 200) ||
+          deleteMuscle.status == 201
+        ) {
+          const responseAllMuscles = await useGetAllMuscles();
+          setMuscles(responseAllMuscles?.data);
+          setOpen(false);
+        }
       }
     } catch (e) {
       console.log(e);
@@ -42,7 +58,7 @@ export const ModalDeleteItem = ({
         <ButtonSpinner
           loading={loading}
           onClick={deleteItem}
-          label="Eliminar Grupo muscular"
+          label={`Eliminar ${selectNav}`}
           className="bg-red-600"
         ></ButtonSpinner>
       </div>
