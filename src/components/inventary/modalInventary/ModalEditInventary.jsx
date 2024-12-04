@@ -114,7 +114,7 @@ export const ModalEditInventary = ({
         ></CustomInput>
 
         <label className="font-semibold text-start w-full" htmlFor="">
-          Estado del item:
+          Estado del ítem:
         </label>
         <select
           name="estado"
@@ -130,7 +130,7 @@ export const ModalEditInventary = ({
         </select>
 
         <ButtonSpinner
-          label="Editar Usuario"
+          label="Editar Inventario"
           type="submit"
           loading={loading}
         ></ButtonSpinner>
