@@ -66,10 +66,7 @@ export const HomePage = () => {
           const response = await useGetRequestPaymentSocio(
             dataUser.identityUserId
           );
-          console.log(
-            response.data.historialSolicitudDePagos,
-            "response membresias"
-          );
+          console.log(response, "response membresias");
 
           if (response?.data) {
             const allMembership = response.data.historialSolicitudDePagos || [];

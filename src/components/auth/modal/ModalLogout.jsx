@@ -9,6 +9,7 @@ import { useSpring, animated } from "@react-spring/web";
 import { useStoreUser, useStoreUserData, useStoreMenu } from "../../../store";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "../../ui/buttons/Button";
+import { useMembershipStore } from "../../../store/useStoreMembership";
 const style = {
   position: "absolute",
   top: "50%",
@@ -26,13 +27,15 @@ export const ModalLogout = ({ openModalLogout, setOpenModalLogout }) => {
   const closeSession = useStoreUser((state) => state.clearToken);
   const clearUserData = useStoreUserData((state) => state.clearUserData);
   const closeNavBar = useStoreMenu((state) => state.closeNavBar);
+  const setMembershipData = useMembershipStore((state) => state.setMembershipData);
   const navigate = useNavigate();
   const handleClose = () => setOpenModalLogout(false);
   const handleLogout = () => {
     closeSession();
     clearUserData();
-    navigate("/");
     closeNavBar(false);
+    setMembershipData(null);
+    navigate("/");
   };
 
   return (
