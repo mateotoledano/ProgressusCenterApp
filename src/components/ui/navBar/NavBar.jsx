@@ -84,7 +84,7 @@ export const NavBar = () => {
       link: "/users",
     },
     {
-      title: "Estadisticas",
+      title: "Estadísticas",
       icon: <IoStatsChartOutline />,
       link: "/stats",
     },
@@ -118,7 +118,7 @@ export const NavBar = () => {
       link: "/exercices",
     },
     {
-      title: "Estadisticas",
+      title: "Estadísticas",
       icon: <IoStatsChartOutline />,
       link: "/stats",
     },

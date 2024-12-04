@@ -51,7 +51,7 @@ const routeAdminNavigation = [
     link: "/attendance",
   },
   {
-    title: "Estadisticas",
+    title: "Estadísticas",
     icon: <IoStatsChartOutline />,
     link: "/stats",
   },
@@ -80,7 +80,7 @@ const routeTrainerNavigation = [
     link: "/plans",
   },
   {
-    title: "Estadisticas",
+    title: "Estadísticas",
     icon: <IoStatsChartOutline />,
     link: "/stats",
   },

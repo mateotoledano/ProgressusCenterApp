@@ -68,7 +68,7 @@ export const Inventary = () => {
       <section className="animate-fade-in-down md:mx-auto bg-white  rounded shadow-xl w-full md:w-11/12 overflow-hidden mb-20">
         <div className="b p-3">
           <Location
-            route={`Membresia`}
+            route={`Inventario`}
             subroute={"Consultar Inventario"}
           ></Location>
 

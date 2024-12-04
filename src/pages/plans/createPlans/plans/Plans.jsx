@@ -361,7 +361,7 @@ export const Plans = () => {
               "border-b-2 border-customTextBlue text-customTextBlue md:text-lg"
             }`}
           >
-            {roleUser === "SOCIO" ? "Planes plantillas" : "Todos los planes"}
+            {roleUser === "SOCIO" ? "Planes disponibles" : "Todos los planes"}
           </span>
 
           <span
@@ -371,7 +371,7 @@ export const Plans = () => {
               "border-b-2 border-customTextBlue text-customTextBlue md:text-lg"
             }`}
           >
-            {roleUser === "SOCIO" ? "Mis planes" : "Mis planes"}
+            {roleUser === "SOCIO" ? "Mi plan" : "Mis planes"}
           </span>
         </div>
         <AllPlanes
