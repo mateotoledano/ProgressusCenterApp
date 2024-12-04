@@ -1,12 +1,14 @@
 import { CgGym } from "react-icons/cg";
-
+import { MdOutlineDelete } from "react-icons/md";
 export const Stack = ({
   titulo,
   duracion,
   fechaFinalizacion,
   className,
   Icon,
-  classNameText
+  classNameText,
+  isTurn = false,
+  onClick,
 }) => {
   return (
     <div
@@ -18,8 +20,19 @@ export const Stack = ({
         <span className="text-sm md:text-lg text-slate-600">{duracion}</span>
         {/* <span className="text-sm md:text-lg text-slate-600">estado:Pendiente</span> */}
       </div>
-      <p className={`${classNameText} text-sm md:text-xl text-black  font-semibold ml-auto `}>
+      <p
+        className={`${classNameText} text-sm md:text-xl text-black  font-semibold ml-auto `}
+      >
         {fechaFinalizacion}
+
+        {isTurn && (
+          <span
+            onClick={onClick}
+            className="p-[3px] text-xl bg-red-600 hover:bg-red-800 rounded text-white cursor-pointer"
+          >
+            <MdOutlineDelete></MdOutlineDelete>
+          </span>
+        )}
       </p>
     </div>
   );

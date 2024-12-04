@@ -13,8 +13,9 @@ import {
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 import { CgDanger } from "react-icons/cg";
+import { FaRegCalendarTimes } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
-
+import { useDeleteTurn } from "../../service/turns/useDeleteTurn";
 import { FaRegCalendarCheck } from "react-icons/fa";
 import { IoIosTimer } from "react-icons/io";
 import { useGetTurns } from "../../service/turns/use-getTurns";
@@ -71,34 +72,6 @@ export const Turns = () => {
         const response = await useGetTurns(dataUser.identityUserId);
         console.log(response, "response de response");
 
-        // // Obtener fecha y hora actual
-        // const ahora = dayjs();
-
-        // // Filtrar turnos después de la fecha y hora actual
-        // const turnosFuturos = response.data.value.filter((turno) => {
-        //   // Extraer solo la parte de la fecha de fechaReserva
-        //   const fecha = turno.fechaReserva.split("T")[0]; // Ejemplo: "2024-11-20"
-
-        //   // Combinar fecha con horaInicio
-        //   const fechaHoraTurno = dayjs(
-        //     `${fecha}T${turno.horaInicio}`,
-        //     "YYYY-MM-DDTHH:mm:ss",
-        //     true
-        //   );
-
-        //   // Verificar si la fechaHoraTurno es válida
-        //   if (!fechaHoraTurno.isValid()) {
-        //     console.warn("Fecha y hora inválidas para dayjs:", {
-        //       turno,
-        //       fecha,
-        //       horaInicio: turno.horaInicio,
-        //     });
-        //     return false;
-        //   }
-
-        //   // Filtrar turnos después de la hora actual
-        //   return fechaHoraTurno.isAfter(ahora);
-        // });
         if (response) {
           setTurnosReservados(response?.data.value);
         }
@@ -112,54 +85,47 @@ export const Turns = () => {
     traerTurnos();
   }, []);
 
-  const handleDeleteTurn = async () => {
+  const deleteTurn = async (turn) => {
     showSpinner();
+
     try {
-      const response = await useDeleteTurns(dataUser.identityUserId);
+      console.log(turn, "clcikea");
 
-      if (response.status == "200") {
-        setAlertDelete(true);
+      const response = await useDeleteTurn(turn.id);
+      if (response && response.status == 200) {
+        const responseGet = await useGetTurns(dataUser.identityUserId);
+        console.log(responseGet, "response de response");
 
-        // Esperar a que la alerta se cierre antes de actualizar los turnos
-        const response = await useGetTurns(dataUser.identityUserId);
-        // Obtener fecha y hora actual
-        // const ahora = dayjs();
-
-        // // Filtrar turnos después de la fecha y hora actual
-        // const turnosFuturos = response.data.value.filter((turno) => {
-        //   // Extraer solo la parte de la fecha de fechaReserva
-        //   const fecha = turno.fechaReserva.split("T")[0]; // Ejemplo: "2024-11-20"
-
-        //   // Combinar fecha con horaInicio
-        //   const fechaHoraTurno = dayjs(
-        //     `${fecha}T${turno.horaInicio}`,
-        //     "YYYY-MM-DDTHH:mm:ss",
-        //     true
-        //   );
-
-        //   // Verificar si la fechaHoraTurno es válida
-        //   if (!fechaHoraTurno.isValid()) {
-        //     console.warn("Fecha y hora inválidas para dayjs:", {
-        //       turno,
-        //       fecha,
-        //       horaInicio: turno.horaInicio,
-        //     });
-        //     return false;
-        //   }
-
-        //   // Filtrar turnos después de la hora actual
-        //   return fechaHoraTurno.isAfter(ahora);
-        // });
-
-        setTurnosReservados(response?.data.value);
+        if (responseGet) {
+          setTurnosReservados(responseGet?.data.value);
+        }
       }
+
+      // if (response.status == "200") {
+      //   setAlertDelete(true);
+
+      //   // Esperar a que la alerta se cierre antes de actualizar los turnos
+      //   const response = await useGetTurns(dataUser.identityUserId);
+
+      //   setTurnosReservados(response?.data.value);
+      // }
     } catch (e) {
       console.log(e);
     } finally {
       hideSpinner();
     }
   };
-  console.log(turnosReservados, "turnos reservados en turns");
+
+  const turnosHoy = turnosReservados.filter((turn) => {
+    const fechaTurno = turn.fechaReserva.split("T")[0];
+    return dayjs(fechaTurno).isSame(dayjs(), "day");
+  });
+
+  const turnosPasados = turnosReservados.filter((turn) => {
+    const fechaTurno = turn.fechaReserva.split("T")[0];
+    return dayjs(fechaTurno).isBefore(dayjs(), "day");
+  });
+  console.log(turnosHoy, "turnos hoy");
 
   return (
     <MainLayout>
@@ -185,7 +151,7 @@ export const Turns = () => {
                 openAlertError={openAlertError}
                 // PARA ACTUALIZAR TURNOS RESERVADOS
                 setTurnosReservados={setTurnosReservados}
-                turnosReservados={turnosReservados}
+                turnosReservados={turnosHoy}
                 //////////////////////
                 setOpenAlert={setOpenAlert}
                 setOpenAlertError={setOpenAlertError}
@@ -198,9 +164,74 @@ export const Turns = () => {
           <section className="md:w-3/4  md:px-4  ">
             <div className="md:mt-0 mt-3 flex w-full gap-5 flex-col justify-center items-center">
               <Title
-                className={""}
+                className={"md:text-lg font-semibold leading-3  "}
                 title={"Mis turnos"}
-                icon={<IoIosTimer />}
+                icon={<IoIosTimer size={22} />}
+              ></Title>
+              {/* TURNOS DE HOY  */}
+              {skeletonTurn ? (
+                <div className="w-full">
+                  <LoadingSkeleton
+                    className={"w-full "}
+                    width={"100%"}
+                    count={4}
+                    height={50}
+                  />
+                </div>
+              ) : turnosHoy && turnosHoy.length > 0 ? (
+                turnosHoy.map((turn) => {
+                  const fechaReserva = turn.fechaReserva.split("T")[0];
+                  const [year, month, day] = fechaReserva.split("-");
+                  const fechaFormateada = `${day}-${month}-${year}`;
+
+                  const fechaObj = new Date(year, month - 1, day);
+                  const diasSemana = [
+                    "Domingo",
+                    "Lunes",
+                    "Martes",
+                    "Miércoles",
+                    "Jueves",
+                    "Viernes",
+                    "Sábado",
+                  ];
+                  const diaSemana = diasSemana[fechaObj.getDay()];
+
+                  const horaInicioFormateada = turn.horaInicio.substring(0, 5);
+                  const horaFinFormateada = turn.horaFin.substring(0, 5);
+
+                  const hora = parseInt(turn.horaInicio.split(":")[0], 10);
+                  let tituloTurno = "";
+                  if (hora >= 6 && hora < 12) {
+                    tituloTurno = "Turno mañana";
+                  } else if (hora >= 12 && hora < 18) {
+                    tituloTurno = "Turno tarde";
+                  } else {
+                    tituloTurno = "Turno noche";
+                  }
+
+                  return (
+                    <Stack
+                      onClick={() => deleteTurn(turn)}
+                      classNameText={"flex flex-col items-end gap-3"}
+                      isTurn={true}
+                      key={turn.id}
+                      titulo={tituloTurno}
+                      duracion={`${horaInicioFormateada} hs - ${horaFinFormateada} hs`}
+                      fechaFinalizacion={`${diaSemana}, ${fechaFormateada}`}
+                    ></Stack>
+                  );
+                })
+              ) : (
+                <Stack
+                  Icon={CgDanger}
+                  titulo={"No tienes turnos reservados"}
+                ></Stack>
+              )}
+              {/* TURNOS PASADOS */}
+              <Title
+                className={"  md:text-lg font-semibold leading-3 mt-6"}
+                title={"Turnos anteriores"}
+                icon={< FaRegCalendarTimes size={21} />}
               ></Title>
               {skeletonTurn ? (
                 <div className="w-full">
@@ -211,8 +242,8 @@ export const Turns = () => {
                     height={50}
                   />
                 </div>
-              ) : turnosReservados && turnosReservados.length > 0 ? (
-                turnosReservados.map((turn) => {
+              ) : turnosPasados && turnosPasados.length > 0 ? (
+                turnosPasados.map((turn) => {
                   const fechaReserva = turn.fechaReserva.split("T")[0];
                   const [year, month, day] = fechaReserva.split("-");
                   const fechaFormateada = `${day}-${month}-${year}`;
@@ -257,8 +288,7 @@ export const Turns = () => {
                   titulo={"No tienes turnos reservados"}
                 ></Stack>
               )}
-
-              {turnosReservados &&
+              {/* {turnosReservados &&
                 turnosReservados.length > 0 &&
                 !skeletonTurn && (
                   <div className="w-full flex justify-end">
@@ -273,7 +303,7 @@ export const Turns = () => {
                       }`}
                     ></Button>
                   </div>
-                )}
+                )} */}
             </div>
 
             {/* <div className="md:mt-0 mt-3 flex w-full gap-5 flex-col justify-center items-center">

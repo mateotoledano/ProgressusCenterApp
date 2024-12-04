@@ -7,7 +7,10 @@ import { useStoreUserData } from "../../store";
 import { useGetRequestPaymentSocio } from "../../service/membership/useGetRequestPaymentSocio";
 import { useSpinnerStore } from "../../store";
 import { MdDeleteOutline } from "react-icons/md";
+
 import { BiEditAlt } from "react-icons/bi";
+import { TableAsist } from "../../components/profile/TableAsist";
+import { useAsistProfile } from "../../service/profile/useAsistProfile";
 export const Profile = () => {
   const dataUser = useStoreUserData((state) => state.userData);
   const [dataMembership, setDataMembership] = useState(null);
@@ -21,7 +24,8 @@ export const Profile = () => {
   const fotoProfile = useUserProfile((state) => state.userImage);
   const [openModal, setOpenModal] = useState(false);
   const roleUser = dataUser.roles[0];
-
+  const [userAsist, setUserAsist] = useState([]);
+  const arregloColumns = ["Fecha", ""];
   useEffect(() => {
     const traerMembresiaActiva = async () => {
       setLoadingSkeleton(true);
@@ -31,10 +35,16 @@ export const Profile = () => {
         );
         if (response?.data) {
           setDataMembership(response.data);
-          setAllMembership(
-            response.data.historialSolicitudDePagos || []
-          );
+          setAllMembership(response.data.historialSolicitudDePagos || []);
         }
+        const responseAsist = await useAsistProfile(dataUser.identityUserId);
+        // const responseAsist = await useAsistProfile(
+        //   "06e89924-00b6-4ad7-adb8-c1f1ee8323cc"
+        // );
+        if (responseAsist && responseAsist.status == 200) {
+          setUserAsist(responseAsist.data);
+        }
+        console.log(responseAsist, "response asistttt");
       } catch (error) {
         console.error("Error al traer membresía activa:", error);
       } finally {
@@ -156,12 +166,13 @@ export const Profile = () => {
             (loadingSkeleton ? (
               <LoadingSkeleton
                 count={1}
+                height={80}
                 width={"100%"}
                 className={"mt-20"}
               ></LoadingSkeleton>
             ) : (
               <div className="flex flex-col items-center md:text-lg gap-3 mt-5 ">
-                <h4 className="text-md font-medium leading-3 mt-6 pb-4 ">
+                <h4 className="text-md underline text-customTextGreen font-semibold leading-3 mt-6 pb-4 ">
                   Membresías activas
                 </h4>
                 {allMembership &&
@@ -180,6 +191,27 @@ export const Profile = () => {
                 )}
               </div>
             ))}
+
+          {loadingSkeleton ? (
+            <LoadingSkeleton
+              count={1}
+              height={80}
+              width={"50%"}
+              className={"mt-20"}
+            ></LoadingSkeleton>
+          ) : (
+            roleUser === "SOCIO" && (
+              <div className="w-full flex flex-col md:text-lg justify-center items-center">
+                <h4 className="underline text-customTextGreen text-md font-semibold leading-3 mt-6 pb-4 ">
+                  Turnos a los que asistí
+                </h4>
+                <TableAsist
+                  columns={arregloColumns}
+                  data={userAsist}
+                ></TableAsist>
+              </div>
+            )
+          )}
         </div>
       </div>
       <ModalPhotoProfile
