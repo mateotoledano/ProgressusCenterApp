@@ -9,40 +9,11 @@ import Paper from "@mui/material/Paper";
 import TablePagination from "@mui/material/TablePagination";
 import { LoadingSkeleton } from "../ui/skeleton/LoadingSkeleton";
 
-export const TableContability = ({ data, columns, loading }) => {
+export const TableContability = ({ data, columns, loading, setTotal }) => {
+  console.log(data, "data");
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [membershipDetails, setMembershipDetails] = useState({});
-
-  useEffect(() => {
-    const fetchMembershipDetails = async () => {
-      const uniqueIds = [...new Set(data.map((item) => item.tipoMembresiaId))];
-      const fetchedDetails = {};
-
-      await Promise.all(
-        uniqueIds.map(async (id) => {
-          try {
-            const response = await fetch(
-              `https://www.progressuscenter.somee.com/api/Membresia/ObtenerMembresiaPorId?id=${id}`
-            );
-            const result = await response.json();
-            fetchedDetails[id] = {
-              nombre: result.nombre,
-              precio: result.precio,
-            };
-          } catch (error) {
-            console.error(`Error fetching membership ${id}:`, error);
-            fetchedDetails[id] = { nombre: "Error", precio: "N/A" };
-          }
-        })
-      );
-
-      setMembershipDetails(fetchedDetails);
-      loadingFetch(false);
-    };
-
-    fetchMembershipDetails();
-  }, [data]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -58,11 +29,15 @@ export const TableContability = ({ data, columns, loading }) => {
     page * rowsPerPage + rowsPerPage
   );
 
-  // Sumar todos los precios de todas las filas en 'data'
+  // Sumar el precio de todas las membresías
   const totalPrice = data.reduce((acc, row) => {
-    const price = membershipDetails[row.tipoMembresiaId]?.precio;
-    return price ? acc + parseFloat(price) : acc;
+    return acc + (row.precioMembresia || 0); // Suma el precio de cada membresía, asegurándose de que no sea null o undefined
   }, 0);
+
+  // Pasar el totalPrice al estado setTotal
+  useEffect(() => {
+    setTotal(totalPrice);
+  }, [data, setTotal, totalPrice]);
 
   return (
     <div className="w-full">
@@ -96,7 +71,7 @@ export const TableContability = ({ data, columns, loading }) => {
                     count={5}
                   ></LoadingSkeleton>
                 </TableCell>
-              ) : paginatedData.length == 0 ? (
+              ) : paginatedData.length === 0 ? (
                 <TableRow>
                   <TableCell
                     sx={{ fontSize: "18px" }}
@@ -116,40 +91,33 @@ export const TableContability = ({ data, columns, loading }) => {
                       {new Date(row.fechaPago).toLocaleDateString()}
                     </TableCell>
                     <TableCell sx={{ fontSize: "16px" }} align="center">
-                      {membershipDetails[row.tipoMembresiaId]?.nombre ||
-                        "Cargando..."}
+                      {row.nombreMembresia}
                     </TableCell>
                     <TableCell sx={{ fontSize: "16px" }} align="center">
-                      {membershipDetails[row.tipoMembresiaId]?.precio
-                        ? `$${membershipDetails[row.tipoMembresiaId]?.precio}`
-                        : "N/A"}
+                      ${row.precioMembresia}
                     </TableCell>
                   </TableRow>
                 ))
               )}
             </TableBody>
           </Table>
-          <TablePagination
-            rowsPerPageOptions={[3, 5, 10]}
-            component="div"
-            count={data.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            labelRowsPerPage="Filas por página"
-            labelDisplayedRows={() => ""}
-          />
-          {/* Mostrar el total de los precios de todas las filas */}
-          <div className="text-center md:text-right  text-customTextGreen font-bold md:text-xl p-5">
-            Total de Precios (todos los registros del mes):
-            <span className="text-black">
-             ${totalPrice.toFixed(2)}
-
-            </span>
-          </div>
         </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 15]}
+          component="div"
+          count={data.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </Paper>
+      {/* Mostrar el total calculado */}
+      {!loading && (
+        <div className="mt-2 text-lg md:text-xl mr-3 p-3 text-center md:text-right font-bold">
+          <span>Total: ${totalPrice.toFixed(2)}</span>
+        </div>
+      )}
     </div>
   );
 };
