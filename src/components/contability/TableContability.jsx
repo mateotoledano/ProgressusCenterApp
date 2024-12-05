@@ -31,7 +31,7 @@ export const TableContability = ({ data, columns, loading, setTotal }) => {
 
   // Sumar el precio de todas las membresías
   const totalPrice = data.reduce((acc, row) => {
-    return acc + (row.precioMembresia || 0); // Suma el precio de cada membresía, asegurándose de que no sea null o undefined
+    return acc + (row.precioMembresia || 0);
   }, 0);
 
   // Pasar el totalPrice al estado setTotal
@@ -91,10 +91,10 @@ export const TableContability = ({ data, columns, loading, setTotal }) => {
                       {new Date(row.fechaPago).toLocaleDateString()}
                     </TableCell>
                     <TableCell sx={{ fontSize: "16px" }} align="center">
-                      {row.nombreMembresia}
+                      {row?.nombreMembresia && row.nombreMembresia}
                     </TableCell>
                     <TableCell sx={{ fontSize: "16px" }} align="center">
-                      ${row.precioMembresia}
+                      ${row?.precioMembresia && row.precioMembresia}
                     </TableCell>
                   </TableRow>
                 ))
