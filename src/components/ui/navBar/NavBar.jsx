@@ -7,6 +7,7 @@ import { HiOutlineUsers } from "react-icons/hi2";
 import { CgProfile } from "react-icons/cg";
 import { TbUserCheck } from "react-icons/tb";
 import { FaRegAddressCard } from "react-icons/fa";
+import { BsPiggyBank } from "react-icons/bs";
 import { BsMenuButtonWide } from "react-icons/bs";
 import { CgGym } from "react-icons/cg";
 import { MdOutlineInventory } from "react-icons/md";
@@ -67,7 +68,11 @@ export const NavBar = () => {
       icon: <FaRegAddressCard />,
       link: "/membership",
     },
-
+    {
+      title: "Contabilidad",
+      icon: <BsPiggyBank  />,
+      link: "/contability",
+    },
     {
       title: "Inventario",
       icon: <MdOutlineInventory />,
@@ -83,6 +88,7 @@ export const NavBar = () => {
       icon: <HiOutlineUsers />,
       link: "/users",
     },
+    
     {
       title: "Estadísticas",
       icon: <IoStatsChartOutline />,
@@ -219,7 +225,7 @@ export const NavBar = () => {
               key={item.link}
               onClick={() => handleLinkClick(item.link)}
               className={clsx(
-                "flex items-center mt-7 p-1 trans-hover rounded-md hover:bg-gray-100 transition-all cursor-pointer",
+                "flex text-xl items-center mt-5 p-1.5 trans-hover rounded-md hover:bg-gray-100 transition-all cursor-pointer",
                 {
                   "bg-customBlue text-customTextBlue font-semibold":
                     path.startsWith(item.link),

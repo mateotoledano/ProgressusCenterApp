@@ -12,3 +12,4 @@ export * from "./notifications/Notifications";
 export * from "./plans/createPlans/myPlans/MyPlans"
 export * from "./plans/createallExercise/CreateallExercise"
 export * from "./exercices/Exercices"
+export * from "./contability/Contability"

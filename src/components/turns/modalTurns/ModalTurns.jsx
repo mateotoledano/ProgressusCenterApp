@@ -107,7 +107,7 @@ export const ModalTurns = ({
     .minute(parseInt(horaInicio.split(":")[1], 10));
 
   const turnoDisponible = horaActual.isBefore(horaInicioTurno);
-  console.log(horaActual, "hora actual");
+  console.log(turnoDisponible, "turno disponible");
 
   const fechaArgentina = dayjs()
     .tz("America/Argentina/Buenos_Aires")

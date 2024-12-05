@@ -231,7 +231,7 @@ export const Turns = () => {
               <Title
                 className={"  md:text-lg font-semibold leading-3 mt-6"}
                 title={"Turnos anteriores"}
-                icon={< FaRegCalendarTimes size={21} />}
+                icon={<FaRegCalendarTimes size={21} />}
               ></Title>
               {skeletonTurn ? (
                 <div className="w-full">

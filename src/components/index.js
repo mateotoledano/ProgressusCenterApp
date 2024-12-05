@@ -48,3 +48,7 @@ export * from "./plans/ModalDeletePlan"
 // EXERCICES 
 export * from "./exercices/ModalAddGroupMuscle"
 export * from "./ui/CheckboxesTags/CheckboxesTags"
+
+//CONTABILITY
+export * from "./contability/TableContability"
+export * from "./contability/DatePicker"

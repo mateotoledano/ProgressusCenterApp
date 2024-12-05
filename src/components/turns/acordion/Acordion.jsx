@@ -101,7 +101,7 @@ export const Acordion = ({
   };
 
   const handleModal = (cont, index, isDisabled) => {
-    if (reservasPorHora[cont] > 40) {
+    if (reservasPorHora[cont] >= 40) {
       setAlertMaxTurns(true);
     } else {
       if (turnosReservados && turnosReservados.length === 1) {

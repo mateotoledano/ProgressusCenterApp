@@ -13,6 +13,7 @@ import {
   MyPlans,
   CreateallExercise,
   Exercices,
+  Contability
 } from "./pages";
 import { Attendance } from "./pages/attendance/Attendance";
 import { HomePlans } from "./pages/plans/HomePlans";
@@ -144,6 +145,15 @@ export const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
+  {
+    path: "/contability",
+    element: (
+      <ProtectedRoute allowedRoles={["ADMIN"]}>
+        <Contability/>
+      </ProtectedRoute>
+    ),
+  },
+
   {
     path: "/users",
     element: (

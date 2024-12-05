@@ -27,7 +27,9 @@ export const ModalLogout = ({ openModalLogout, setOpenModalLogout }) => {
   const closeSession = useStoreUser((state) => state.clearToken);
   const clearUserData = useStoreUserData((state) => state.clearUserData);
   const closeNavBar = useStoreMenu((state) => state.closeNavBar);
-  const setMembershipData = useMembershipStore((state) => state.setMembershipData);
+  const setMembershipData = useMembershipStore(
+    (state) => state.setMembershipData
+  );
   const navigate = useNavigate();
   const handleClose = () => setOpenModalLogout(false);
   const handleLogout = () => {

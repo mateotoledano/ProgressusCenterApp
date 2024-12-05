@@ -26,6 +26,7 @@ export const ButtonSpinner = ({
     ) : (
       label
     )}
+    {Icon && <Icon></Icon>}
   </button>
 );
 
