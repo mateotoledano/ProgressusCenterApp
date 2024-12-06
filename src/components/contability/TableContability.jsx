@@ -101,13 +101,15 @@ export const TableContability = ({ data, columns, loading, setTotal }) => {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 15]}
-          component="div"
-          count={data.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
+            rowsPerPageOptions={[3, 5, 10]}
+            component="div"
+            count={data?.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            labelRowsPerPage="Filas por página"
+            labelDisplayedRows={() => ""}
         />
       </Paper>
       {/* Mostrar el total calculado */}

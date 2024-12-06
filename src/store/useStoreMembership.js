@@ -10,8 +10,8 @@ export const useMembershipStore = create(
       setMembershipData: (data) => set({ membershipData: data }),
     }),
     {
-      name: 'membership-store', // nombre que se usará en localStorage
-      getStorage: () => localStorage, // Esto indica que se usará localStorage
+      name: 'membership-store', 
+      getStorage: () => localStorage, 
     }
   )
 );

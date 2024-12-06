@@ -21,7 +21,7 @@ export const useStorePlanCreado = create(
       // Limpiar todos los ejercicios
       clearPlan: () => set({ planCreado: [] }),
 
-      // Actualizar un ejercicio existente
+      // Actualizar un ejercicio 
       updateExercise: (id, updatedFields) =>
         set((state) => ({
           planCreado: state.planCreado.map((exercise) =>
