@@ -10,8 +10,6 @@ import TablePagination from "@mui/material/TablePagination";
 import { LoadingSkeleton } from "../ui/skeleton/LoadingSkeleton";
 
 export const TableContability = ({ data, columns, loading, setTotal }) => {
-  console.log(data, "data");
-
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -40,7 +38,7 @@ export const TableContability = ({ data, columns, loading, setTotal }) => {
   }, [data, setTotal, totalPrice]);
 
   return (
-    <div className="w-full">
+    <div className="w-full ">
       <Paper>
         <TableContainer>
           <Table>

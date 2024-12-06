@@ -69,8 +69,8 @@ export const Contability = () => {
       let currentY = 15;
 
       const imageUrl = "./progressus.png";
-      const imageWidth = 30;
-      const imageHeight = 24;
+      const imageWidth = 35;
+      const imageHeight = 25;
 
       // Agregar la imagen al PDF a la derecha, pegada arriba
       doc.addImage(imageUrl, "JPEG", 172, 10, imageWidth, imageHeight);
@@ -153,7 +153,7 @@ export const Contability = () => {
               <ButtonSpinner
                 loading={loadingPdf}
                 onClick={generatePdf}
-                className="flex items-center justify-between hover:bg-green-600 gap-3 w-full"
+                className="flex items-center justify-between  gap-3 w-full"
                 label="Descargar PDF"
                 Icon={FaRegFilePdf}
               ></ButtonSpinner>
@@ -163,7 +163,7 @@ export const Contability = () => {
               <ButtonSpinner
                 loading={loadingPdf}
                 onClick={generatePdf}
-                className="flex items-center hover:bg-green-600 justify-between gap-3 w-full"
+                className="flex items-center justify-between gap-3 w-full"
                 Icon={FaRegFilePdf}
               ></ButtonSpinner>
             </div>

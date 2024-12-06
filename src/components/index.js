@@ -52,3 +52,6 @@ export * from "./ui/CheckboxesTags/CheckboxesTags"
 //CONTABILITY
 export * from "./contability/TableContability"
 export * from "./contability/DatePicker"
+
+// STATS
+export * from "./stats/ChartBar"
