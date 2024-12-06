@@ -27,6 +27,7 @@ export const ChartBar = ({
   return (
     <div className="w-full md:w-2/3 text-xs">
       <BarChart
+   
         dataset={dataset}
         xAxis={xAxis.map((axis) => ({
           ...axis,

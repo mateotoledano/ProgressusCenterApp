@@ -1,31 +1,64 @@
 import React, { useEffect, useState } from "react";
 import { MainLayout } from "../../layout/MainLayout";
-import { ChartBar, Location, Title } from "../../components";
+import { ChartBar, Location, SelectNavegable, Title } from "../../components";
 import { useGetAsistForMonth } from "../../service/stats/useGetAsistForMonth";
+import { TbClockHour4 } from "react-icons/tb";
 import { BsCalendar2Month } from "react-icons/bs";
 import { useGetAsistForDay } from "../../service/stats/useGetAsistForDay";
 import { IoTodayOutline } from "react-icons/io5";
+import { SelectDef } from "../../components";
+import { ChartBarHorizontal } from "../../components/stats/ChartBarHorizontal";
+import { useSpinnerStore } from "../../store";
+import { useGetAsistForHour } from "../../service/stats/useGetAsistForHour";
 export const Stats = () => {
+  const showSpinner = useSpinnerStore((state) => state.showSpinner);
+  const hideSpinner = useSpinnerStore((state) => state.hideSpinner);
   const [selectNav, setSelectNav] = useState("Asistencia/Turnos");
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   // ASISTENCIAS POR MES
   const [nroAsistenciaPorMes, setNroAsistenciaPorMes] = useState([]);
   // ASISTENCIAS POR DIA
   const [nroAsistForDay, setNroAsistForDay] = useState([]);
-
+  // ASISTENCIAS POR HORA
+  const [hourSelect, setHourSelect] = useState("10:00:00");
+  const [asistForHour, setAsistForHour] = useState([]);
   useEffect(() => {
+    showSpinner();
     const fetchData = async () => {
-      // ASITENCIAS POR MES
-      const traerAsistForMes = await useGetAsistForMonth();
-      setNroAsistenciaPorMes(traerAsistForMes?.data || []);
-      // ASISTENCIAS POR DIA
-      const traerAsistForDay = await useGetAsistForDay();
-      setNroAsistForDay(traerAsistForDay?.data || []);
+      try {
+        // ASITENCIAS POR MES
+        const traerAsistForMes = await useGetAsistForMonth();
+        setNroAsistenciaPorMes(traerAsistForMes?.data || []);
+        // ASISTENCIAS POR DIA
+        const traerAsistForDay = await useGetAsistForDay();
+        setNroAsistForDay(traerAsistForDay?.data || []);
+      } catch (e) {
+        console.log(e, "error a traer stats");
+      } finally {
+        hideSpinner();
+      }
     };
     fetchData();
   }, []);
+  useEffect(() => {
+    const traerForHour = async () => {
+      try {
+        // TRAER ASISTENCIAS POR HORA
+        const traerAsistForHour = await useGetAsistForHour(hourSelect);
+
+        setAsistForHour(traerAsistForHour?.data || []);
+      } catch (e) {
+        console.log(e, "error");
+      }
+    };
+    traerForHour();
+  }, [hourSelect]);
   // ASISTENCIA POR MES
   // Filtrar por año
+  const selectYear = (e) => {
+    setSelectedYear(Number(e.target.value));
+  };
+
   const filteredData = nroAsistenciaPorMes.filter(
     (asistencia) => asistencia.anio === selectedYear
   );
@@ -54,7 +87,6 @@ export const Stats = () => {
     "sábado",
     "domingo",
   ];
-
   // Mapa de días en inglés a español
   const diaMap = {
     Sunday: "domingo",
@@ -65,11 +97,11 @@ export const Stats = () => {
     Friday: "viernes",
     Saturday: "sábado",
   };
-
   // Transformar los datos para el dataset y asegurarnos de que los días estén en español y en el orden correcto
   const dayOfWeekDataset = nroAsistForDay
     .map((asistencia) => ({
-      dia: diaMap[asistencia.diaDeSemana] || asistencia.diaDeSemana.toLowerCase(), // Usamos el mapa para traducir al español
+      dia:
+        diaMap[asistencia.diaDeSemana] || asistencia.diaDeSemana.toLowerCase(), // Usamos el mapa para traducir al español
       numeroDeAsistencias: asistencia.numeroDeAsistencias,
     }))
     .sort(
@@ -77,9 +109,50 @@ export const Stats = () => {
     );
 
   // Verifica si el orden de los días es el correcto
-  console.log(dayOfWeekDataset, "DAY"); // Para depuración
 
   ///////////////////////////////////////////////////////////////
+
+  // TRAER POR HORA
+  const horarios = [
+    "07:00:00",
+    "08:00:00",
+    "09:00:00",
+    "10:00:00",
+    "11:00:00",
+    "12:00:00",
+    "13:00:00",
+    "14:00:00",
+    "15:00:00",
+    "16:00:00",
+    "17:00:00",
+    "18:00:00",
+    "19:00:00",
+    "20:00:00",
+    "21:00:00",
+    "22:00:00",
+    "23:00:00",
+  ];
+  const selectHour = (e) => {
+    setHourSelect(e.target.value);
+  };
+
+  const asistForHourDataset = asistForHour.map((asistencia) => {
+    const hora = new Date(asistencia.fechaAsistencia).toLocaleTimeString(
+      "es-ES",
+      {
+        hour: "2-digit",
+        minute: "2-digit",
+      }
+    );
+    return {
+      hora: hora,
+      numeroDeAsistencias: 1,
+    };
+  });
+
+  ///////////////////////////////////////////////////////////////
+  console.log(asistForHourDataset, "asist for hour");
+
   return (
     <MainLayout>
       <section className="animate-fade-in-down md:mx-auto bg-white rounded shadow-xl w-full md:w-11/12 overflow-hidden mb-20">
@@ -111,34 +184,23 @@ export const Stats = () => {
           </div>
           {/* ASISTENCIAS/TURNOS */}
           {/* ASISTENCIA POR CADA MES */}
-          <div className="mt-12 mb-3 w-full   flex flex-col justify-center md:justify-between items-center gap-5 md:gap-12">
+          <div className="mt-5 md:mt-12 mb-3 w-full   flex flex-col justify-center md:justify-between items-center md:items-start gap-6 md:gap-5">
             <div className="flex items-center gap-3">
               <Title
                 className={"text-customTextGreen "}
                 title={"Asistencias por mes"}
               ></Title>
-              <BsCalendar2Month className="text-3xl font-bold"></BsCalendar2Month>
+              <BsCalendar2Month className="text-xl md:text-3xl font-bold"></BsCalendar2Month>
             </div>
 
             <div className="flex justify-end w-full items-center">
-              <label
-                htmlFor="year-selector"
-                className="font-semibold mr-2 hidden md:block md:text-xl"
-              >
-                Seleccionar Año:
-              </label>
-              <select
-                id="year-selector"
+              <SelectDef
                 value={selectedYear}
-                onChange={(e) => setSelectedYear(Number(e.target.value))}
-                className="border rounded px-1 md:px-3 font-semibold border-customTextGreen py-1 outline-none"
-              >
-                {availableYears.map((year) => (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
-                ))}
-              </select>
+                label="Seleccionar Año:"
+                options={availableYears}
+                onChange={selectYear}
+                variant={"filled"}
+              />
             </div>
             {/* ASISTENCIA POR CADA MES */}
             <div className="w-full flex items-center justify-center">
@@ -167,15 +229,15 @@ export const Stats = () => {
             </div>
           </div>
           {/* /////////////////////////////////// */}
-          <div className="w-full shadow-lg h-12"></div>
+          <div className="w-full shadow-md h-4"></div>
           {/* ASISTENCIAS POR DIA DE SEMANA */}
-          <div className="mt-12 mb-3 w-full flex flex-col justify-center md:justify-between items-center gap-5 md:gap-12">
+          <div className="mt-12 mb-3 w-full flex flex-col justify-center md:justify-between items-center md:items-start  gap-5 md:gap-12">
             <div className="flex items-center gap-3">
               <Title
                 className={"text-customTextGreen"}
                 title={"Asistencias por día de la semana"}
               ></Title>
-              <IoTodayOutline className="text-3xl"></IoTodayOutline>
+              <IoTodayOutline className="text-xl md:text-3xl"></IoTodayOutline>
             </div>
 
             <div className="w-full flex items-center justify-center">
@@ -200,6 +262,52 @@ export const Stats = () => {
                   },
                 ]}
                 barColor="#FF5733" // Color personalizado para las barras
+              />
+            </div>
+          </div>
+
+          {/* ////////////////////////////////////////// */}
+          <div className="w-full shadow-md h-4"></div>
+          {/* ASISTENCIAS POR DIA DE SEMANA */}
+          <div className="mt-12 mb-3 w-full flex flex-col justify-center md:justify-between items-center md:items-start gap-5 md:gap-12">
+            <div className="flex items-center gap-3">
+              <Title
+                className={"text-customTextGreen"}
+                title={"Asistencias por hora"}
+              ></Title>
+              <TbClockHour4 className="text-2xl md:text-3xl"></TbClockHour4>
+            </div>
+            <div className="flex justify-end w-full items-center">
+              <SelectDef
+                value={hourSelect}
+                label="Horario"
+                options={horarios}
+                onChange={selectHour}
+                variant={"filled"}
+              />
+            </div>
+            <div className="w-full flex items-center justify-center">
+              <ChartBar
+                dataset={asistForHourDataset} // Usamos los datos transformados
+                xAxis={[
+                  {
+                    scaleType: "band",
+                    dataKey: "hora", // Usamos 'hora' como la clave para el eje X
+                    label: "Hora",
+                  },
+                ]}
+                yAxis={[
+                  {
+                    label: "Número de asistencias",
+                  },
+                ]}
+                series={[
+                  {
+                    dataKey: "numeroDeAsistencias",
+                    label: "Asistencias",
+                  },
+                ]}
+                barColor="#FF5733" // Color de las barras
               />
             </div>
           </div>

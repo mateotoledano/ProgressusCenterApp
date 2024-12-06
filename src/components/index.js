@@ -15,6 +15,7 @@ export * from "./ui/footer/Footer"
 export * from "./ui/spinnerLoading/Spinner"
 export * from "./ui/skeleton/LoadingSkeleton"
 export * from "./ui/buttons/ButtonSpinner"
+export * from "./ui/select/SelectDef"
 export * from "./auth/modal/ModalVerificationAuth";
 export * from "./auth/confirmCode/ConfirmCode";
 export * from "./turns/acordion/Acordion";
